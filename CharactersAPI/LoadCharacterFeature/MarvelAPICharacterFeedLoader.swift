@@ -9,9 +9,11 @@ import Foundation
 
 public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
     let client: HTTPClient
+    let router: RouteComposer
 
-    public init(client: HTTPClient) {
+    public init(baseAPIURL: URL = URL(string: "https://gateway.marvel.com:443/v1/public/")!, client: HTTPClient) {
         self.client = client
+        self.router = RouteComposer(url: baseAPIURL)
     }
 
     public func load(id: Int? = nil, completion: @escaping (Result<MarvelCharacter, Error>) -> Void) {
@@ -21,9 +23,9 @@ public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
 
     private func resolveURL(for character: Int?) -> URL {
         guard let id = character else {
-            return MarvelAPIRoute.characters.route
+            return router.characters()
         }
-        return MarvelAPIRoute.character(id: id).route
+        return router.character(withId: id)
     }
 }
 
