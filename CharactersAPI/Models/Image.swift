@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Image: Codable {
-    public let path: String?
-    public let `extension`: String?
+struct Image: Codable {
+    let path: String?
+    let `extension`: String?
 }

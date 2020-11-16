@@ -16,7 +16,7 @@
 		5B6DD3BF25621F040062004B /* CharactersAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B6DD3B125621F040062004B /* CharactersAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B6DD3D8256221420062004B /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3CF256221420062004B /* Image.swift */; };
 		5B6DD3D9256221420062004B /* DataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3D0256221420062004B /* DataContainer.swift */; };
-		5B6DD3DA256221420062004B /* MarvelCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3D1256221420062004B /* MarvelCharacter.swift */; };
+		5B6DD3DA256221420062004B /* MarvelCharacterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3D1256221420062004B /* MarvelCharacterItem.swift */; };
 		5B6DD3DB256221420062004B /* DataWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3D2256221420062004B /* DataWrapper.swift */; };
 		5B6DD3DD256221420062004B /* LinkURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3D4256221420062004B /* LinkURL.swift */; };
 		5B6DD3DE256221420062004B /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3D5256221420062004B /* List.swift */; };
@@ -47,7 +47,7 @@
 		5B6DD3BE25621F040062004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B6DD3CF256221420062004B /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		5B6DD3D0256221420062004B /* DataContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContainer.swift; sourceTree = "<group>"; };
-		5B6DD3D1256221420062004B /* MarvelCharacter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarvelCharacter.swift; sourceTree = "<group>"; };
+		5B6DD3D1256221420062004B /* MarvelCharacterItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarvelCharacterItem.swift; sourceTree = "<group>"; };
 		5B6DD3D2256221420062004B /* DataWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataWrapper.swift; sourceTree = "<group>"; };
 		5B6DD3D4256221420062004B /* LinkURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkURL.swift; sourceTree = "<group>"; };
 		5B6DD3D5256221420062004B /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 				5B6DD3D2256221420062004B /* DataWrapper.swift */,
 				5B6DD3D0256221420062004B /* DataContainer.swift */,
 				5B6DD3D6256221420062004B /* NonCharacterItem.swift */,
-				5B6DD3D1256221420062004B /* MarvelCharacter.swift */,
+				5B6DD3D1256221420062004B /* MarvelCharacterItem.swift */,
 				5B6DD3CF256221420062004B /* Image.swift */,
 				5B6DD3D4256221420062004B /* LinkURL.swift */,
 				5B6DD3D5256221420062004B /* List.swift */,
@@ -249,7 +249,7 @@
 			files = (
 				5B6DD3DD256221420062004B /* LinkURL.swift in Sources */,
 				5B6CBC48256249D000804AC9 /* MarvelAPICharacterFeedLoader.swift in Sources */,
-				5B6DD3DA256221420062004B /* MarvelCharacter.swift in Sources */,
+				5B6DD3DA256221420062004B /* MarvelCharacterItem.swift in Sources */,
 				5B6DD3DB256221420062004B /* DataWrapper.swift in Sources */,
 				5B6CBC3925623FEB00804AC9 /* MarvelAPIRoute.swift in Sources */,
 				5B6DD3D9256221420062004B /* DataContainer.swift in Sources */,

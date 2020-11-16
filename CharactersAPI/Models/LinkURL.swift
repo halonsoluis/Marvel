@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct LinkURL: Codable {
-    public let type: String!
-    public let url: String?
+struct LinkURL: Codable {
+    let type: String?
+    let url: String?
 }
