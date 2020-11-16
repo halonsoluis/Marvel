@@ -13,8 +13,8 @@ enum MarvelAPIRoute {
     ///Fetches a single character by id.
     case character(id: Int)
 
-    var route: String {
-        "https://gateway.marvel.com:443/v1/public/\(path)"
+    var route: URL {
+        URL(string: "https://gateway.marvel.com:443/v1/public/\(path)")!
     }
 }
 

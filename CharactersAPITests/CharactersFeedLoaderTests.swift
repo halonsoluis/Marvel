@@ -16,11 +16,15 @@ class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
     }
 
     func load(id: Int? = nil, completion: @escaping (Result<MarvelCharacter, Error>) -> Void) {
-        if let id = id, let url = URL(string: MarvelAPIRoute.character(id: id).route) {
-            client.get(from: url)
-        } else if let url = URL(string: MarvelAPIRoute.characters.route) {
-            client.get(from: url)
+        let url = resolveURL(for: id)
+        client.get(from: url)
+    }
+
+    private func resolveURL(for character: Int?) -> URL {
+        guard let id = character else {
+            return MarvelAPIRoute.characters.route
         }
+        return MarvelAPIRoute.character(id: id).route
     }
 }
 
