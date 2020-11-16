@@ -66,6 +66,32 @@ class CharactersFeedLoaderTests: XCTestCase {
         }
         wait(for: [expect], timeout: 1)
     }
+
+    func test_load_severalItemsFromJSONResponse() {
+        let (client, sut) = makeSUT()
+        let (response, item, _, _, _, _, _, thumbnail) = makeJSON()
+        client.returnedJSON = response
+
+        let expect = expectation(description: "Waiting for expectation")
+
+        sut.load(id: nil) { result in
+            switch result {
+            case let .success(characters) where characters.count == 1:
+                let character = characters.first!
+
+                XCTAssertEqual(character.id, item["id"] as? Int)
+                XCTAssertEqual(character.description, item["description"] as? String)
+                XCTAssertEqual(character.modified, item["modified"] as? String)
+                XCTAssertEqual(character.thumbnail?.absoluteString, "\(thumbnail["path"]!).\(thumbnail["extension"]!)")
+            case .failure:
+                XCTFail()
+            case .success(_):
+                XCTFail()
+            }
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: 1)
+    }
     
     private func makeSUT() -> (client: HTTPClientSpy, loader: CharacterFeedLoader) {
         let client = HTTPClientSpy()
@@ -74,7 +100,7 @@ class CharactersFeedLoaderTests: XCTestCase {
         return (client: client, loader: sut)
     }
     
-    private func makeJSON() -> (response: [String: Any], item: [String: Any], urls: [[String: String]], events: [String: Any], comics: [String: Any], series: [String: Any], stories: [String: Any], thumbnail: [String: String]) {
+    private func makeJSON(amountOfItems: Int = 1) -> (response: [String: Any], item: [String: Any], urls: [[String: String]], events: [String: Any], comics: [String: Any], series: [String: Any], stories: [String: Any], thumbnail: [String: String]) {
         let thumbnail: [String: String] = [
             "path": "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784",
             "extension": "jpg"
@@ -176,11 +202,11 @@ class CharactersFeedLoaderTests: XCTestCase {
             "code": 200,
             "status": "Ok",
             "data": [
-                "offset": 20,
+                "offset": 0,
                 "limit": 20,
                 "total": 1485,
-                "count": 20,
-                "results": [item]
+                "count": amountOfItems,
+                "results": Array(repeating: item, count: amountOfItems)
             ]
         ]
         return (response, item, urls, events, comics, series, stories, thumbnail)
