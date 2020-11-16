@@ -43,12 +43,12 @@ class CharactersFeedLoaderTests: XCTestCase {
     
     func test_load_anItemFromJSONResponse() {
         let (client, sut) = makeSUT()
-        let (response, item, _, _, _, _, _, thumbnail) = makeJSON()
+        let (response, item, _, _, _, _, _, thumbnail) = makeJSON(amountOfItems: 1)
         client.returnedJSON = response
 
         let expect = expectation(description: "Waiting for expectation")
 
-        sut.load(id: nil) { result in
+        sut.load(id: 1) { result in
             switch result {
             case let .success(characters) where characters.count == 1:
                 let character = characters.first!
@@ -69,23 +69,16 @@ class CharactersFeedLoaderTests: XCTestCase {
 
     func test_load_severalItemsFromJSONResponse() {
         let (client, sut) = makeSUT()
-        let (response, item, _, _, _, _, _, thumbnail) = makeJSON()
+        let (response, _, _, _, _, _, _, _) = makeJSON(amountOfItems: 10)
         client.returnedJSON = response
 
         let expect = expectation(description: "Waiting for expectation")
 
         sut.load(id: nil) { result in
             switch result {
-            case let .success(characters) where characters.count == 1:
-                let character = characters.first!
-
-                XCTAssertEqual(character.id, item["id"] as? Int)
-                XCTAssertEqual(character.description, item["description"] as? String)
-                XCTAssertEqual(character.modified, item["modified"] as? String)
-                XCTAssertEqual(character.thumbnail?.absoluteString, "\(thumbnail["path"]!).\(thumbnail["extension"]!)")
+            case let .success(characters):
+                XCTAssertEqual(characters.count, 10)
             case .failure:
-                XCTFail()
-            case .success(_):
                 XCTFail()
             }
             expect.fulfill()
@@ -100,7 +93,7 @@ class CharactersFeedLoaderTests: XCTestCase {
         return (client: client, loader: sut)
     }
     
-    private func makeJSON(amountOfItems: Int = 1) -> (response: [String: Any], item: [String: Any], urls: [[String: String]], events: [String: Any], comics: [String: Any], series: [String: Any], stories: [String: Any], thumbnail: [String: String]) {
+    private func makeJSON(amountOfItems: Int) -> (response: [String: Any], item: [String: Any], urls: [[String: String]], events: [String: Any], comics: [String: Any], series: [String: Any], stories: [String: Any], thumbnail: [String: String]) {
         let thumbnail: [String: String] = [
             "path": "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784",
             "extension": "jpg"
