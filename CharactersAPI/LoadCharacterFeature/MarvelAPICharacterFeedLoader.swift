@@ -7,14 +7,14 @@
 
 import Foundation
 
-class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
+public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
     let client: HTTPClient
 
-    init(client: HTTPClient) {
+    public init(client: HTTPClient) {
         self.client = client
     }
 
-    func load(id: Int? = nil, completion: @escaping (Result<MarvelCharacter, Error>) -> Void) {
+    public func load(id: Int? = nil, completion: @escaping (Result<MarvelCharacter, Error>) -> Void) {
         let url = resolveURL(for: id)
         client.get(from: url)
     }
@@ -27,6 +27,6 @@ class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
     }
 }
 
-protocol HTTPClient {
+public protocol HTTPClient {
     func get(from url: URL)
 }

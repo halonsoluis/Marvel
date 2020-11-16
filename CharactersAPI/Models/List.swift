@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct List<T: Summary>: Codable {
+public struct List<T: Summary>: Codable {
 
-    let available: Int?
-    let collectionURI: String?
-    let items: [T]?
-    let returned: Int?
+    public let available: Int?
+    public let collectionURI: String?
+    public let items: [T]?
+    public let returned: Int?
 }

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import CharactersAPI
+import CharactersAPI
 
 class CharactersFeedLoaderTests: XCTestCase {
 

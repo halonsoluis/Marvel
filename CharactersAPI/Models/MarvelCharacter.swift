@@ -7,18 +7,18 @@
 
 import Foundation
 
-struct MarvelCharacter: Codable {
+public struct MarvelCharacter: Codable {
 
-    let id: Int?
-    let name: String?
-    let description: String?
-    let modified: String?
-    let thumbnail: Image?
-    let resourceURI: String?
+    public let id: Int?
+    public let name: String?
+    public let description: String?
+    public let modified: String?
+    public let thumbnail: Image?
+    public let resourceURI: String?
 
-    let comics: List<ComicSummary>?
-    let series: List<SeriesSummary>?
-    let stories: List<StorySummary>?
-    let events: List<EventSummary>?
-    let urls: [LinkURL]?
+    public let comics: List<ComicSummary>?
+    public let series: List<SeriesSummary>?
+    public let stories: List<StorySummary>?
+    public let events: List<EventSummary>?
+    public let urls: [LinkURL]?
 }

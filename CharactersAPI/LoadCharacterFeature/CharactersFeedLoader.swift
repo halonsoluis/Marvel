@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol CharacterFeedLoader {
+public protocol CharacterFeedLoader {
     func load(id: Int?, completion: @escaping (Result<MarvelCharacter, Error>) -> Void)
 }

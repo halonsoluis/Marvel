@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum MarvelAPIRoute {
+public enum MarvelAPIRoute {
     ///Fetches lists of characters.
     case characters
     ///Fetches a single character by id.
     case character(id: Int)
 
-    var route: URL {
+    public var route: URL {
         URL(string: "https://gateway.marvel.com:443/v1/public/\(path)")!
     }
 }
