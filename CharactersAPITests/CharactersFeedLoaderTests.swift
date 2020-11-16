@@ -107,6 +107,26 @@ class CharactersFeedLoaderTests: XCTestCase {
         }
         wait(for: [expect], timeout: 1)
     }
+
+    func test_load_returnsErrorOnWrongStatusCode() {
+        let (client, sut) = makeSUT()
+        let (response, _, _, _, _, _, _, _) = makeJSON(amountOfItems: 10)
+        client.returnedJSON = response
+        client.returnedStatusCode = 404
+
+        let expect = expectation(description: "Waiting for expectation")
+
+        sut.load(id: nil) { result in
+            switch result {
+            case .success:
+                XCTFail()
+            case let .failure(error):
+                XCTAssertNotNil(error)
+            }
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: 1)
+    }
     
     private func makeSUT() -> (client: HTTPClientSpy, loader: CharacterFeedLoader) {
         let client = HTTPClientSpy()
