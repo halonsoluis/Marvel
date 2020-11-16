@@ -55,7 +55,7 @@ class CharactersFeedLoaderTests: XCTestCase {
 
         sut.load { _ in }
 
-        XCTAssertEqual(client.requestedURL, URL(string: "https://gateway.marvel.com:443/v1/public/characters")!)
+        XCTAssertEqual(client.requestedURL, MarvelAPIRoute.characters.route)
     }
 
     func test_load_singleCharacterFromURLWhenIdPassed() {
@@ -64,6 +64,6 @@ class CharactersFeedLoaderTests: XCTestCase {
 
         sut.load(id: 1) { _ in }
 
-        XCTAssertEqual(client.requestedURL, URL(string: "https://gateway.marvel.com:443/v1/public/characters/1")!)
+        XCTAssertEqual(client.requestedURL, MarvelAPIRoute.character(id: 1).route)
     }
 }
