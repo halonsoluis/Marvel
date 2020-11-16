@@ -8,5 +8,5 @@
 import Foundation
 
 protocol CharacterFeedLoader {
-    func load(completion: @escaping (Result<MarvelCharacter, Error>) -> Void)
+    func load(id: Int?, completion: @escaping (Result<MarvelCharacter, Error>) -> Void)
 }

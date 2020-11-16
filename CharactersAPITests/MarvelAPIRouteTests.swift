@@ -14,6 +14,6 @@ class MarvelAPIRouteTests: XCTestCase {
     }
 
     func testGetRouteFetchSingleCharacter() {
-        XCTAssertEqual(MarvelAPIRoute.character(id: 1).route, "https://gateway.marvel.com:443/v1/public/characters/\(1)")
+        XCTAssertEqual(MarvelAPIRoute.character(id: 1).route, "https://gateway.marvel.com:443/v1/public/characters/1")
     }
 }

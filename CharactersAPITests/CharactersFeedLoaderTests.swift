@@ -15,8 +15,12 @@ class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
         self.client = client
     }
 
-    func load(completion: @escaping (Result<MarvelCharacter, Error>) -> Void) {
-        client.get(from: URL(string: "www.notarealurl.com")!)
+    func load(id: Int? = nil, completion: @escaping (Result<MarvelCharacter, Error>) -> Void) {
+        if let id = id, let url = URL(string: MarvelAPIRoute.character(id: id).route) {
+            client.get(from: url)
+        } else if let url = URL(string: MarvelAPIRoute.characters.route) {
+            client.get(from: url)
+        }
     }
 }
 
@@ -48,5 +52,14 @@ class CharactersFeedLoaderTests: XCTestCase {
         sut.load { _ in }
 
         XCTAssertNotNil(client.requestedURL)
+    }
+
+    func test_load_requestURLForIntentededCharacter() {
+        let client = HTTPClientSpy()
+        let sut = MarvelAPICharacterFeedLoader(client: client)
+
+        sut.load(id: 1) { _ in }
+
+        XCTAssertEqual(client.requestedURL, URL(string: "https://gateway.marvel.com:443/v1/public/characters/1")!)
     }
 }
