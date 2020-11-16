@@ -13,6 +13,7 @@ public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
 
     enum Error: Swift.Error {
         case invalidData
+        case invalidStatusCode
     }
 
     public init(baseAPIURL: URL = URL(string: "https://gateway.marvel.com:443/v1/public/")!, client: HTTPClient) {
@@ -31,11 +32,15 @@ public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
         })
     }
 
-    private func parse(response result: Result<Data, Swift.Error>) -> Result<[MarvelCharacter], Swift.Error> {
+    private func parse(response result: Result<(Data, HTTPURLResponse), Swift.Error>) -> Result<[MarvelCharacter], Swift.Error> {
         switch result {
         case let .failure(error):
             return .failure(error)
-        case let .success(data):
+        case let .success((data, response)):
+            guard response.statusCode == 200 else {
+                return .failure(MarvelAPICharacterFeedLoader.Error.invalidStatusCode)
+            }
+
             guard let box = try? JSONDecoder().decode(DataWrapper<MarvelCharacterItem>.self, from: data) else {
                 return .failure(MarvelAPICharacterFeedLoader.Error.invalidData)
             }
@@ -70,5 +75,5 @@ public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
 }
 
 public protocol HTTPClient {
-    func get(from url: URL, completion: @escaping (Result<Data, Error>) -> Void)
+    func get(from url: URL, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void)
 }
