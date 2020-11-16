@@ -45,16 +45,16 @@ class CharactersFeedLoaderTests: XCTestCase {
         XCTAssertNil(client.requestedURL)
     }
 
-    func test_load_requestFromURL() {
+    func test_load_allCharactersFromURLWhenNoIdPassed() {
         let client = HTTPClientSpy()
         let sut = MarvelAPICharacterFeedLoader(client: client)
 
         sut.load { _ in }
 
-        XCTAssertNotNil(client.requestedURL)
+        XCTAssertEqual(client.requestedURL, URL(string: "https://gateway.marvel.com:443/v1/public/characters")!)
     }
 
-    func test_load_requestURLForIntentededCharacter() {
+    func test_load_singleCharacterFromURLWhenIdPassed() {
         let client = HTTPClientSpy()
         let sut = MarvelAPICharacterFeedLoader(client: client)
 
