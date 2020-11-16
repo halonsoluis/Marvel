@@ -67,6 +67,28 @@ class CharactersFeedLoaderTests: XCTestCase {
         wait(for: [expect], timeout: 1)
     }
 
+    func test_load_onFailure_FailsWithError() {
+        let (client, sut) = makeSUT()
+        let (response, _, _, _, _, _, _, _) = makeJSON(amountOfItems: 10)
+        client.returnedJSON = response
+        let expectedError = NSError(domain: "anyerror", code: 123, userInfo: nil)
+        client.returnedError = expectedError
+
+        let expect = expectation(description: "Waiting for expectation")
+
+        sut.load(id: nil) { result in
+            switch result {
+            case .success:
+                XCTFail()
+            case let .failure(receivedError as NSError):
+                XCTAssertEqual(expectedError.domain, receivedError.domain)
+                XCTAssertEqual(expectedError.code, receivedError.code)
+            }
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: 1)
+    }
+
     func test_load_severalItemsFromJSONResponse() {
         let (client, sut) = makeSUT()
         let (response, _, _, _, _, _, _, _) = makeJSON(amountOfItems: 10)
