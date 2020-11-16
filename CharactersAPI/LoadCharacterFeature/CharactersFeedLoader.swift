@@ -16,5 +16,5 @@ public struct MarvelCharacter {
 }
 
 public protocol CharacterFeedLoader {
-    func load(id: Int?, completion: @escaping (Result<MarvelCharacter, Error>) -> Void)
+    func load(id: Int?, completion: @escaping (Result<[MarvelCharacter], Error>) -> Void)
 }
