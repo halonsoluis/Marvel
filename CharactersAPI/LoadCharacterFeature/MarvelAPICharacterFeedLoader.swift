@@ -22,20 +22,27 @@ public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
 
     public func load(id: Int? = nil, completion: @escaping (Result<[MarvelCharacter], Swift.Error>) -> Void) {
         let url = resolveURL(for: id)
-        client.get(from: url, completion: { result in
-            switch result {
-            case let .failure(error):
-                completion(.failure(error))
-            case let .success(data):
-                guard let box = try? JSONDecoder().decode(DataWrapper<MarvelCharacterItem>.self, from: data) else {
-                    completion(.failure(MarvelAPICharacterFeedLoader.Error.invalidData))
-                    return
-                }
-
-                let items = box.data?.results ?? []
-                return completion(.success(MarvelAPICharacterMapper.map(items)))
+        client.get(from: url, completion: { [weak self] result in
+            guard let `self` = self else {
+                return
             }
+            let parsedResult = self.parse(response: result)
+            completion(parsedResult)
         })
+    }
+
+    private func parse(response result: Result<Data, Swift.Error>) -> Result<[MarvelCharacter], Swift.Error> {
+        switch result {
+        case let .failure(error):
+            return .failure(error)
+        case let .success(data):
+            guard let box = try? JSONDecoder().decode(DataWrapper<MarvelCharacterItem>.self, from: data) else {
+                return .failure(MarvelAPICharacterFeedLoader.Error.invalidData)
+            }
+
+            let items = box.data?.results ?? []
+            return .success(MarvelAPICharacterMapper.map(items))
+        }
     }
 
     private class MarvelAPICharacterMapper {
