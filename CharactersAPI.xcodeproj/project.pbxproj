@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5B6CBC222562375500804AC9 /* CharactersFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6CBC212562375500804AC9 /* CharactersFeedLoader.swift */; };
+		5B6CBC3925623FEB00804AC9 /* MarvelAPIRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6CBC3825623FEB00804AC9 /* MarvelAPIRoute.swift */; };
+		5B6CBC3F2562417500804AC9 /* MarvelAPIRouteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6CBC3E2562417500804AC9 /* MarvelAPIRouteTests.swift */; };
 		5B6DD3B825621F040062004B /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6DD3AE25621F040062004B /* CharactersAPI.framework */; };
 		5B6DD3BD25621F040062004B /* CharactersFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3BC25621F040062004B /* CharactersFeedLoaderTests.swift */; };
 		5B6DD3BF25621F040062004B /* CharactersAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B6DD3B125621F040062004B /* CharactersAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,6 +35,8 @@
 
 /* Begin PBXFileReference section */
 		5B6CBC212562375500804AC9 /* CharactersFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersFeedLoader.swift; sourceTree = "<group>"; };
+		5B6CBC3825623FEB00804AC9 /* MarvelAPIRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAPIRoute.swift; sourceTree = "<group>"; };
+		5B6CBC3E2562417500804AC9 /* MarvelAPIRouteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAPIRouteTests.swift; sourceTree = "<group>"; };
 		5B6DD3AE25621F040062004B /* CharactersAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CharactersAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B6DD3B125621F040062004B /* CharactersAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharactersAPI.h; sourceTree = "<group>"; };
 		5B6DD3B225621F040062004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -68,6 +72,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B6CBC2F25623F6200804AC9 /* LoadCharacterFeature */ = {
+			isa = PBXGroup;
+			children = (
+				5B6CBC212562375500804AC9 /* CharactersFeedLoader.swift */,
+				5B6CBC3825623FEB00804AC9 /* MarvelAPIRoute.swift */,
+			);
+			path = LoadCharacterFeature;
+			sourceTree = "<group>";
+		};
 		5B6DD3A425621F030062004B = {
 			isa = PBXGroup;
 			children = (
@@ -89,10 +102,10 @@
 		5B6DD3B025621F040062004B /* CharactersAPI */ = {
 			isa = PBXGroup;
 			children = (
+				5B6CBC2F25623F6200804AC9 /* LoadCharacterFeature */,
 				5B6DD3CE256221420062004B /* Models */,
 				5B6DD3B125621F040062004B /* CharactersAPI.h */,
 				5B6DD3B225621F040062004B /* Info.plist */,
-				5B6CBC212562375500804AC9 /* CharactersFeedLoader.swift */,
 			);
 			path = CharactersAPI;
 			sourceTree = "<group>";
@@ -100,8 +113,9 @@
 		5B6DD3BB25621F040062004B /* CharactersAPITests */ = {
 			isa = PBXGroup;
 			children = (
-				5B6DD3BC25621F040062004B /* CharactersFeedLoaderTests.swift */,
 				5B6DD3BE25621F040062004B /* Info.plist */,
+				5B6DD3BC25621F040062004B /* CharactersFeedLoaderTests.swift */,
+				5B6CBC3E2562417500804AC9 /* MarvelAPIRouteTests.swift */,
 			);
 			path = CharactersAPITests;
 			sourceTree = "<group>";
@@ -233,6 +247,7 @@
 				5B6DD3DD256221420062004B /* LinkURL.swift in Sources */,
 				5B6DD3DA256221420062004B /* MarvelCharacter.swift in Sources */,
 				5B6DD3DB256221420062004B /* DataWrapper.swift in Sources */,
+				5B6CBC3925623FEB00804AC9 /* MarvelAPIRoute.swift in Sources */,
 				5B6DD3D9256221420062004B /* DataContainer.swift in Sources */,
 				5B6DD3DF256221420062004B /* NonCharacterItem.swift in Sources */,
 				5B6DD3E0256221420062004B /* Summary.swift in Sources */,
@@ -247,6 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B6DD3BD25621F040062004B /* CharactersFeedLoaderTests.swift in Sources */,
+				5B6CBC3F2562417500804AC9 /* MarvelAPIRouteTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
