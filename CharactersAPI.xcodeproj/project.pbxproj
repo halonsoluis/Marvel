@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B6CBC222562375500804AC9 /* CharactersFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6CBC212562375500804AC9 /* CharactersFeedLoader.swift */; };
 		5B6DD3B825621F040062004B /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6DD3AE25621F040062004B /* CharactersAPI.framework */; };
 		5B6DD3BD25621F040062004B /* CharactersAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3BC25621F040062004B /* CharactersAPITests.swift */; };
 		5B6DD3BF25621F040062004B /* CharactersAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B6DD3B125621F040062004B /* CharactersAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -31,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5B6CBC212562375500804AC9 /* CharactersFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersFeedLoader.swift; sourceTree = "<group>"; };
 		5B6DD3AE25621F040062004B /* CharactersAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CharactersAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B6DD3B125621F040062004B /* CharactersAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharactersAPI.h; sourceTree = "<group>"; };
 		5B6DD3B225621F040062004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				5B6DD3CE256221420062004B /* Models */,
 				5B6DD3B125621F040062004B /* CharactersAPI.h */,
 				5B6DD3B225621F040062004B /* Info.plist */,
+				5B6CBC212562375500804AC9 /* CharactersFeedLoader.swift */,
 			);
 			path = CharactersAPI;
 			sourceTree = "<group>";
@@ -235,6 +238,7 @@
 				5B6DD3E0256221420062004B /* Summary.swift in Sources */,
 				5B6DD3DE256221420062004B /* List.swift in Sources */,
 				5B6DD3D8256221420062004B /* Image.swift in Sources */,
+				5B6CBC222562375500804AC9 /* CharactersFeedLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
