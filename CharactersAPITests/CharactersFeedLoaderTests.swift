@@ -8,28 +8,36 @@
 import XCTest
 @testable import CharactersAPI
 
-class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
-    let client: HTTPClient
+class CharactersFeedLoaderTests: XCTestCase {
 
-    init(client: HTTPClient) {
-        self.client = client
+    func testInit_doesNot_requestDataFromURL() {
+        let (client, _) = makeSUT()
+
+        XCTAssertNil(client.requestedURL)
     }
 
-    func load(id: Int? = nil, completion: @escaping (Result<MarvelCharacter, Error>) -> Void) {
-        let url = resolveURL(for: id)
-        client.get(from: url)
+    func test_load_allCharactersFromURLWhenNoIdPassed() {
+        let (client, sut) = makeSUT()
+
+        sut.load(id: nil) { _ in }
+
+        XCTAssertEqual(client.requestedURL, MarvelAPIRoute.characters.route)
     }
 
-    private func resolveURL(for character: Int?) -> URL {
-        guard let id = character else {
-            return MarvelAPIRoute.characters.route
-        }
-        return MarvelAPIRoute.character(id: id).route
-    }
-}
+    func test_load_singleCharacterFromURLWhenIdPassed() {
+        let (client, sut) = makeSUT()
 
-protocol HTTPClient {
-    func get(from url: URL)
+        sut.load(id: 1) { _ in }
+
+        XCTAssertEqual(client.requestedURL, MarvelAPIRoute.character(id: 1).route)
+    }
+
+    private func makeSUT() -> (client: HTTPClientSpy, loader: CharacterFeedLoader) {
+        let client = HTTPClientSpy()
+        let sut = MarvelAPICharacterFeedLoader(client: client)
+
+        return (client: client, loader: sut)
+    }
 }
 
 class HTTPClientSpy: HTTPClient {
@@ -37,33 +45,5 @@ class HTTPClientSpy: HTTPClient {
 
     func get(from url: URL) {
         requestedURL = url
-    }
-}
-
-class CharactersFeedLoaderTests: XCTestCase {
-
-    func testInit_doesNot_requestDataFromURL() {
-        let client = HTTPClientSpy()
-        _ = MarvelAPICharacterFeedLoader(client: client)
-
-        XCTAssertNil(client.requestedURL)
-    }
-
-    func test_load_allCharactersFromURLWhenNoIdPassed() {
-        let client = HTTPClientSpy()
-        let sut = MarvelAPICharacterFeedLoader(client: client)
-
-        sut.load { _ in }
-
-        XCTAssertEqual(client.requestedURL, MarvelAPIRoute.characters.route)
-    }
-
-    func test_load_singleCharacterFromURLWhenIdPassed() {
-        let client = HTTPClientSpy()
-        let sut = MarvelAPICharacterFeedLoader(client: client)
-
-        sut.load(id: 1) { _ in }
-
-        XCTAssertEqual(client.requestedURL, MarvelAPIRoute.character(id: 1).route)
     }
 }
