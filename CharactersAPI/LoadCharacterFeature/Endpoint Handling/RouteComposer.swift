@@ -16,6 +16,6 @@ struct RouteComposer {
     }
     ///Fetches a single character by id.
     func character(withId id: Int) -> URL {
-        url.appendingPathComponent("characters/\(id)")
+        characters().appendingPathComponent(id.description)
     }
 }
