@@ -44,18 +44,22 @@ class LoadDataFromNetworkIntegrationTests: XCTestCase {
         sut.get(from: url) { result in
             switch result {
             case let .success((_, response)):
-                XCTAssertEqual(response.statusCode, statusCode)
+                XCTAssertEqual(response.statusCode, statusCode, "Wrong status Code received", file: file, line: line)
             case let .failure(receivedError as NSError):
-                XCTFail(receivedError.description)
+                XCTFail("Unexpected Error Received \(receivedError.description)", file: file, line: line)
             }
             expect.fulfill()
         }
         wait(for: [expect], timeout: 5)
     }
 
-    func createSUT(_ urlString: String) -> (HTTPClient, MarvelURL) {
+    func createSUT(_ urlString: String, file: StaticString = #filePath, line: UInt = #line) -> (HTTPClient, MarvelURL) {
         let sut = URLSessionHTTPClient()
         let url = MarvelURL(URL(string: urlString)!, config: .shared, hashResolver: MarvelURL.MD5Digester.createHash, timeProvider: Date.init)
+
+        addTeardownBlock { [weak sut] in
+            XCTAssertNil(sut, "Potential memory leak", file: file, line: line)
+        }
 
         return (sut, url)
     }

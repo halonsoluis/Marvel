@@ -79,7 +79,7 @@ final class MarvelAPICharacterFeedLoader {
         }
     }
 
-    private class MarvelAPICharacterMapper {
+    private struct MarvelAPICharacterMapper {
         static func mapItem(_ item: MarvelCharacterItem) -> MarvelCharacter {
             MarvelCharacter(
                 id: item.id,
@@ -90,7 +90,7 @@ final class MarvelAPICharacterFeedLoader {
             )
         }
 
-        static  func map(_ items: [MarvelCharacterItem]) -> [MarvelCharacter] {
+        static func map(_ items: [MarvelCharacterItem]) -> [MarvelCharacter] {
             items.map(mapItem)
         }
     }

@@ -149,12 +149,16 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
         wait(for: [expect], timeout: 1)
     }
     
-    private func makeSUT() -> (client: HTTPClientSpy, loader: CharacterFeedLoader, time: String) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (client: HTTPClientSpy, loader: CharacterFeedLoader, time: String) {
         let client = HTTPClientSpy()
         let time = Date()
         let sut = MarvelAPICharacterFeedLoader(urlDecorator: { url in
             return self.dummyURLDecorator(url: url, time: time)
         }, client: client)
+
+        addTeardownBlock { [weak sut] in
+            XCTAssertNil(sut, "Potential memory leak", file: file, line: line)
+        }
         
         return (client: client, loader: sut, time: time.timeIntervalSinceReferenceDate.description)
     }
