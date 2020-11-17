@@ -9,39 +9,29 @@ import XCTest
 import Foundation
 import CommonCrypto
 
-final class APIConfig {
-    private let itemsPerPage = 20
-    private let privateAPIKey = "da9b58ab629e94bb1d66ea165fe1fe92c896ba08"
-    private let publicAPIKey = "19972fbcfc8ba75736070bc42fbca671"
+struct MarverlURL {
+    private let baseURL: URL
+    private let config: MarvelAPIConfig
+    private let hashResolver: (String...) -> String
 
-    private var urlComponents: URLComponents
+    internal init(_ baseURL: URL, config: MarvelAPIConfig = .shared, hashResolver: @escaping (String...) -> String = MD5Digester.createHash) {
+        self.baseURL = baseURL
+        self.config = config
+        self.hashResolver = hashResolver
+    }
 
-    init?(url: URL) {
-        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            return nil
+    struct MarvelAPIConfig {
+        var itemsPerPage: Int
+        var privateAPIKey: String
+        var publicAPIKey: String
+
+        static var shared: MarvelAPIConfig {
+            MarvelAPIConfig(
+                itemsPerPage: 20,
+                privateAPIKey: "da9b58ab629e94bb1d66ea165fe1fe92c896ba08",
+                publicAPIKey: "19972fbcfc8ba75736070bc42fbca671"
+            )
         }
-        urlComponents = components
-    }
-
-    func resolve(for page: Int = 0) -> URL? {
-        urlComponents.queryItems = params(for: page).map(URLQueryItem.init)
-        return urlComponents.url
-    }
-
-    private func pagination(for page: Int) -> (offset: Int, limit: Int) {
-        (offset: page * itemsPerPage, limit : itemsPerPage)
-    }
-
-    func params(for page: Int = 0) -> [String: String] {
-        let (offset, limit) = pagination(for: max(page, 0))
-        let timestamp = Date.timeIntervalSinceReferenceDate.description
-        return [
-            "apikey": publicAPIKey,
-            "hash" : MD5Digester.createHash(timestamp, privateAPIKey, publicAPIKey),
-            "ts" : timestamp,
-            "limit" : limit.description,
-            "offset" : offset.description,
-        ]
     }
 
     private struct MD5Digester {
@@ -61,6 +51,30 @@ final class APIConfig {
 
             return (0..<Int(CC_MD5_DIGEST_LENGTH)).reduce("") { $0 + String(format: "%02x", digest[$1]) }
         }
+    }
+
+    func url(for page: Int = 0, at time: Date = Date()) -> URL? {
+        guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+        components.queryItems = params(for: page, at: time, using: hashResolver).map(URLQueryItem.init)
+        return components.url
+    }
+
+    private func params(for page: Int = 0, at time: Date, using hashResolver: (String...) -> String) -> [String: String] {
+        let (offset, limit) = pagination(for: max(page, 0), itemsPerPage: config.itemsPerPage)
+        let timestamp = time.timeIntervalSinceReferenceDate.description
+        return [
+            "apikey": config.publicAPIKey,
+            "hash" : hashResolver(timestamp, config.privateAPIKey, config.publicAPIKey),
+            "ts" : timestamp,
+            "limit" : limit.description,
+            "offset" : offset.description,
+        ]
+    }
+
+    private func pagination(for page: Int, itemsPerPage: Int) -> (offset: Int, limit: Int) {
+        (offset: page * itemsPerPage, limit : itemsPerPage)
     }
 }
 
@@ -110,13 +124,11 @@ class URLSessionHTTPClientTests: XCTestCase {
 
     func test_load_DataFromNetwork() {
         let sut = URLSessionHTTPClient()
-        let url = URL(string: "https://gateway.marvel.com:443/v1/public/characters")!
+        let url = MarverlURL(URL(string: "https://gateway.marvel.com:443/v1/public/characters")!).url()!
 
-        let enhancedURL = APIConfig(url: url)!.resolve()!
+        let expect = expectation(description: "Waiting for \(url) to resolve")
 
-        let expect = expectation(description: "Waiting for \(enhancedURL) to resolve")
-
-        sut.get(from: enhancedURL) { result in
+        sut.get(from: url) { result in
             switch result {
             case let .success(data, response):
                 XCTAssertEqual(response.statusCode, 200)
