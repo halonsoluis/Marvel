@@ -12,16 +12,7 @@ struct MarvelURL {
     private let config: MarvelAPIConfig
     private let hashResolver: (String...) -> String
     private let timeProvider: () -> Date
-
-    init(_ baseURL: URL) {
-        self.init(
-            baseURL,
-            config: .shared,
-            hashResolver: MD5Digester.createHash,
-            timeProvider: Date.init
-        )
-    }
-
+    
     init(_ baseURL: URL, config: MarvelAPIConfig, hashResolver: @escaping (String...) -> String, timeProvider: @escaping () -> Date) {
         self.baseURL = baseURL
         self.config = config

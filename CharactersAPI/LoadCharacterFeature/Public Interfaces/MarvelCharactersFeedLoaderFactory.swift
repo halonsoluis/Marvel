@@ -8,14 +8,19 @@
 import Foundation
 
 public final class MarvelCharactersFeedLoader: CharacterFeedLoader {
+    private let client: HTTPClient
 
-    private let characterFeedLoader: CharacterFeedLoader
+    private lazy var characterFeedLoader: CharacterFeedLoader = MarvelAPICharacterFeedLoader(
+        urlDecorator: urlDecoratorBuilder,
+        client: client
+    )
 
     public init(client: HTTPClient) {
-        characterFeedLoader = MarvelAPICharacterFeedLoader(
-            urlDecorator: MarvelURL.init,
-            client: client
-        )
+        self.client = client
+    }
+
+    private func urlDecoratorBuilder(url: URL) -> MarvelURL {
+        MarvelURL(url, config: .shared, hashResolver: MarvelURL.MD5Digester.createHash, timeProvider: Date.init)
     }
 
     public func characters(page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
