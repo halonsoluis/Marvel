@@ -8,8 +8,8 @@
 import Foundation
 
 struct MarvelURL {
-    private let baseURL: URL
-    private let config: MarvelAPIConfig
+    let baseURL: URL
+    let config: MarvelAPIConfig
     private let hashResolver: (String...) -> String
     private let timeProvider: () -> Date
     

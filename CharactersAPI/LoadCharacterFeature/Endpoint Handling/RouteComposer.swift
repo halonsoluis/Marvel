@@ -7,15 +7,18 @@
 
 import Foundation
 
-struct RouteComposer {
-    let url: URL
-
+enum RouteComposer {
     ///Fetches lists of characters.
-    func characters() -> URL {
-        url.appendingPathComponent("characters")
-    }
+    case characters(url: URL)
     ///Fetches a single character by id.
-    func character(withId id: Int) -> URL {
-        characters().appendingPathComponent(id.description)
+    case character(url: URL, id: Int)
+
+    var url: URL {
+        switch self {
+        case let .characters(url):
+            return url.appendingPathComponent("characters")
+        case let .character(url, id):
+            return url.appendingPathComponent("characters").appendingPathComponent(id.description)
+        }
     }
 }

@@ -97,8 +97,8 @@
 		5B6CBC2F25623F6200804AC9 /* LoadCharacterFeature */ = {
 			isa = PBXGroup;
 			children = (
-				5B6D27972563F4CF0021B70E /* Endpoint Handling */,
 				5B6D27942563F4500021B70E /* Public Interfaces */,
+				5B6D27972563F4CF0021B70E /* Endpoint Handling */,
 				5B6CBC47256249D000804AC9 /* MarvelAPICharacterFeedLoader.swift */,
 			);
 			path = LoadCharacterFeature;
