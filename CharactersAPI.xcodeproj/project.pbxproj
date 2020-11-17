@@ -18,6 +18,8 @@
 		5B6D278D2563F30F0021B70E /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D278C2563F30F0021B70E /* URLSessionHTTPClient.swift */; };
 		5B6D27912563F42B0021B70E /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27902563F42B0021B70E /* HTTPClient.swift */; };
 		5B6D279B2563F5590021B70E /* MarvelAPIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D279A2563F5590021B70E /* MarvelAPIConfig.swift */; };
+		5B6D27A72563F8880021B70E /* MarvelURL+MD5Digester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27A62563F8880021B70E /* MarvelURL+MD5Digester.swift */; };
+		5B6D27AB2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27AA2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift */; };
 		5B6DD3B825621F040062004B /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6DD3AE25621F040062004B /* CharactersAPI.framework */; };
 		5B6DD3BD25621F040062004B /* MarvelAPICharacterFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3BC25621F040062004B /* MarvelAPICharacterFeedLoaderTests.swift */; };
 		5B6DD3BF25621F040062004B /* CharactersAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B6DD3B125621F040062004B /* CharactersAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -53,6 +55,8 @@
 		5B6D278C2563F30F0021B70E /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		5B6D27902563F42B0021B70E /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		5B6D279A2563F5590021B70E /* MarvelAPIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAPIConfig.swift; sourceTree = "<group>"; };
+		5B6D27A62563F8880021B70E /* MarvelURL+MD5Digester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarvelURL+MD5Digester.swift"; sourceTree = "<group>"; };
+		5B6D27AA2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarvelURL+MD5DigesterTests.swift"; sourceTree = "<group>"; };
 		5B6DD3AE25621F040062004B /* CharactersAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CharactersAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B6DD3B125621F040062004B /* CharactersAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharactersAPI.h; sourceTree = "<group>"; };
 		5B6DD3B225621F040062004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -114,6 +118,7 @@
 				5B6CBC3825623FEB00804AC9 /* RouteComposer.swift */,
 				5B6D27802563F1E20021B70E /* MarverlURL.swift */,
 				5B6D279A2563F5590021B70E /* MarvelAPIConfig.swift */,
+				5B6D27A62563F8880021B70E /* MarvelURL+MD5Digester.swift */,
 			);
 			path = "Endpoint Handling";
 			sourceTree = "<group>";
@@ -131,6 +136,7 @@
 			children = (
 				5B6D27842563F2160021B70E /* MarverlURLTests.swift */,
 				5B6CBC3E2562417500804AC9 /* MarvelAPIRouteTests.swift */,
+				5B6D27AA2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift */,
 			);
 			path = "Endpoint Handling";
 			sourceTree = "<group>";
@@ -316,6 +322,7 @@
 				5B6DD3D9256221420062004B /* DataContainer.swift in Sources */,
 				5B6D278D2563F30F0021B70E /* URLSessionHTTPClient.swift in Sources */,
 				5B6DD3DF256221420062004B /* NonCharacterItem.swift in Sources */,
+				5B6D27A72563F8880021B70E /* MarvelURL+MD5Digester.swift in Sources */,
 				5B6D279B2563F5590021B70E /* MarvelAPIConfig.swift in Sources */,
 				5B6D27812563F1E20021B70E /* MarverlURL.swift in Sources */,
 				5B6DD3E0256221420062004B /* Summary.swift in Sources */,
@@ -330,6 +337,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B6D27AB2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift in Sources */,
 				5B6DD3BD25621F040062004B /* MarvelAPICharacterFeedLoaderTests.swift in Sources */,
 				5B6D277D256295280021B70E /* URLSessionHTTPClientTests.swift in Sources */,
 				5B6D27892563F25C0021B70E /* LoadDataFromNetworkIntegrationTests.swift in Sources */,

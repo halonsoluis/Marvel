@@ -13,7 +13,7 @@ class MarverlURLTests: XCTestCase {
 
         let url = URL(string: "www.url.com")!
 
-        let sut = MarverlURL(
+        let sut = MarvelURL(
             url,
             config: MarvelAPIConfig(
                 itemsPerPage: 10,
@@ -37,7 +37,7 @@ class MarverlURLTests: XCTestCase {
 
         let url = URL(string: "www.url.com")!
 
-        let sut = MarverlURL(
+        let sut = MarvelURL(
             url,
             config: MarvelAPIConfig(
                 itemsPerPage: 10,

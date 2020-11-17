@@ -12,7 +12,7 @@ class LoadDataFromNetworkIntegrationTests: XCTestCase {
 
     func test_load_DataFromNetwork() {
         let sut = URLSessionHTTPClient()
-        let url = MarverlURL(URL(string: "https://gateway.marvel.com:443/v1/public/characters")!).url()!
+        let url = MarvelURL(URL(string: "https://gateway.marvel.com:443/v1/public/characters")!).url()!
 
         let expect = expectation(description: "Waiting for \(url) to resolve")
 
