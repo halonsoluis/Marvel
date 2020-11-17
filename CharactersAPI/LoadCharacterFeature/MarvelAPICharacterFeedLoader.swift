@@ -9,8 +9,7 @@ import Foundation
 
 final class MarvelAPICharacterFeedLoader {
     let client: HTTPClient
-    let urlDecorator: (URL) -> MarvelURL
-    let baseURL: URL
+    let urlDecorator: MarvelURL
 
     enum Error: Swift.Error {
         case invalidData
@@ -18,20 +17,18 @@ final class MarvelAPICharacterFeedLoader {
         case invalidURL
     }
 
-    init(baseAPIURL: URL = URL(string: "https://gateway.marvel.com:443/v1/public/")!, urlDecorator: @escaping (URL) -> MarvelURL, client: HTTPClient) {
+    init(urlDecorator: MarvelURL, client: HTTPClient) {
         self.client = client
         self.urlDecorator = urlDecorator
-        self.baseURL = baseAPIURL
     }
 
     private func loadCharacters(by name: String? = nil, in page: Int = 0, completion: @escaping MultipleCharacterFeedLoaderResult) {
-        let url = urlDecorator(RouteComposer.characters.url(from: baseURL)).url(nameStartingWith: name, for: page)
-
+        let url = urlDecorator.url(route: .characters, nameStartingWith: name, for: page)
         performQuery(to: url, completion: completion)
     }
 
     private func loadCharacter(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {
-        let url = urlDecorator(RouteComposer.character(id: id).url(from: baseURL)).url()
+        let url = urlDecorator.url(route: .character(id: id))
 
         performQuery(to: url) { result in
             switch result {

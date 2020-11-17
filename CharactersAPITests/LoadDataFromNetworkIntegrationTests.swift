@@ -11,29 +11,29 @@ import XCTest
 class LoadDataFromNetworkIntegrationTests: XCTestCase {
 
     func test_load_DataFromNetwork() {
-        let (sut, marvelURL) = createSUT( "https://gateway.marvel.com:443/v1/public/characters")
-        let url = marvelURL.url(for: 1)!
+        let (sut, marvelURL) = createSUT()
+        let url = marvelURL.url(route: .characters)!
 
         expectToResolve(url: url, sut: sut, with: 200)
     }
 
     func test_load_DataFromNetworkSingleCharacterEndpoint() {
-        let (sut, marvelURL) = createSUT( "https://gateway.marvel.com:443/v1/public/characters/1011334")
-        let url = marvelURL.url()!
+        let (sut, marvelURL) = createSUT()
+        let url = marvelURL.url(route: .character(id: 1011334))!
 
         expectToResolve(url: url, sut: sut, with: 200)
     }
 
     func test_load_DataFromNetworkSingleCharacterEndpoint_FailsWith404IfNotFound() {
-        let (sut, marvelURL) = createSUT( "https://gateway.marvel.com:443/v1/public/characters/10113346")
-        let url = marvelURL.url()!
+        let (sut, marvelURL) = createSUT()
+        let url = marvelURL.url(route: .character(id: 10113346))!
 
         expectToResolve(url: url, sut: sut, with: 404)
     }
 
     func test_load_DataFromNetworkFilteringCharacterEndpoint() {
-        let (sut, marvelURL) = createSUT("https://gateway.marvel.com:443/v1/public/characters")
-        let url = marvelURL.url(nameStartingWith: "a")!
+        let (sut, marvelURL) = createSUT()
+        let url = marvelURL.url(route: .characters, nameStartingWith: "a")!
 
         expectToResolve(url: url, sut: sut, with: 200)
     }
@@ -53,7 +53,7 @@ class LoadDataFromNetworkIntegrationTests: XCTestCase {
         wait(for: [expect], timeout: 5)
     }
 
-    func createSUT(_ urlString: String, file: StaticString = #filePath, line: UInt = #line) -> (HTTPClient, MarvelURL) {
+    func createSUT(_ urlString: String = "https://gateway.marvel.com:443/v1/public", file: StaticString = #filePath, line: UInt = #line) -> (HTTPClient, MarvelURL) {
         let sut = URLSessionHTTPClient()
         let url = MarvelURL(URL(string: urlString)!, config: .shared, hashResolver: MarvelURL.MD5Digester.createHash, timeProvider: Date.init)
 

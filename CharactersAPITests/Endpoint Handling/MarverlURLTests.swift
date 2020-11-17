@@ -25,9 +25,9 @@ class MarverlURLTests: XCTestCase {
 
         let expectedDateInString = expectedDate.timeIntervalSinceReferenceDate.description
 
-        let expectedURL = URL(string: "www.url.com?offset=0&ts=\(expectedDateInString)&apikey=publicAPIKey&limit=10&hash=\(expectedDateInString)privateAPIKeypublicAPIKey")!
+        let expectedURL = URL(string: "www.url.com/characters?offset=0&ts=\(expectedDateInString)&apikey=publicAPIKey&limit=10&hash=\(expectedDateInString)privateAPIKeypublicAPIKey")!
 
-        let marvelURL = sut.url(for: 0)!
+        let marvelURL = sut.url(route: .characters, for: 0)!
 
         XCTAssertEqual(expectedURL.pathComponents, marvelURL.pathComponents)
         XCTAssertEqual(expectedURL.baseURL, marvelURL.baseURL)
@@ -50,9 +50,9 @@ class MarverlURLTests: XCTestCase {
 
         let expectedDateInString = expectedDate.timeIntervalSinceReferenceDate.description
 
-        let expectedURL = URL(string: "www.url.com?offset=10&ts=\(expectedDateInString)&apikey=publicAPIKey&limit=10&hash=\(expectedDateInString)privateAPIKeypublicAPIKey")!
+        let expectedURL = URL(string: "www.url.com/characters?offset=10&ts=\(expectedDateInString)&apikey=publicAPIKey&limit=10&hash=\(expectedDateInString)privateAPIKeypublicAPIKey")!
 
-        let marvelURL = sut.url(for: 1)!
+        let marvelURL = sut.url(route: .characters, for: 1)!
 
         XCTAssertEqual(expectedURL.pathComponents, marvelURL.pathComponents)
         XCTAssertEqual(expectedURL.baseURL, marvelURL.baseURL)

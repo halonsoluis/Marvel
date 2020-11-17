@@ -9,18 +9,6 @@ import XCTest
 @testable import CharactersAPI
 
 class MarvelAPICharacterFeedLoaderTests: XCTestCase {
-
-    func dummyURLDecorator(url: URL, time: Date) -> MarvelURL {
-        func dummyHasher(values: String...) -> String {
-            return ""
-        }
-        return MarvelURL(
-            url,
-            config: MarvelAPIConfig(itemsPerPage: 10, privateAPIKey: "", publicAPIKey: ""),
-            hashResolver: dummyHasher,
-            timeProvider: { time }
-        )
-    }
     
     func test_load_allCharactersFromURLWhenNoIdPassed() {
         let (client, sut, time) = makeSUT()
@@ -152,9 +140,17 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (client: HTTPClientSpy, loader: CharacterFeedLoader, time: String) {
         let client = HTTPClientSpy()
         let time = Date()
-        let sut = MarvelAPICharacterFeedLoader(urlDecorator: { url in
-            return self.dummyURLDecorator(url: url, time: time)
-        }, client: client)
+
+        func dummyHasher(values: String...) -> String {
+            return ""
+        }
+        
+        let sut = MarvelAPICharacterFeedLoader(urlDecorator: MarvelURL(
+            URL(string: "https://gateway.marvel.com:443/v1/public/")!,
+            config: MarvelAPIConfig(itemsPerPage: 10, privateAPIKey: "", publicAPIKey: ""),
+            hashResolver: dummyHasher,
+            timeProvider: { time }
+        ), client: client)
 
         addTeardownBlock { [weak sut] in
             XCTAssertNil(sut, "Potential memory leak", file: file, line: line)

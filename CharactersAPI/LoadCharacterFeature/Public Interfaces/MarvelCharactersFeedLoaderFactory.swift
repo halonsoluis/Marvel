@@ -11,8 +11,12 @@ public final class MarvelCharactersFeedLoader: CharacterFeedLoader {
     private let client: HTTPClient
 
     private lazy var characterFeedLoader: CharacterFeedLoader = MarvelAPICharacterFeedLoader(
-        urlDecorator: { MarvelURL($0, config: .shared, hashResolver: MarvelURL.MD5Digester.createHash, timeProvider: Date.init) },
-        client: client
+        urlDecorator: MarvelURL(
+            URL(string: "https://gateway.marvel.com:443/v1/public/")!,
+            config: .shared,
+            hashResolver: MarvelURL.MD5Digester.createHash,
+            timeProvider: Date.init
+        ), client: client
     )
 
     public init(client: HTTPClient) {

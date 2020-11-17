@@ -20,8 +20,8 @@ struct MarvelURL {
         self.timeProvider = timeProvider
     }
 
-    func url(nameStartingWith: String? = nil, for page: Int = 0) -> URL? {
-        guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
+    func url(route: RouteComposer, nameStartingWith: String? = nil, for page: Int = 0) -> URL? {
+        guard var components = URLComponents(url: route.url(from: baseURL), resolvingAgainstBaseURL: false) else {
             return nil
         }
         let params: [[String: String]] = [
