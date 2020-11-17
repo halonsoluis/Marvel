@@ -98,7 +98,6 @@
 				5B6D27972563F4CF0021B70E /* Endpoint Handling */,
 				5B6D27942563F4500021B70E /* Public Interfaces */,
 				5B6CBC47256249D000804AC9 /* MarvelAPICharacterFeedLoader.swift */,
-				5B6D279E2563F59C0021B70E /* HTTPClient */,
 			);
 			path = LoadCharacterFeature;
 			sourceTree = "<group>";
@@ -170,6 +169,7 @@
 		5B6DD3B025621F040062004B /* CharactersAPI */ = {
 			isa = PBXGroup;
 			children = (
+				5B6D279E2563F59C0021B70E /* HTTPClient */,
 				5B6CBC2F25623F6200804AC9 /* LoadCharacterFeature */,
 				5B6DD3CE256221420062004B /* Models */,
 				5B6DD3B125621F040062004B /* CharactersAPI.h */,
