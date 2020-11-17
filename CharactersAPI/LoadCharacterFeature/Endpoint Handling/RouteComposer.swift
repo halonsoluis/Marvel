@@ -9,16 +9,16 @@ import Foundation
 
 enum RouteComposer {
     ///Fetches lists of characters.
-    case characters(url: URL)
+    case characters
     ///Fetches a single character by id.
-    case character(url: URL, id: Int)
+    case character(id: Int)
 
-    var url: URL {
+    func url(from baseURL: URL) -> URL {
         switch self {
-        case let .characters(url):
-            return url.appendingPathComponent("characters")
-        case let .character(url, id):
-            return url.appendingPathComponent("characters").appendingPathComponent(id.description)
+        case .characters:
+            return baseURL.appendingPathComponent("characters")
+        case .character(let id):
+            return baseURL.appendingPathComponent("characters").appendingPathComponent(id.description)
         }
     }
 }

@@ -10,12 +10,12 @@ import XCTest
 
 class MarvelAPIRouteTests: XCTestCase {
     func test_GetRoute_ListCharacters() {
-        let sut = RouteComposer.characters(url: URL(string: "https://gateway.marvel.com:443/v1/public/")!)
-        XCTAssertEqual(sut.url, URL(string: "https://gateway.marvel.com:443/v1/public/characters")!)
+        let sut = RouteComposer.characters
+        XCTAssertEqual(sut.url(from: URL(string: "https://gateway.marvel.com:443/v1/public/")!), URL(string: "https://gateway.marvel.com:443/v1/public/characters")!)
     }
 
     func test_GetRoute_FetchSingleCharacter() {
-        let sut = RouteComposer.character(url: URL(string: "https://gateway.marvel.com:443/v1/public/")!, id: 1)
-        XCTAssertEqual(sut.url, URL(string: "https://gateway.marvel.com:443/v1/public/characters/1")!)
+        let sut = RouteComposer.character(id: 1)
+        XCTAssertEqual(sut.url(from: URL(string: "https://gateway.marvel.com:443/v1/public/")!), URL(string: "https://gateway.marvel.com:443/v1/public/characters/1")!)
     }
 }

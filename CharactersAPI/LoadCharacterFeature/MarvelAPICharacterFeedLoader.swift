@@ -25,13 +25,13 @@ final class MarvelAPICharacterFeedLoader {
     }
 
     private func loadCharacters(by name: String? = nil, in page: Int = 0, completion: @escaping MultipleCharacterFeedLoaderResult) {
-        let url = urlDecorator(RouteComposer.characters(url: baseURL).url).url(nameStartingWith: name, for: page)
+        let url = urlDecorator(RouteComposer.characters.url(from: baseURL)).url(nameStartingWith: name, for: page)
 
         performQuery(to: url, completion: completion)
     }
 
     private func loadCharacter(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {
-        let url = urlDecorator(RouteComposer.character(url: baseURL, id: id).url).url()
+        let url = urlDecorator(RouteComposer.character(id: id).url(from: baseURL)).url()
 
         performQuery(to: url) { result in
             switch result {
