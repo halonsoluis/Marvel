@@ -13,10 +13,16 @@ struct MarvelURL {
     private let hashResolver: (String...) -> String
     private let timeProvider: () -> Date
 
-    internal init(_ baseURL: URL,
-                  config: MarvelAPIConfig = .shared,
-                  hashResolver: @escaping (String...) -> String = MD5Digester.createHash,
-                  timeProvider: @escaping () -> Date = { Date() }) {
+    init(_ baseURL: URL) {
+        self.init(
+            baseURL,
+            config: .shared,
+            hashResolver: MD5Digester.createHash,
+            timeProvider: Date.init
+        )
+    }
+
+    init(_ baseURL: URL, config: MarvelAPIConfig, hashResolver: @escaping (String...) -> String, timeProvider: @escaping () -> Date) {
         self.baseURL = baseURL
         self.config = config
         self.hashResolver = hashResolver

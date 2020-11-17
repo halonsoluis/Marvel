@@ -20,6 +20,7 @@
 		5B6D279B2563F5590021B70E /* MarvelAPIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D279A2563F5590021B70E /* MarvelAPIConfig.swift */; };
 		5B6D27A72563F8880021B70E /* MarvelURL+MD5Digester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27A62563F8880021B70E /* MarvelURL+MD5Digester.swift */; };
 		5B6D27AB2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27AA2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift */; };
+		5B6D27B1256465300021B70E /* MarvelCharactersFeedLoaderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27B0256465300021B70E /* MarvelCharactersFeedLoaderFactory.swift */; };
 		5B6DD3B825621F040062004B /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6DD3AE25621F040062004B /* CharactersAPI.framework */; };
 		5B6DD3BD25621F040062004B /* MarvelAPICharacterFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3BC25621F040062004B /* MarvelAPICharacterFeedLoaderTests.swift */; };
 		5B6DD3BF25621F040062004B /* CharactersAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B6DD3B125621F040062004B /* CharactersAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -57,6 +58,7 @@
 		5B6D279A2563F5590021B70E /* MarvelAPIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAPIConfig.swift; sourceTree = "<group>"; };
 		5B6D27A62563F8880021B70E /* MarvelURL+MD5Digester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarvelURL+MD5Digester.swift"; sourceTree = "<group>"; };
 		5B6D27AA2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarvelURL+MD5DigesterTests.swift"; sourceTree = "<group>"; };
+		5B6D27B0256465300021B70E /* MarvelCharactersFeedLoaderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelCharactersFeedLoaderFactory.swift; sourceTree = "<group>"; };
 		5B6DD3AE25621F040062004B /* CharactersAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CharactersAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B6DD3B125621F040062004B /* CharactersAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharactersAPI.h; sourceTree = "<group>"; };
 		5B6DD3B225621F040062004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 			children = (
 				5B6D27902563F42B0021B70E /* HTTPClient.swift */,
 				5B6CBC212562375500804AC9 /* CharactersFeedLoader.swift */,
+				5B6D27B0256465300021B70E /* MarvelCharactersFeedLoaderFactory.swift */,
 			);
 			path = "Public Interfaces";
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				5B6D27A72563F8880021B70E /* MarvelURL+MD5Digester.swift in Sources */,
 				5B6D279B2563F5590021B70E /* MarvelAPIConfig.swift in Sources */,
 				5B6D27812563F1E20021B70E /* MarverlURL.swift in Sources */,
+				5B6D27B1256465300021B70E /* MarvelCharactersFeedLoaderFactory.swift in Sources */,
 				5B6DD3E0256221420062004B /* Summary.swift in Sources */,
 				5B6D27912563F42B0021B70E /* HTTPClient.swift in Sources */,
 				5B6DD3DE256221420062004B /* List.swift in Sources */,

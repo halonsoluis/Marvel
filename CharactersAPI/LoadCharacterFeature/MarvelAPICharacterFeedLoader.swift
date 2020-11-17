@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class MarvelAPICharacterFeedLoader {
+final class MarvelAPICharacterFeedLoader {
     let client: HTTPClient
     let router: RouteComposer
     let urlDecorator: (URL) -> MarvelURL
@@ -24,13 +24,13 @@ public final class MarvelAPICharacterFeedLoader {
         self.urlDecorator = urlDecorator
     }
 
-    func loadCharacters(by name: String? = nil, in page: Int = 0, completion: @escaping MultipleCharacterFeedLoaderResult) {
+    private func loadCharacters(by name: String? = nil, in page: Int = 0, completion: @escaping MultipleCharacterFeedLoaderResult) {
         let url = urlDecorator(resolveBaseURL(for: nil)).url(nameStartingWith: name, for: page)
 
         performQuery(to: url, completion: completion)
     }
 
-    func loadCharacter(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {
+    private func loadCharacter(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {
         let url = urlDecorator(resolveBaseURL(for: id)).url()
 
         performQuery(to: url) { result in
