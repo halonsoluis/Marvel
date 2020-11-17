@@ -6,57 +6,78 @@
 //
 
 import XCTest
-import CharactersAPI
+@testable import CharactersAPI
 
 class MarvelAPICharacterFeedLoaderTests: XCTestCase {
-    
-    func testInit_doesNot_requestDataFromURL() {
-        let (client, _) = makeSUT()
-        
-        XCTAssertNil(client.requestedURL)
+
+    func dummyURLDecorator(url: URL, time: Date) -> MarvelURL {
+        func dummyHasher(values: String...) -> String {
+            return ""
+        }
+        return MarvelURL(
+            url,
+            config: MarvelAPIConfig(itemsPerPage: 10, privateAPIKey: "", publicAPIKey: ""),
+            hashResolver: dummyHasher,
+            timeProvider: { time }
+        )
     }
     
     func test_load_allCharactersFromURLWhenNoIdPassed() {
-        let (client, sut) = makeSUT()
+        let (client, sut, time) = makeSUT()
         
-        sut.load(id: nil) { _ in }
-        
-        XCTAssertEqual(client.requestedURL, URL(string: "https://gateway.marvel.com:443/v1/public/characters")!)
+        sut.characters(page: 0) { _ in }
+
+        let requestedURL = client.requestedURL!
+        let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name")!
+
+        XCTAssertEqual(requestedURL.host, expectedURL.host)
+        XCTAssertEqual(requestedURL.relativePath, expectedURL.relativePath)
+        XCTAssertEqual(requestedURL.port, 443)
+        XCTAssertEqual(requestedURL.pathComponents, expectedURL.pathComponents)
     }
-    
-    func test_load_allCharactersFromCustomURLWhenNoIdPassed() {
-        let client = HTTPClientSpy()
-        let sut = MarvelAPICharacterFeedLoader(baseAPIURL: URL(string: "www.example.com")!, client: client)
-        
-        sut.load(id: nil) { _ in }
-        
-        XCTAssertEqual(client.requestedURL, URL(string: "www.example.com/characters")!)
+
+    func test_load_allCharactersForSecondPageFromURLWhenNoIdPassed() {
+        let (client, sut, time) = makeSUT()
+
+        sut.characters(page: 1) { _ in }
+
+        let requestedURL = client.requestedURL!
+        let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=10&orderBy=name")!
+
+        XCTAssertEqual(requestedURL.host, expectedURL.host)
+        XCTAssertEqual(requestedURL.relativePath, expectedURL.relativePath)
+        XCTAssertEqual(requestedURL.port, 443)
+        XCTAssertEqual(requestedURL.pathComponents, expectedURL.pathComponents)
     }
     
     func test_load_singleCharacterFromURLWhenIdPassed() {
-        let (client, sut) = makeSUT()
+        let (client, sut, time) = makeSUT()
         
-        sut.load(id: 1) { _ in }
+        sut.character(id: 1) { _ in }
+
+        let requestedURL = client.requestedURL!
+        let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters/1?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name")!
         
-        XCTAssertEqual(client.requestedURL, URL(string: "https://gateway.marvel.com:443/v1/public/characters/1")!)
+        XCTAssertEqual(requestedURL.host, expectedURL.host)
+        XCTAssertEqual(requestedURL.relativePath, expectedURL.relativePath)
+        XCTAssertEqual(requestedURL.port, 443)
+        XCTAssertEqual(requestedURL.pathComponents, expectedURL.pathComponents)
     }
     
     func test_load_anItemFromJSONResponse() {
-        let (client, sut) = makeSUT()
+        let (client, sut, _) = makeSUT()
         let (response, item, _, _, _, _, _, thumbnail) = makeJSON(amountOfItems: 1)
         client.returnedJSON = response
 
         let expect = expectation(description: "Waiting for expectation")
 
-        sut.load(id: 1) { result in
+        sut.character(id: 1) { result in
             switch result {
-            case let .success(characters) where characters.count == 1:
-                let character = characters.first!
-
-                XCTAssertEqual(character.id, item["id"] as? Int)
-                XCTAssertEqual(character.description, item["description"] as? String)
-                XCTAssertEqual(character.modified, item["modified"] as? String)
-                XCTAssertEqual(character.thumbnail?.absoluteString, "\(thumbnail["path"]!).\(thumbnail["extension"]!)")
+            case let .success(character) where character != nil:
+                XCTAssertEqual(character!.id, item["id"] as? Int)
+                XCTAssertEqual(character!.description, item["description"] as? String)
+                XCTAssertEqual(character!.modified, item["modified"] as? String)
+                XCTAssertEqual(character!.thumbnail?.absoluteString, "\(thumbnail["path"]!).\(thumbnail["extension"]!)")
             case .failure:
                 XCTFail()
             case .success(_):
@@ -68,7 +89,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
     }
 
     func test_load_onFailure_FailsWithError() {
-        let (client, sut) = makeSUT()
+        let (client, sut, _) = makeSUT()
         let (response, _, _, _, _, _, _, _) = makeJSON(amountOfItems: 10)
         client.returnedJSON = response
         let expectedError = NSError(domain: "anyerror", code: 123, userInfo: nil)
@@ -76,7 +97,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
 
         let expect = expectation(description: "Waiting for expectation")
 
-        sut.load(id: nil) { result in
+        sut.characters(page: 0) { result in
             switch result {
             case .success:
                 XCTFail()
@@ -90,13 +111,13 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
     }
 
     func test_load_severalItemsFromJSONResponse() {
-        let (client, sut) = makeSUT()
+        let (client, sut, _) = makeSUT()
         let (response, _, _, _, _, _, _, _) = makeJSON(amountOfItems: 10)
         client.returnedJSON = response
 
         let expect = expectation(description: "Waiting for expectation")
 
-        sut.load(id: nil) { result in
+        sut.characters(page: 0) { result in
             switch result {
             case let .success(characters):
                 XCTAssertEqual(characters.count, 10)
@@ -109,14 +130,14 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
     }
 
     func test_load_returnsErrorOnWrongStatusCode() {
-        let (client, sut) = makeSUT()
+        let (client, sut, _) = makeSUT()
         let (response, _, _, _, _, _, _, _) = makeJSON(amountOfItems: 10)
         client.returnedJSON = response
         client.returnedStatusCode = 404
 
         let expect = expectation(description: "Waiting for expectation")
 
-        sut.load(id: nil) { result in
+        sut.characters(page: 0) { result in
             switch result {
             case .success:
                 XCTFail()
@@ -128,11 +149,14 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
         wait(for: [expect], timeout: 1)
     }
     
-    private func makeSUT() -> (client: HTTPClientSpy, loader: CharacterFeedLoader) {
+    private func makeSUT() -> (client: HTTPClientSpy, loader: CharacterFeedLoader, time: String) {
         let client = HTTPClientSpy()
-        let sut = MarvelAPICharacterFeedLoader(client: client)
+        let time = Date()
+        let sut = MarvelAPICharacterFeedLoader(urlDecorator: { url in
+            return self.dummyURLDecorator(url: url, time: time)
+        }, client: client)
         
-        return (client: client, loader: sut)
+        return (client: client, loader: sut, time: time.timeIntervalSinceReferenceDate.description)
     }
     
     private func makeJSON(amountOfItems: Int) -> (response: [String: Any], item: [String: Any], urls: [[String: String]], events: [String: Any], comics: [String: Any], series: [String: Any], stories: [String: Any], thumbnail: [String: String]) {

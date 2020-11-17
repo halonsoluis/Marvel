@@ -15,7 +15,11 @@ public struct MarvelCharacter {
     public let thumbnail: URL?
 }
 
+public typealias SingleCharacterFeedLoaderResult = (Result<MarvelCharacter?, Error>) -> Void
+public typealias MultipleCharacterFeedLoaderResult = (Result<[MarvelCharacter], Error>) -> Void
+
 public protocol CharacterFeedLoader {
-    func load(id: Int?, completion: @escaping (Result<[MarvelCharacter], Error>) -> Void)
-  //  func search(byName: String, completion: @escaping (Result<[MarvelCharacter], Error>) -> Void)
+    func characters(page: Int, completion: @escaping MultipleCharacterFeedLoaderResult)
+    func character(id: Int, completion: @escaping SingleCharacterFeedLoaderResult)
+    func search(by name: String, in page: Int, completion: @escaping MultipleCharacterFeedLoaderResult)
 }

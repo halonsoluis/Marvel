@@ -7,46 +7,75 @@
 
 import Foundation
 
-public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
+public final class MarvelAPICharacterFeedLoader {
     let client: HTTPClient
     let router: RouteComposer
+    let urlDecorator: (URL) -> MarvelURL
 
     enum Error: Swift.Error {
         case invalidData
         case invalidStatusCode
+        case invalidURL
     }
 
-    public init(baseAPIURL: URL = URL(string: "https://gateway.marvel.com:443/v1/public/")!, client: HTTPClient) {
+    init(baseAPIURL: URL = URL(string: "https://gateway.marvel.com:443/v1/public/")!, urlDecorator: @escaping (URL) -> MarvelURL, client: HTTPClient) {
         self.client = client
         self.router = RouteComposer(url: baseAPIURL)
+        self.urlDecorator = urlDecorator
     }
 
-    public func load(id: Int? = nil, completion: @escaping (Result<[MarvelCharacter], Swift.Error>) -> Void) {
-        let url = resolveURL(for: id)
+    func loadCharacters(by name: String? = nil, in page: Int = 0, completion: @escaping MultipleCharacterFeedLoaderResult) {
+        let url = urlDecorator(resolveBaseURL(for: nil)).url(nameStartingWith: name, for: page)
+
+        performQuery(to: url, completion: completion)
+    }
+
+    func loadCharacter(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {
+        let url = urlDecorator(resolveBaseURL(for: id)).url()
+
+        performQuery(to: url) { result in
+            switch result {
+            case .success(let items):
+                completion(.success(items.first))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    private func performQuery(to url: URL?, completion: @escaping MultipleCharacterFeedLoaderResult) {
+        guard let url = url else {
+            completion(.failure(Error.invalidURL))
+            return
+        }
         client.get(from: url, completion: { [weak self] result in
             guard let `self` = self else {
                 return
             }
-            let parsedResult = self.parse(response: result)
-            completion(parsedResult)
+            completion(self.parse(response: result))
         })
+    }
+
+    private func parseResult(from data: Data) -> [MarvelCharacter]? {
+        guard let box = try? JSONDecoder().decode(DataWrapper<MarvelCharacterItem>.self, from: data) else {
+            return nil
+        }
+        let items = box.data?.results ?? []
+        return MarvelAPICharacterMapper.map(items)
     }
 
     private func parse(response result: Result<(Data, HTTPURLResponse), Swift.Error>) -> Result<[MarvelCharacter], Swift.Error> {
         switch result {
-        case let .failure(error):
-            return .failure(error)
         case let .success((data, response)):
             guard response.statusCode == 200 else {
                 return .failure(Error.invalidStatusCode)
             }
-
-            guard let box = try? JSONDecoder().decode(DataWrapper<MarvelCharacterItem>.self, from: data) else {
+            guard let result: [MarvelCharacter] = parseResult(from: data) else {
                 return .failure(Error.invalidData)
             }
-
-            let items = box.data?.results ?? []
-            return .success(MarvelAPICharacterMapper.map(items))
+            return .success(result)
+        case let .failure(error):
+            return .failure(error)
         }
     }
 
@@ -66,11 +95,25 @@ public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
         }
     }
 
-    private func resolveURL(for character: Int?) -> URL {
-        guard let id = character else {
-            return router.characters()
+    private func resolveBaseURL(for character: Int?) -> URL {
+        if let id = character {
+            return router.character(withId: id)
         }
-        return router.character(withId: id)
+        return router.characters()
+    }
+}
+
+extension MarvelAPICharacterFeedLoader: CharacterFeedLoader {
+    public func characters(page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
+        loadCharacters(in: page, completion: completion)
+    }
+
+    public func character(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {
+        loadCharacter(id: id, completion: completion)
+    }
+
+    public func search(by name: String, in page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
+        loadCharacters(by: name, in: page, completion: completion)
     }
 }
 
