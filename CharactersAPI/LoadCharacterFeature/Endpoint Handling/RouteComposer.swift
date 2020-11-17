@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct RouteComposer {
+struct RouteComposer {
     let url: URL
 
     ///Fetches lists of characters.

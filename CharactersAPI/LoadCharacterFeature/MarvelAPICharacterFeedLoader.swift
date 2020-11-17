@@ -74,6 +74,11 @@ public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
     }
 }
 
-public protocol HTTPClient {
-    func get(from url: URL, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void)
+extension LinkURL {
+    var resolvedURL: URL? {
+        guard let url = url, let type = type else {
+            return nil
+        }
+        return URL(string: "\(url).\(type)")
+    }
 }

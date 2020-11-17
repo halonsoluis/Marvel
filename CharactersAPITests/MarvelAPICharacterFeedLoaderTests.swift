@@ -1,5 +1,5 @@
 //
-//  CharactersFeedLoaderTests.swift
+//  MarvelAPICharacterFeedLoaderTests.swift
 //  CharactersAPITests
 //
 //  Created by Hugo Alonso on 16/11/2020.
@@ -8,7 +8,7 @@
 import XCTest
 import CharactersAPI
 
-class CharactersFeedLoaderTests: XCTestCase {
+class MarvelAPICharacterFeedLoaderTests: XCTestCase {
     
     func testInit_doesNot_requestDataFromURL() {
         let (client, _) = makeSUT()

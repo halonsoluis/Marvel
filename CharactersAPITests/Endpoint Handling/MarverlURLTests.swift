@@ -15,7 +15,7 @@ class MarverlURLTests: XCTestCase {
 
         let sut = MarverlURL(
             url,
-            config: MarverlURL.MarvelAPIConfig(
+            config: MarvelAPIConfig(
                 itemsPerPage: 10,
                 privateAPIKey: "privateAPIKey",
                 publicAPIKey: "publicAPIKey"),
@@ -39,7 +39,7 @@ class MarverlURLTests: XCTestCase {
 
         let sut = MarverlURL(
             url,
-            config: MarverlURL.MarvelAPIConfig(
+            config: MarvelAPIConfig(
                 itemsPerPage: 10,
                 privateAPIKey: "privateAPIKey",
                 publicAPIKey: "publicAPIKey"),

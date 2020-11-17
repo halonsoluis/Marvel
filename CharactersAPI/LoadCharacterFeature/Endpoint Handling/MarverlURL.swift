@@ -19,39 +19,6 @@ struct MarverlURL {
         self.hashResolver = hashResolver
     }
 
-    struct MarvelAPIConfig {
-        var itemsPerPage: Int
-        var privateAPIKey: String
-        var publicAPIKey: String
-
-        static var shared: MarvelAPIConfig {
-            MarvelAPIConfig(
-                itemsPerPage: 20,
-                privateAPIKey: "da9b58ab629e94bb1d66ea165fe1fe92c896ba08",
-                publicAPIKey: "19972fbcfc8ba75736070bc42fbca671"
-            )
-        }
-    }
-
-    private struct MD5Digester {
-
-        static func createHash(_ values: String...) -> String {
-            digest(values.joined())
-        }
-
-        // return MD5 digest of string provided
-        private static func digest(_ string: String) -> String {
-
-            guard let data = string.data(using: String.Encoding.utf8) else { return "" }
-
-            var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-
-            CC_MD5((data as NSData).bytes, CC_LONG(data.count), &digest)
-
-            return (0..<Int(CC_MD5_DIGEST_LENGTH)).reduce("") { $0 + String(format: "%02x", digest[$1]) }
-        }
-    }
-
     func url(for page: Int = 0, at time: Date = Date()) -> URL? {
         guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
             return nil
@@ -74,5 +41,26 @@ struct MarverlURL {
 
     private func pagination(for page: Int, itemsPerPage: Int) -> (offset: Int, limit: Int) {
         (offset: page * itemsPerPage, limit : itemsPerPage)
+    }
+}
+
+extension MarverlURL {
+    private struct MD5Digester {
+
+        static func createHash(_ values: String...) -> String {
+            digest(values.joined())
+        }
+
+        // return MD5 digest of string provided
+        private static func digest(_ string: String) -> String {
+
+            guard let data = string.data(using: String.Encoding.utf8) else { return "" }
+
+            var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+
+            CC_MD5((data as NSData).bytes, CC_LONG(data.count), &digest)
+
+            return (0..<Int(CC_MD5_DIGEST_LENGTH)).reduce("") { $0 + String(format: "%02x", digest[$1]) }
+        }
     }
 }
