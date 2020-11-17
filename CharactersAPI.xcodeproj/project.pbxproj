@@ -11,6 +11,7 @@
 		5B6CBC3925623FEB00804AC9 /* RouteComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6CBC3825623FEB00804AC9 /* RouteComposer.swift */; };
 		5B6CBC3F2562417500804AC9 /* MarvelAPIRouteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6CBC3E2562417500804AC9 /* MarvelAPIRouteTests.swift */; };
 		5B6CBC48256249D000804AC9 /* MarvelAPICharacterFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6CBC47256249D000804AC9 /* MarvelAPICharacterFeedLoader.swift */; };
+		5B6D277D256295280021B70E /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D277C256295280021B70E /* URLSessionHTTPClientTests.swift */; };
 		5B6DD3B825621F040062004B /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6DD3AE25621F040062004B /* CharactersAPI.framework */; };
 		5B6DD3BD25621F040062004B /* CharactersFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3BC25621F040062004B /* CharactersFeedLoaderTests.swift */; };
 		5B6DD3BF25621F040062004B /* CharactersAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B6DD3B125621F040062004B /* CharactersAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -39,6 +40,7 @@
 		5B6CBC3825623FEB00804AC9 /* RouteComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteComposer.swift; sourceTree = "<group>"; };
 		5B6CBC3E2562417500804AC9 /* MarvelAPIRouteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAPIRouteTests.swift; sourceTree = "<group>"; };
 		5B6CBC47256249D000804AC9 /* MarvelAPICharacterFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAPICharacterFeedLoader.swift; sourceTree = "<group>"; };
+		5B6D277C256295280021B70E /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
 		5B6DD3AE25621F040062004B /* CharactersAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CharactersAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B6DD3B125621F040062004B /* CharactersAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharactersAPI.h; sourceTree = "<group>"; };
 		5B6DD3B225621F040062004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				5B6DD3BE25621F040062004B /* Info.plist */,
 				5B6DD3BC25621F040062004B /* CharactersFeedLoaderTests.swift */,
 				5B6CBC3E2562417500804AC9 /* MarvelAPIRouteTests.swift */,
+				5B6D277C256295280021B70E /* URLSessionHTTPClientTests.swift */,
 			);
 			path = CharactersAPITests;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B6DD3BD25621F040062004B /* CharactersFeedLoaderTests.swift in Sources */,
+				5B6D277D256295280021B70E /* URLSessionHTTPClientTests.swift in Sources */,
 				5B6CBC3F2562417500804AC9 /* MarvelAPIRouteTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

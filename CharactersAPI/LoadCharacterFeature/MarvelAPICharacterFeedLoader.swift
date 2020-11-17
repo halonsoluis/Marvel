@@ -38,11 +38,11 @@ public final class MarvelAPICharacterFeedLoader: CharacterFeedLoader {
             return .failure(error)
         case let .success((data, response)):
             guard response.statusCode == 200 else {
-                return .failure(MarvelAPICharacterFeedLoader.Error.invalidStatusCode)
+                return .failure(Error.invalidStatusCode)
             }
 
             guard let box = try? JSONDecoder().decode(DataWrapper<MarvelCharacterItem>.self, from: data) else {
-                return .failure(MarvelAPICharacterFeedLoader.Error.invalidData)
+                return .failure(Error.invalidData)
             }
 
             let items = box.data?.results ?? []
