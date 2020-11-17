@@ -11,34 +11,60 @@ struct MarvelURL {
     private let baseURL: URL
     private let config: MarvelAPIConfig
     private let hashResolver: (String...) -> String
+    private let timeProvider: () -> Date
 
-    internal init(_ baseURL: URL, config: MarvelAPIConfig = .shared, hashResolver: @escaping (String...) -> String = MD5Digester.createHash) {
+    internal init(_ baseURL: URL,
+                  config: MarvelAPIConfig = .shared,
+                  hashResolver: @escaping (String...) -> String = MD5Digester.createHash,
+                  timeProvider: @escaping () -> Date = { Date() }) {
         self.baseURL = baseURL
         self.config = config
         self.hashResolver = hashResolver
+        self.timeProvider = timeProvider
     }
 
-    func url(for page: Int = 0, at time: Date = Date()) -> URL? {
+    func url(nameStartingWith: String? = nil, for page: Int = 0) -> URL? {
         guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
             return nil
         }
-        components.queryItems = params(for: page, at: time, using: hashResolver).map(URLQueryItem.init)
+        let params: [[String: String]] = [
+            securityParams(at: timeProvider(), using: hashResolver),
+            pagination(for: page),
+            filter(by: nameStartingWith),
+            sortedBy()
+        ]
+        components.queryItems = params.joined().map(URLQueryItem.init)
         return components.url
     }
 
-    private func params(for page: Int = 0, at time: Date, using hashResolver: (String...) -> String) -> [String: String] {
-        let (offset, limit) = pagination(for: max(page, 0), itemsPerPage: config.itemsPerPage)
+    private func securityParams(at time: Date, using hashResolver: (String...) -> String) -> [String: String] {
         let timestamp = time.timeIntervalSinceReferenceDate.description
         return [
-            "apikey": config.publicAPIKey,
+            "apikey" : config.publicAPIKey,
             "hash" : hashResolver(timestamp, config.privateAPIKey, config.publicAPIKey),
             "ts" : timestamp,
-            "limit" : limit.description,
-            "offset" : offset.description,
         ]
     }
 
-    private func pagination(for page: Int, itemsPerPage: Int) -> (offset: Int, limit: Int) {
-        (offset: page * itemsPerPage, limit : itemsPerPage)
+    private func sortedBy() -> [String: String]{
+        return [
+            "orderBy": "name",
+        ]
+    }
+
+    private func pagination(for page: Int = 0) -> [String: String] {
+        return [
+            "limit" : (config.itemsPerPage).description,
+            "offset" : (page * config.itemsPerPage).description,
+        ]
+    }
+
+    private func filter(by nameStartingWith: String?) -> [String: String] {
+        guard let filter = nameStartingWith else {
+            return [:]
+        }
+        return [
+            "nameStartsWith" : filter,
+        ]
     }
 }
