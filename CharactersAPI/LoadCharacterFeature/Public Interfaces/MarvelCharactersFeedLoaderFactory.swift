@@ -11,16 +11,12 @@ public final class MarvelCharactersFeedLoader: CharacterFeedLoader {
     private let client: HTTPClient
 
     private lazy var characterFeedLoader: CharacterFeedLoader = MarvelAPICharacterFeedLoader(
-        urlDecorator: urlDecoratorBuilder,
+        urlDecorator: { MarvelURL($0, config: .shared, hashResolver: MarvelURL.MD5Digester.createHash, timeProvider: Date.init) },
         client: client
     )
 
     public init(client: HTTPClient) {
         self.client = client
-    }
-
-    private func urlDecoratorBuilder(url: URL) -> MarvelURL {
-        MarvelURL(url, config: .shared, hashResolver: MarvelURL.MD5Digester.createHash, timeProvider: Date.init)
     }
 
     public func characters(page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
