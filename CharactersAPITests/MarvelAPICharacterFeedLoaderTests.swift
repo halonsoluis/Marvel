@@ -9,6 +9,8 @@ import XCTest
 @testable import CharactersAPI
 
 class MarvelAPICharacterFeedLoaderTests: XCTestCase {
+
+
     
     func test_load_allCharactersFromURLWhenNoIdPassed() {
         let (client, sut, time) = makeSUT()
@@ -18,10 +20,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
         let requestedURL = client.requestedURL!
         let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name")!
 
-        XCTAssertEqual(requestedURL.host, expectedURL.host)
-        XCTAssertEqual(requestedURL.relativePath, expectedURL.relativePath)
-        XCTAssertEqual(requestedURL.port, 443)
-        XCTAssertEqual(requestedURL.pathComponents, expectedURL.pathComponents)
+        expect(requestedURL: requestedURL, toBeEquivalentTo: expectedURL)
     }
 
     func test_load_allCharactersForSecondPageFromURLWhenNoIdPassed() {
@@ -32,10 +31,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
         let requestedURL = client.requestedURL!
         let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=10&orderBy=name")!
 
-        XCTAssertEqual(requestedURL.host, expectedURL.host)
-        XCTAssertEqual(requestedURL.relativePath, expectedURL.relativePath)
-        XCTAssertEqual(requestedURL.port, 443)
-        XCTAssertEqual(requestedURL.pathComponents, expectedURL.pathComponents)
+        expect(requestedURL: requestedURL, toBeEquivalentTo: expectedURL)
     }
     
     func test_load_singleCharacterFromURLWhenIdPassed() {
@@ -46,10 +42,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
         let requestedURL = client.requestedURL!
         let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters/1?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name")!
         
-        XCTAssertEqual(requestedURL.host, expectedURL.host)
-        XCTAssertEqual(requestedURL.relativePath, expectedURL.relativePath)
-        XCTAssertEqual(requestedURL.port, 443)
-        XCTAssertEqual(requestedURL.pathComponents, expectedURL.pathComponents)
+        expect(requestedURL: requestedURL, toBeEquivalentTo: expectedURL)
     }
     
     func test_load_anItemFromJSONResponse() {
@@ -135,6 +128,14 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
             expect.fulfill()
         }
         wait(for: [expect], timeout: 1)
+    }
+
+
+    private func expect(requestedURL: URL, toBeEquivalentTo expectedURL: URL, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(requestedURL.host, expectedURL.host, file: file, line: line)
+        XCTAssertEqual(requestedURL.relativePath, expectedURL.relativePath, file: file, line: line)
+        XCTAssertEqual(requestedURL.port, 443, file: file, line: line)
+        XCTAssertEqual(requestedURL.pathComponents, expectedURL.pathComponents, file: file, line: line)
     }
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (client: HTTPClientSpy, loader: CharacterFeedLoader, time: String) {
