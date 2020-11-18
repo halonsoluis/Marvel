@@ -8,6 +8,7 @@
 import XCTest
 import CharactersAPI
 
+//Integration test to verify end2end system work as expected
 class MarvelCharactersFeedLoaderTests: XCTestCase {
 
     func test_charactersCall_produces_a_httpRequest() {
