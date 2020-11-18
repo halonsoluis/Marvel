@@ -9,18 +9,16 @@ import XCTest
 @testable import CharactersAPI
 
 class MarvelAPICharacterFeedLoaderTests: XCTestCase {
-
-
     
     func test_load_allCharactersFromURLWhenNoIdPassed() {
         let (client, sut, time) = makeSUT()
         
         sut.characters(page: 0) { _ in }
 
-        let requestedURL = client.requestedURL!
-        let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name")!
-
-        expect(requestedURL: requestedURL, toBeEquivalentTo: expectedURL)
+        expect(
+            requestedURL: client.requestedURL,
+            toBeEquivalentTo: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name"
+        )
     }
 
     func test_load_allCharactersForSecondPageFromURLWhenNoIdPassed() {
@@ -28,21 +26,21 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
 
         sut.characters(page: 1) { _ in }
 
-        let requestedURL = client.requestedURL!
-        let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=10&orderBy=name")!
-
-        expect(requestedURL: requestedURL, toBeEquivalentTo: expectedURL)
+        expect(
+            requestedURL: client.requestedURL,
+            toBeEquivalentTo: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=10&orderBy=name"
+        )
     }
     
     func test_load_singleCharacterFromURLWhenIdPassed() {
         let (client, sut, time) = makeSUT()
         
         sut.character(id: 1) { _ in }
-
-        let requestedURL = client.requestedURL!
-        let expectedURL = URL(string: "https://gateway.marvel.com:443/v1/public/characters/1?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name")!
         
-        expect(requestedURL: requestedURL, toBeEquivalentTo: expectedURL)
+        expect(
+            requestedURL: client.requestedURL,
+            toBeEquivalentTo: "https://gateway.marvel.com:443/v1/public/characters/1?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name"
+        )
     }
     
     func test_load_anItemFromJSONResponse() {
@@ -131,11 +129,13 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
     }
 
 
-    private func expect(requestedURL: URL, toBeEquivalentTo expectedURL: URL, file: StaticString = #filePath, line: UInt = #line) {
-        XCTAssertEqual(requestedURL.host, expectedURL.host, file: file, line: line)
-        XCTAssertEqual(requestedURL.relativePath, expectedURL.relativePath, file: file, line: line)
-        XCTAssertEqual(requestedURL.port, 443, file: file, line: line)
-        XCTAssertEqual(requestedURL.pathComponents, expectedURL.pathComponents, file: file, line: line)
+    private func expect(requestedURL: URL?, toBeEquivalentTo expectedURL: String, file: StaticString = #filePath, line: UInt = #line) {
+        let expectedURL = URL(string: expectedURL)
+
+        XCTAssertEqual(requestedURL?.host, expectedURL?.host, file: file, line: line)
+        XCTAssertEqual(requestedURL?.relativePath, expectedURL?.relativePath, file: file, line: line)
+        XCTAssertEqual(requestedURL?.port, expectedURL?.port, file: file, line: line)
+        XCTAssertEqual(requestedURL?.pathComponents, expectedURL?.pathComponents, file: file, line: line)
     }
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (client: HTTPClientSpy, loader: CharacterFeedLoader, time: String) {
