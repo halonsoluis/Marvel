@@ -23,6 +23,7 @@
 		5B6D27B1256465300021B70E /* MarvelCharactersFeedLoaderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27B0256465300021B70E /* MarvelCharactersFeedLoaderFactory.swift */; };
 		5B6D27B8256590890021B70E /* HTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27B7256590890021B70E /* HTTPClientSpy.swift */; };
 		5B6D27BE256590A20021B70E /* URLProtocolStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27BD256590A20021B70E /* URLProtocolStub.swift */; };
+		5B6D27C5256593E50021B70E /* MarvelCharactersFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D27C4256593E50021B70E /* MarvelCharactersFeedLoaderTests.swift */; };
 		5B6DD3B825621F040062004B /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6DD3AE25621F040062004B /* CharactersAPI.framework */; };
 		5B6DD3BD25621F040062004B /* MarvelAPICharacterFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DD3BC25621F040062004B /* MarvelAPICharacterFeedLoaderTests.swift */; };
 		5B6DD3BF25621F040062004B /* CharactersAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B6DD3B125621F040062004B /* CharactersAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -63,6 +64,7 @@
 		5B6D27B0256465300021B70E /* MarvelCharactersFeedLoaderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelCharactersFeedLoaderFactory.swift; sourceTree = "<group>"; };
 		5B6D27B7256590890021B70E /* HTTPClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientSpy.swift; sourceTree = "<group>"; };
 		5B6D27BD256590A20021B70E /* URLProtocolStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLProtocolStub.swift; sourceTree = "<group>"; };
+		5B6D27C4256593E50021B70E /* MarvelCharactersFeedLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelCharactersFeedLoaderTests.swift; sourceTree = "<group>"; };
 		5B6DD3AE25621F040062004B /* CharactersAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CharactersAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B6DD3B125621F040062004B /* CharactersAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharactersAPI.h; sourceTree = "<group>"; };
 		5B6DD3B225621F040062004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -157,6 +159,14 @@
 			path = HTTPClient;
 			sourceTree = "<group>";
 		};
+		5B6D27C3256593D40021B70E /* Public Interface */ = {
+			isa = PBXGroup;
+			children = (
+				5B6D27C4256593E50021B70E /* MarvelCharactersFeedLoaderTests.swift */,
+			);
+			path = "Public Interface";
+			sourceTree = "<group>";
+		};
 		5B6DD3A425621F030062004B = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +200,7 @@
 		5B6DD3BB25621F040062004B /* CharactersAPITests */ = {
 			isa = PBXGroup;
 			children = (
+				5B6D27C3256593D40021B70E /* Public Interface */,
 				5B6DD3BE25621F040062004B /* Info.plist */,
 				5B6D27A12563F5C00021B70E /* HTTPClient */,
 				5B6D27A02563F5B70021B70E /* Endpoint Handling */,
@@ -347,6 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B6D27C5256593E50021B70E /* MarvelCharactersFeedLoaderTests.swift in Sources */,
 				5B6D27AB2563F8B40021B70E /* MarvelURL+MD5DigesterTests.swift in Sources */,
 				5B6DD3BD25621F040062004B /* MarvelAPICharacterFeedLoaderTests.swift in Sources */,
 				5B6D277D256295280021B70E /* URLSessionHTTPClientTests.swift in Sources */,
