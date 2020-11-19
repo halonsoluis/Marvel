@@ -1,0 +1,28 @@
+name: iOS starter workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build and Test CI scheme
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        env:
+          scheme: CI
+          project: CharactersAPI.xcodeproj
+        run: |
+          xcodebuild build-for-testing -scheme "$scheme" -project $project CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO MACOSX_DEPLOYMENT_TARGET=10.15
+      - name: Test
+        env:
+          scheme: CI
+          project: CharactersAPI.xcodeproj
+        run: |
+          xcodebuild test-without-building -scheme "$scheme" -project $project CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO MACOSX_DEPLOYMENT_TARGET=10.15
