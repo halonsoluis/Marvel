@@ -72,7 +72,7 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
 
     func test_singleCharacterWithUnknownIdAndValidResponse_doesNotProduceAMarvelItem() {
         let sut = makeSUT()
-        stubHTTPResponseAndData(itemAmount: 0, statusCode: 200)
+        stubHTTPResponseAndData(itemAmount: 0, statusCode: 404)
 
         let expect = expectation(description: "A request for data to the network was issued")
         var receivedResult: Result<MarvelCharacter?, Error>!
@@ -82,8 +82,12 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         }
         wait(for: [expect], timeout: 1.0)
 
-        let item = extractResultDataFromCall(result: receivedResult)!
-        XCTAssertNil(item)
+        switch receivedResult {
+        case .failure:
+            break;
+        default:
+            XCTFail("This is expected to receive an error as the id is not valid")
+        }
     }
 
     private func stubHTTPResponseAndData(itemAmount: Int, statusCode: Int = 200) {
