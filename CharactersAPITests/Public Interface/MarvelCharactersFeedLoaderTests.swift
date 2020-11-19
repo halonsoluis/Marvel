@@ -110,9 +110,13 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         return nil
     }
 
-    private func makeSUT() -> CharacterFeedLoader {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CharacterFeedLoader {
         let client = URLSessionHTTPClient()
         let sut = MarvelCharactersFeedLoader(client: client)
+
+        addTeardownBlock { [weak sut] in
+            XCTAssertNil(sut, "Potential memory leak", file: file, line: line)
+        }
 
         return sut
     }
