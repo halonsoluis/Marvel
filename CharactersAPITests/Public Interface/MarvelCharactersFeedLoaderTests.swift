@@ -22,17 +22,15 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         stubHTTPResponseAndData(itemAmount: 10, statusCode: 200)
 
         let expect = expectation(description: "A request for data to the network was issued")
-
-        sut.characters(page: 0) { result in
-            switch result {
-            case let .success(items):
-                XCTAssertEqual(items.count, 10)
-            default:
-                break
-            }
+        var receivedResult: Result<[MarvelCharacter], Error>!
+        sut.characters(page: 0) {
+            receivedResult = $0
             expect.fulfill()
         }
         wait(for: [expect], timeout: 1.0)
+
+        let items = Self.extractResultDataFromCall(result: receivedResult)!
+        XCTAssertEqual(items.count, 10)
     }
 
     func test_searchWithValidResponse_producesMarvelItems() {
@@ -40,17 +38,15 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         stubHTTPResponseAndData(itemAmount: 10, statusCode: 200)
 
         let expect = expectation(description: "A request for data to the network was issued")
-
-        sut.search(by: "", in : 0) { result in
-            switch result {
-            case let .success(items):
-                XCTAssertEqual(items.count, 10)
-            default:
-                XCTFail("Unexpected state, expected success received \(result)")
-            }
+        var receivedResult: Result<[MarvelCharacter], Error>!
+        sut.search(by: "", in : 0) {
+            receivedResult = $0
             expect.fulfill()
         }
         wait(for: [expect], timeout: 1.0)
+
+        let items = Self.extractResultDataFromCall(result: receivedResult)!
+        XCTAssertEqual(items.count, 10)
     }
 
     func test_singleCharacterWithValidResponse_producesAMarvelItem() {
@@ -58,22 +54,20 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         stubHTTPResponseAndData(itemAmount: 1, statusCode: 200)
 
         let expect = expectation(description: "A request for data to the network was issued")
-
-        sut.character(id: 0) { result in
-            switch result {
-            case let .success(item):
-                let jsonItem = self.makeValidJSONResponse(amountOfItems: 1, statusCode: 200).item
-
-                XCTAssertEqual(item?.name, jsonItem["name"] as? String)
-                XCTAssertEqual(item?.description, jsonItem["description"] as? String)
-                XCTAssertEqual(item?.id, jsonItem["id"] as? Int)
-                XCTAssertEqual(item?.modified, jsonItem["modified"] as? String)
-            default:
-                XCTFail("Unexpected state, expected success received \(result)")
-            }
+        var receivedResult: Result<MarvelCharacter?, Error>!
+        sut.character(id: 0) {
+            receivedResult = $0
             expect.fulfill()
         }
         wait(for: [expect], timeout: 1.0)
+
+        let item = Self.extractResultDataFromCall(result: receivedResult)!
+        let jsonItem = self.makeValidJSONResponse(amountOfItems: 1, statusCode: 200).item
+
+        XCTAssertEqual(item?.name, jsonItem["name"] as? String)
+        XCTAssertEqual(item?.description, jsonItem["description"] as? String)
+        XCTAssertEqual(item?.id, jsonItem["id"] as? Int)
+        XCTAssertEqual(item?.modified, jsonItem["modified"] as? String)
     }
 
     func test_singleCharacterWithUnknownIdAndValidResponse_doesNotProduceAMarvelItem() {
@@ -83,12 +77,9 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         let expect = expectation(description: "A request for data to the network was issued")
 
         sut.character(id: 0) { result in
-            switch result {
-            case let .success(item):
-                XCTAssertNil(item)
-            default:
-                XCTFail("Unexpected state, expected success received \(result)")
-            }
+            let item = Self.extractResultDataFromCall(result: result)!
+            XCTAssertNil(item)
+
             expect.fulfill()
         }
         wait(for: [expect], timeout: 1.0)
@@ -102,6 +93,16 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         let response = HTTPURLResponse(url: URL(string: "www.anyurl.com")!, statusCode: statusCode, httpVersion: nil, headerFields: nil)
 
         URLProtocolStub.stub(data: data, response: response, error: nil)
+    }
+
+    static func extractResultDataFromCall<T>(result: Result<T, Error>, file: StaticString = #filePath, line: UInt = #line) -> T? {
+        switch result {
+        case let .success(item):
+            return item
+        default:
+            XCTFail("Unexpected state, expected success received \(result)", file: file, line: line)
+        }
+        return nil
     }
 
     private func makeSUT() -> CharacterFeedLoader {
