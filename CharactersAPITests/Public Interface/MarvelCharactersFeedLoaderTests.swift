@@ -29,7 +29,7 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         }
         wait(for: [expect], timeout: 1.0)
 
-        let items = Self.extractResultDataFromCall(result: receivedResult)!
+        let items = extractResultDataFromCall(result: receivedResult)!
         XCTAssertEqual(items.count, 10)
     }
 
@@ -45,7 +45,7 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         }
         wait(for: [expect], timeout: 1.0)
 
-        let items = Self.extractResultDataFromCall(result: receivedResult)!
+        let items = extractResultDataFromCall(result: receivedResult)!
         XCTAssertEqual(items.count, 10)
     }
 
@@ -61,8 +61,8 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         }
         wait(for: [expect], timeout: 1.0)
 
-        let item = Self.extractResultDataFromCall(result: receivedResult)!
-        let jsonItem = self.makeValidJSONResponse(amountOfItems: 1, statusCode: 200).item
+        let item = extractResultDataFromCall(result: receivedResult)!
+        let jsonItem = makeValidJSONResponse(amountOfItems: 1, statusCode: 200).item
 
         XCTAssertEqual(item?.name, jsonItem["name"] as? String)
         XCTAssertEqual(item?.description, jsonItem["description"] as? String)
@@ -75,14 +75,15 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         stubHTTPResponseAndData(itemAmount: 0, statusCode: 200)
 
         let expect = expectation(description: "A request for data to the network was issued")
-
-        sut.character(id: 0) { result in
-            let item = Self.extractResultDataFromCall(result: result)!
-            XCTAssertNil(item)
-
+        var receivedResult: Result<MarvelCharacter?, Error>!
+        sut.character(id: 0) {
+            receivedResult = $0
             expect.fulfill()
         }
         wait(for: [expect], timeout: 1.0)
+
+        let item = extractResultDataFromCall(result: receivedResult)!
+        XCTAssertNil(item)
     }
 
     private func stubHTTPResponseAndData(itemAmount: Int, statusCode: Int = 200) {
@@ -95,7 +96,7 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         URLProtocolStub.stub(data: data, response: response, error: nil)
     }
 
-    static func extractResultDataFromCall<T>(result: Result<T, Error>, file: StaticString = #filePath, line: UInt = #line) -> T? {
+    private func extractResultDataFromCall<T>(result: Result<T, Error>, file: StaticString = #filePath, line: UInt = #line) -> T? {
         switch result {
         case let .success(item):
             return item
