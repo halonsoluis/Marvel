@@ -11,9 +11,9 @@ final class MarvelAPICharacterFeedLoader {
     let client: HTTPClient
     let urlDecorator: MarvelURL
 
-    enum Error: Swift.Error {
+    enum Error: Swift.Error, Equatable {
         case invalidData
-        case invalidStatusCode
+        case invalidStatusCode(code: Int)
         case invalidURL
     }
 
@@ -34,7 +34,9 @@ final class MarvelAPICharacterFeedLoader {
             switch result {
             case .success(let items):
                 completion(.success(items.first))
-            case .failure(let error):
+            case let .failure(error as Error) where error == Error.invalidStatusCode(code: 404):
+                completion(.success(nil))
+            case let .failure(error):
                 completion(.failure(error))
             }
         }
@@ -65,7 +67,7 @@ final class MarvelAPICharacterFeedLoader {
         switch result {
         case let .success((data, response)):
             guard response.statusCode == 200 else {
-                return .failure(Error.invalidStatusCode)
+                return .failure(Error.invalidStatusCode(code: response.statusCode))
             }
             guard let result: [MarvelCharacter] = parseResult(from: data) else {
                 return .failure(Error.invalidData)

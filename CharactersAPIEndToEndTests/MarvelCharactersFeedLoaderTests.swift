@@ -69,10 +69,10 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         wait(for: [expect], timeout: 5.0)
 
         switch receivedResult {
-        case .failure:
-            break;
+        case let .success(item):
+            XCTAssertNil(item)
         default:
-            XCTFail("This is expected to receive an error as the id is not valid")
+            XCTFail("This is expected to receive a nil item as a response to a not found id")
         }
     }
 

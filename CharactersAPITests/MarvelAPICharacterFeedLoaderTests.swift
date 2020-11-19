@@ -52,15 +52,13 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
 
         sut.character(id: 1) { result in
             switch result {
-            case let .success(character) where character != nil:
+            case let .success(character):
                 XCTAssertEqual(character!.id, item["id"] as? Int)
                 XCTAssertEqual(character!.description, item["description"] as? String)
                 XCTAssertEqual(character!.modified, item["modified"] as? String)
                 XCTAssertEqual(character!.thumbnail?.absoluteString, "\(thumbnail["path"]!).\(thumbnail["extension"]!)")
             case .failure:
-                XCTFail()
-            case .success(_):
-                XCTFail()
+                XCTFail("A valid item is expected as a result to the received response")
             }
             expect.fulfill()
         }

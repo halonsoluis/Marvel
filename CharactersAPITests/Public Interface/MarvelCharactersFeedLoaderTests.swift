@@ -64,10 +64,10 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         let item = extractResultDataFromCall(result: receivedResult)!
         let jsonItem = makeValidJSONResponse(amountOfItems: 1, statusCode: 200).item
 
-        XCTAssertEqual(item?.name, jsonItem["name"] as? String)
-        XCTAssertEqual(item?.description, jsonItem["description"] as? String)
-        XCTAssertEqual(item?.id, jsonItem["id"] as? Int)
-        XCTAssertEqual(item?.modified, jsonItem["modified"] as? String)
+        XCTAssertEqual(item!.name, jsonItem["name"] as? String)
+        XCTAssertEqual(item!.description, jsonItem["description"] as? String)
+        XCTAssertEqual(item!.id, jsonItem["id"] as? Int)
+        XCTAssertEqual(item!.modified, jsonItem["modified"] as? String)
     }
 
     func test_singleCharacterWithUnknownIdAndValidResponse_doesNotProduceAMarvelItem() {
@@ -83,10 +83,10 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         wait(for: [expect], timeout: 1.0)
 
         switch receivedResult {
-        case .failure:
-            break;
+        case let .success(item):
+            XCTAssertNil(item)
         default:
-            XCTFail("This is expected to receive an error as the id is not valid")
+            XCTFail("This is expected to receive a nil item as a response to a not found id")
         }
     }
 
