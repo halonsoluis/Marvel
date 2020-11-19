@@ -1,6 +1,6 @@
 //
-//  LoadDataFromNetworkIntegrationTests.swift
-//  CharactersAPITests
+//  CharactersAPIEndToEndTests.swift
+//  CharactersAPIEndToEndTests
 //
 //  Created by Hugo Alonso on 17/11/2020.
 //
@@ -8,7 +8,7 @@
 import XCTest
 @testable import CharactersAPI
 
-class LoadDataFromNetworkIntegrationTests: XCTestCase {
+class CharactersAPIEndToEndTests: XCTestCase {
 
     func test_load_DataFromNetwork() {
         let (sut, marvelURL) = createSUT()
@@ -26,7 +26,7 @@ class LoadDataFromNetworkIntegrationTests: XCTestCase {
 
     func test_load_DataFromNetworkSingleCharacterEndpoint_FailsWith404IfNotFound() {
         let (sut, marvelURL) = createSUT()
-        let url = marvelURL.url(route: .character(id: 10113346))!
+        let url = marvelURL.url(route: .character(id: -1))!
 
         expectToResolve(url: url, sut: sut, with: 404)
     }
