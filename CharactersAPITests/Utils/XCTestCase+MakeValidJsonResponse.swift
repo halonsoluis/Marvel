@@ -8,7 +8,7 @@
 import XCTest
 
 extension XCTestCase {
-    func makeValidJSONResponse(amountOfItems: Int) -> (response: [String: Any], item: [String: Any], urls: [[String: String]], events: [String: Any], comics: [String: Any], series: [String: Any], stories: [String: Any], thumbnail: [String: String]) {
+    func makeValidJSONResponse(amountOfItems: Int, statusCode: Int = 200) -> (response: [String: Any], item: [String: Any], urls: [[String: String]], events: [String: Any], comics: [String: Any], series: [String: Any], stories: [String: Any], thumbnail: [String: String]) {
         let thumbnail: [String: String] = [
             "path": "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784",
             "extension": "jpg"
@@ -107,7 +107,7 @@ extension XCTestCase {
         ]
 
         let response: [String: Any] = [
-            "code": 200,
+            "code": statusCode,
             "status": "Ok",
             "data": [
                 "offset": 0,
