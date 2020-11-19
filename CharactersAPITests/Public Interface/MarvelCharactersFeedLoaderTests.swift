@@ -90,6 +90,66 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         }
     }
 
+    func test_singleCharacterResponseWithNonValidStatusCode405_producesAnError() {
+        let sut = makeSUT()
+        stubHTTPResponseAndData(itemAmount: 0, statusCode: 405)
+
+        let expect = expectation(description: "A request for data to the network was issued")
+        var receivedResult: Result<MarvelCharacter?, Error>!
+        sut.character(id: 0) {
+            receivedResult = $0
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: 1.0)
+
+        switch receivedResult {
+        case .failure:
+            break;
+        default:
+            XCTFail("This is expected to receive an error as the status code is not handled")
+        }
+    }
+
+    func test_singleCharacterResponseWithNonValidStatusCode403_producesAnError() {
+        let sut = makeSUT()
+        stubHTTPResponseAndData(itemAmount: 0, statusCode: 403)
+
+        let expect = expectation(description: "A request for data to the network was issued")
+        var receivedResult: Result<MarvelCharacter?, Error>!
+        sut.character(id: 0) {
+            receivedResult = $0
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: 1.0)
+
+        switch receivedResult {
+        case .failure:
+            break;
+        default:
+            XCTFail("This is expected to receive an error as the status code is not handled")
+        }
+    }
+
+    func test_singleCharacterResponseWithNonValidStatusCode500_producesAnError() {
+        let sut = makeSUT()
+        stubHTTPResponseAndData(itemAmount: 0, statusCode: 500)
+
+        let expect = expectation(description: "A request for data to the network was issued")
+        var receivedResult: Result<MarvelCharacter?, Error>!
+        sut.character(id: 0) {
+            receivedResult = $0
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: 1.0)
+
+        switch receivedResult {
+        case .failure:
+            break;
+        default:
+            XCTFail("This is expected to receive an error as the status code is not handled")
+        }
+    }
+
     private func stubHTTPResponseAndData(itemAmount: Int, statusCode: Int = 200) {
         let data: Data = try! JSONSerialization.data(
             withJSONObject: makeValidJSONResponse(amountOfItems: itemAmount, statusCode: statusCode).response,
