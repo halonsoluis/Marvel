@@ -69,7 +69,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
 
     func test_load_onFailure_FailsWithError() {
         let (client, sut, _) = makeSUT()
-        let (response, _, _, _, _, _, _, _) = makeValidJSONResponse(amountOfItems: 10)
+        let response = makeValidJSONResponse(amountOfItems: 10).response
         client.returnedJSON = response
         let expectedError = NSError(domain: "anyerror", code: 123, userInfo: nil)
         client.returnedError = expectedError
@@ -91,7 +91,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
 
     func test_load_severalItemsFromJSONResponse() {
         let (client, sut, _) = makeSUT()
-        let (response, _, _, _, _, _, _, _) = makeValidJSONResponse(amountOfItems: 10)
+        let response = makeValidJSONResponse(amountOfItems: 10).response
         client.returnedJSON = response
 
         let expect = expectation(description: "Waiting for expectation")
@@ -110,7 +110,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
 
     func test_load_returnsErrorOnWrongStatusCode() {
         let (client, sut, _) = makeSUT()
-        let (response, _, _, _, _, _, _, _) = makeValidJSONResponse(amountOfItems: 10)
+        let response = makeValidJSONResponse(amountOfItems: 10).response
         client.returnedJSON = response
         client.returnedStatusCode = 404
 

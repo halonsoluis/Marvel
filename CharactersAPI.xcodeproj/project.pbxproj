@@ -201,8 +201,8 @@
 			isa = PBXGroup;
 			children = (
 				5B6D27882563F25C0021B70E /* CharactersAPIEndToEndTests.swift */,
-				5B6D27DD2565FFC10021B70E /* Info.plist */,
 				5B6D27F4256600DB0021B70E /* MarvelCharactersFeedLoaderTests.swift */,
+				5B6D27DD2565FFC10021B70E /* Info.plist */,
 			);
 			path = CharactersAPIEndToEndTests;
 			sourceTree = "<group>";
