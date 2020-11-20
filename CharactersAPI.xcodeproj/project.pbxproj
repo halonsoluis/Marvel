@@ -82,6 +82,7 @@
 		5B6D27DD2565FFC10021B70E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B6D27F4256600DB0021B70E /* MarvelCharactersFeedLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelCharactersFeedLoaderTests.swift; sourceTree = "<group>"; };
 		5B6D280825674ED80021B70E /* XCTestCase+QueryEndpointsAndWaitForResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+QueryEndpointsAndWaitForResponse.swift"; sourceTree = "<group>"; };
+		5B6D28112567542B0021B70E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5B6DD3AE25621F040062004B /* CharactersAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CharactersAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B6DD3B125621F040062004B /* CharactersAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharactersAPI.h; sourceTree = "<group>"; };
 		5B6DD3B225621F040062004B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -214,6 +215,7 @@
 		5B6DD3A425621F030062004B = {
 			isa = PBXGroup;
 			children = (
+				5B6D28112567542B0021B70E /* README.md */,
 				5B6DD3B025621F040062004B /* CharactersAPI */,
 				5B6DD3BB25621F040062004B /* CharactersAPITests */,
 				5B6D27DA2565FFC10021B70E /* CharactersAPIEndToEndTests */,
