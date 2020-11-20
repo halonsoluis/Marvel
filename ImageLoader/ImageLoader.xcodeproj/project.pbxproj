@@ -3,13 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		5B968C6A256759F700E54B66 /* ImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B968C60256759F700E54B66 /* ImageLoader.framework */; };
 		5B968C6F256759F700E54B66 /* ImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B968C6E256759F700E54B66 /* ImageLoaderTests.swift */; };
 		5B968C71256759F700E54B66 /* ImageLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B968C63256759F700E54B66 /* ImageLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5B968C7F25675B8900E54B66 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B968C7E25675B8900E54B66 /* Image.swift */; };
+		5B968C8425675C9B00E54B66 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 5B968C8325675C9B00E54B66 /* Kingfisher */; };
+		5B968C882567E2B100E54B66 /* CachedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B968C872567E2B100E54B66 /* CachedImage.swift */; };
+		5B968C8C2567E35300E54B66 /* ImageCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B968C8B2567E35300E54B66 /* ImageCreator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +33,9 @@
 		5B968C69256759F700E54B66 /* ImageLoaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageLoaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B968C6E256759F700E54B66 /* ImageLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoaderTests.swift; sourceTree = "<group>"; };
 		5B968C70256759F700E54B66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5B968C7E25675B8900E54B66 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		5B968C872567E2B100E54B66 /* CachedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImage.swift; sourceTree = "<group>"; };
+		5B968C8B2567E35300E54B66 /* ImageCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCreator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B968C8425675C9B00E54B66 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +81,9 @@
 			children = (
 				5B968C63256759F700E54B66 /* ImageLoader.h */,
 				5B968C64256759F700E54B66 /* Info.plist */,
+				5B968C7E25675B8900E54B66 /* Image.swift */,
+				5B968C8B2567E35300E54B66 /* ImageCreator.swift */,
+				5B968C872567E2B100E54B66 /* CachedImage.swift */,
 			);
 			path = ImageLoader;
 			sourceTree = "<group>";
@@ -114,6 +125,9 @@
 			dependencies = (
 			);
 			name = ImageLoader;
+			packageProductDependencies = (
+				5B968C8325675C9B00E54B66 /* Kingfisher */,
+			);
 			productName = ImageLoader;
 			productReference = 5B968C60256759F700E54B66 /* ImageLoader.framework */;
 			productType = "com.apple.product-type.framework";
@@ -147,6 +161,7 @@
 				TargetAttributes = {
 					5B968C5F256759F700E54B66 = {
 						CreatedOnToolsVersion = 12.2;
+						LastSwiftMigration = 1220;
 					};
 					5B968C68256759F700E54B66 = {
 						CreatedOnToolsVersion = 12.2;
@@ -162,6 +177,9 @@
 				Base,
 			);
 			mainGroup = 5B968C56256759F700E54B66;
+			packageReferences = (
+				5B968C8225675C9B00E54B66 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = 5B968C61256759F700E54B66 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -194,6 +212,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B968C8C2567E35300E54B66 /* ImageCreator.swift in Sources */,
+				5B968C7F25675B8900E54B66 /* Image.swift in Sources */,
+				5B968C882567E2B100E54B66 /* CachedImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +361,7 @@
 		5B968C75256759F700E54B66 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -356,6 +378,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = halonso.ImageLoader;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -363,6 +386,7 @@
 		5B968C76256759F700E54B66 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -386,6 +410,7 @@
 		5B968C78256759F700E54B66 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ImageLoaderTests/Info.plist;
@@ -403,6 +428,7 @@
 		5B968C79256759F700E54B66 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ImageLoaderTests/Info.plist;
@@ -448,6 +474,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5B968C8225675C9B00E54B66 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.15.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5B968C8325675C9B00E54B66 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B968C8225675C9B00E54B66 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5B968C57256759F700E54B66 /* Project object */;
 }

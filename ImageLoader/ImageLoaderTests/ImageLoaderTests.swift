@@ -6,28 +6,44 @@
 //
 
 import XCTest
-@testable import ImageLoader
+import Foundation
+import ImageLoader
+import AppKit
+import Kingfisher
 
 class ImageLoaderTests: XCTestCase {
+    func testExample() {
+        let view = NSImageView()
+        let url = URL(string: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png")!
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+        let imageLoader = ImageLoader(url: url, uniqueKey: "sdf").image
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+        let expect = expectation(description: "A request is made")
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        var receivedError: Error?
+        imageLoader.render(on: view) { error in
+            receivedError = error
+            expect.fulfill()
         }
+        wait(for: [expect], timeout: 5.0)
+
+        XCTAssertNotNil(view.image)
+        XCTAssertNil(receivedError)
     }
 
+    func testPrefetchExample() {
+        let url = URL(string: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png")!
+        let imageLoader = ImageLoader(url: url, uniqueKey: "sdf").image
+
+        let expect = expectation(description: "A request is made")
+
+        var receivedError: Error?
+        imageLoader.prefetch() { error in
+            receivedError = error
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: 5.0)
+
+        XCTAssertNil(receivedError)
+    }
 }
