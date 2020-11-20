@@ -17,12 +17,12 @@ jobs:
       - name: Build
         env:
           scheme: CI
-          project: CharactersAPI.xcodeproj
+          workspace: Marvel.xcworkspace
         run: |
-          xcodebuild build-for-testing -scheme "$scheme" -project $project CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO MACOSX_DEPLOYMENT_TARGET=10.15
+          xcodebuild build-for-testing -scheme "$scheme" -workspace $workspace CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO MACOSX_DEPLOYMENT_TARGET=10.15
       - name: Test
         env:
           scheme: CI
-          project: CharactersAPI.xcodeproj
+          workspace: Marvel.xcworkspace
         run: |
-          xcodebuild test-without-building -scheme "$scheme" -project $project CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO MACOSX_DEPLOYMENT_TARGET=10.15
+          xcodebuild test-without-building -scheme "$scheme" -workspace $workspace CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO MACOSX_DEPLOYMENT_TARGET=10.15
