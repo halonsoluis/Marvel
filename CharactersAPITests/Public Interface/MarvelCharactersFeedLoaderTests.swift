@@ -20,21 +20,21 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
     func test_charactersCallWithValidResponse_producesMarvelItems() {
         stubHTTPResponseAndData(itemAmount: 10, statusCode: 200)
 
-        let items = extractResultDataFromCall(result: resultForCharactersRequest(page: 0))!
+        let items = extractResultDataFromCall(result: performCharactersRequest(page: 0, using: makeSUT()))!
         XCTAssertEqual(items.count, 10)
     }
 
     func test_searchWithValidResponse_producesMarvelItems() {
         stubHTTPResponseAndData(itemAmount: 10, statusCode: 200)
 
-        let items = extractResultDataFromCall(result: resultForSearchRequest(name: "", page: 0))!
+        let items = extractResultDataFromCall(result: performSearchRequest(name: "", page: 0, using: makeSUT()))!
         XCTAssertEqual(items.count, 10)
     }
 
     func test_singleCharacterWithValidResponse_producesAMarvelItem() {
         stubHTTPResponseAndData(itemAmount: 1, statusCode: 200)
 
-        let item = extractResultDataFromCall(result: resultForCharacterRequest())!
+        let item = extractResultDataFromCall(result: performCharacterRequest(using: makeSUT()))!
         let jsonItem = makeValidJSONResponse(amountOfItems: 1, statusCode: 200).item
 
         XCTAssertEqual(item!.name, jsonItem["name"] as? String)
@@ -46,7 +46,7 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
     func test_singleCharacterWithUnknownIdAndValidResponse_doesNotProduceAMarvelItem() {
         stubHTTPResponseAndData(itemAmount: 0, statusCode: 404)
 
-        switch resultForCharacterRequest() {
+        switch performCharacterRequest(using: makeSUT()) {
         case let .success(item):
             XCTAssertNil(item)
         default:
@@ -58,52 +58,13 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         [403, 405, 406, 300, 500].forEach { statusCode in
             stubHTTPResponseAndData(itemAmount: 0, statusCode: statusCode)
 
-            switch resultForCharacterRequest() {
+            switch performCharacterRequest(using: makeSUT()) {
             case .failure:
                 break;
             default:
                 XCTFail("This is expected to receive an error as the status code is not handled")
             }
         }
-    }
-
-    private func resultForCharactersRequest(page: Int) -> Result<[MarvelCharacter], Error> {
-        let sut = makeSUT()
-
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<[MarvelCharacter], Error>!
-        sut.characters(page: page) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-        return receivedResult
-    }
-
-    private func resultForSearchRequest(name: String, page: Int) -> Result<[MarvelCharacter], Error> {
-        let sut = makeSUT()
-
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<[MarvelCharacter], Error>!
-        sut.search(by: name, in: page) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-        return receivedResult
-    }
-
-    private func resultForCharacterRequest() -> Result<MarvelCharacter?, Error> {
-        let sut = makeSUT()
-
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<MarvelCharacter?, Error>!
-        sut.character(id: 0) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-        return receivedResult
     }
 
     private func stubHTTPResponseAndData(itemAmount: Int, statusCode: Int = 200) {

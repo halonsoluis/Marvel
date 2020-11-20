@@ -14,44 +14,25 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
     func test_charactersCallWithValidResponse_producesMarvelItems() {
         let sut = makeSUT()
 
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<[MarvelCharacter], Error>!
-        sut.characters(page: 0) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 5.0)
-
+        let receivedResult = performCharactersRequest(page: 0, using: sut, timeout: 5.0)
         let items = extractResultDataFromCall(result: receivedResult)!
+
         XCTAssertGreaterThan(items.count, 1, "Items Received")
     }
 
     func test_searchWithValidResponse_producesMarvelItems() {
         let sut = makeSUT()
 
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<[MarvelCharacter], Error>!
-        sut.search(by: "a", in : 0) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 5.0)
-
+        let receivedResult = performSearchRequest(name: "a", page: 0, using: sut, timeout: 5.0)
         let items = extractResultDataFromCall(result: receivedResult)!
+
         XCTAssertGreaterThan(items.count, 1, "Items Received")
     }
 
     func test_singleCharacterWithValidResponse_producesAMarvelItem() {
         let sut = makeSUT()
 
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<MarvelCharacter?, Error>!
-        sut.character(id: 1011334) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 5.0)
-
+        let receivedResult = performCharacterRequest(id: 1011334, using: sut, timeout: 5.0)
         let item = extractResultDataFromCall(result: receivedResult)!
 
         XCTAssertEqual(item?.name, "3-D Man")
@@ -59,14 +40,7 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
 
     func test_singleCharacterWithUnknownIdAndValidResponse_doesNotProduceAMarvelItem() {
         let sut = makeSUT()
-
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<MarvelCharacter?, Error>!
-        sut.character(id: -1) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 5.0)
+        let receivedResult = performCharacterRequest(id: -1, using: sut, timeout: 5.0)
 
         switch receivedResult {
         case let .success(item):
