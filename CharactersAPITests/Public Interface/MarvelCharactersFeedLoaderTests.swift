@@ -18,50 +18,23 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
     }
 
     func test_charactersCallWithValidResponse_producesMarvelItems() {
-        let sut = makeSUT()
         stubHTTPResponseAndData(itemAmount: 10, statusCode: 200)
 
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<[MarvelCharacter], Error>!
-        sut.characters(page: 0) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-
-        let items = extractResultDataFromCall(result: receivedResult)!
+        let items = extractResultDataFromCall(result: resultForCharactersRequest(page: 0))!
         XCTAssertEqual(items.count, 10)
     }
 
     func test_searchWithValidResponse_producesMarvelItems() {
-        let sut = makeSUT()
         stubHTTPResponseAndData(itemAmount: 10, statusCode: 200)
 
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<[MarvelCharacter], Error>!
-        sut.search(by: "", in : 0) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-
-        let items = extractResultDataFromCall(result: receivedResult)!
+        let items = extractResultDataFromCall(result: resultForSearchRequest(name: "", page: 0))!
         XCTAssertEqual(items.count, 10)
     }
 
     func test_singleCharacterWithValidResponse_producesAMarvelItem() {
-        let sut = makeSUT()
         stubHTTPResponseAndData(itemAmount: 1, statusCode: 200)
 
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<MarvelCharacter?, Error>!
-        sut.character(id: 0) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-
-        let item = extractResultDataFromCall(result: receivedResult)!
+        let item = extractResultDataFromCall(result: resultForCharacterRequest())!
         let jsonItem = makeValidJSONResponse(amountOfItems: 1, statusCode: 200).item
 
         XCTAssertEqual(item!.name, jsonItem["name"] as? String)
@@ -71,18 +44,9 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
     }
 
     func test_singleCharacterWithUnknownIdAndValidResponse_doesNotProduceAMarvelItem() {
-        let sut = makeSUT()
         stubHTTPResponseAndData(itemAmount: 0, statusCode: 404)
 
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<MarvelCharacter?, Error>!
-        sut.character(id: 0) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-
-        switch receivedResult {
+        switch resultForCharacterRequest() {
         case let .success(item):
             XCTAssertNil(item)
         default:
@@ -90,49 +54,47 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         }
     }
 
-    func test_singleCharacterResponseWithNonValidStatusCode405_producesAnError() {
-        let sut = makeSUT()
-        stubHTTPResponseAndData(itemAmount: 0, statusCode: 405)
+    func test_singleCharacterResponseWithNonValidStatusCodeProducesAnError() {
+        [403, 405, 406, 300, 500].forEach { statusCode in
+            stubHTTPResponseAndData(itemAmount: 0, statusCode: statusCode)
 
-        let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<MarvelCharacter?, Error>!
-        sut.character(id: 0) {
-            receivedResult = $0
-            expect.fulfill()
-        }
-        wait(for: [expect], timeout: 1.0)
-
-        switch receivedResult {
-        case .failure:
-            break;
-        default:
-            XCTFail("This is expected to receive an error as the status code is not handled")
+            switch resultForCharacterRequest() {
+            case .failure:
+                break;
+            default:
+                XCTFail("This is expected to receive an error as the status code is not handled")
+            }
         }
     }
 
-    func test_singleCharacterResponseWithNonValidStatusCode403_producesAnError() {
+    private func resultForCharactersRequest(page: Int) -> Result<[MarvelCharacter], Error> {
         let sut = makeSUT()
-        stubHTTPResponseAndData(itemAmount: 0, statusCode: 403)
 
         let expect = expectation(description: "A request for data to the network was issued")
-        var receivedResult: Result<MarvelCharacter?, Error>!
-        sut.character(id: 0) {
+        var receivedResult: Result<[MarvelCharacter], Error>!
+        sut.characters(page: page) {
             receivedResult = $0
             expect.fulfill()
         }
         wait(for: [expect], timeout: 1.0)
-
-        switch receivedResult {
-        case .failure:
-            break;
-        default:
-            XCTFail("This is expected to receive an error as the status code is not handled")
-        }
+        return receivedResult
     }
 
-    func test_singleCharacterResponseWithNonValidStatusCode500_producesAnError() {
+    private func resultForSearchRequest(name: String, page: Int) -> Result<[MarvelCharacter], Error> {
         let sut = makeSUT()
-        stubHTTPResponseAndData(itemAmount: 0, statusCode: 500)
+
+        let expect = expectation(description: "A request for data to the network was issued")
+        var receivedResult: Result<[MarvelCharacter], Error>!
+        sut.search(by: name, in: page) {
+            receivedResult = $0
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: 1.0)
+        return receivedResult
+    }
+
+    private func resultForCharacterRequest() -> Result<MarvelCharacter?, Error> {
+        let sut = makeSUT()
 
         let expect = expectation(description: "A request for data to the network was issued")
         var receivedResult: Result<MarvelCharacter?, Error>!
@@ -141,13 +103,7 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
             expect.fulfill()
         }
         wait(for: [expect], timeout: 1.0)
-
-        switch receivedResult {
-        case .failure:
-            break;
-        default:
-            XCTFail("This is expected to receive an error as the status code is not handled")
-        }
+        return receivedResult
     }
 
     private func stubHTTPResponseAndData(itemAmount: Int, statusCode: Int = 200) {
