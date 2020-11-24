@@ -14,24 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5B6DD3AD25621F040062004B"
-               BuildableName = "CharactersAPI.framework"
-               BlueprintName = "CharactersAPI"
-               ReferencedContainer = "container:CharactersAPI.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5B968C5F256759F700E54B66"
                BuildableName = "ImageLoader.framework"
                BlueprintName = "ImageLoader"
-               ReferencedContainer = "container:../ImageLoader/ImageLoader.xcodeproj">
+               ReferencedContainer = "container:ImageLoader.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,51 +32,21 @@
       <CodeCoverageTargets>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5B6DD3AD25621F040062004B"
-            BuildableName = "CharactersAPI.framework"
-            BlueprintName = "CharactersAPI"
-            ReferencedContainer = "container:CharactersAPI.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
             BlueprintIdentifier = "5B968C5F256759F700E54B66"
             BuildableName = "ImageLoader.framework"
             BlueprintName = "ImageLoader"
-            ReferencedContainer = "container:../ImageLoader/ImageLoader.xcodeproj">
+            ReferencedContainer = "container:ImageLoader.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
          <TestableReference
-            skipped = "NO"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5B6D27D82565FFC10021B70E"
-               BuildableName = "CharactersAPIEndToEndTests.xctest"
-               BlueprintName = "CharactersAPIEndToEndTests"
-               ReferencedContainer = "container:CharactersAPI.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5B6DD3B625621F040062004B"
-               BuildableName = "CharactersAPITests.xctest"
-               BlueprintName = "CharactersAPITests"
-               ReferencedContainer = "container:CharactersAPI.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            testExecutionOrdering = "random">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5B968C68256759F700E54B66"
                BuildableName = "ImageLoaderTests.xctest"
                BlueprintName = "ImageLoaderTests"
-               ReferencedContainer = "container:../ImageLoader/ImageLoader.xcodeproj">
+               ReferencedContainer = "container:ImageLoader.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -115,10 +71,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5B6DD3AD25621F040062004B"
-            BuildableName = "CharactersAPI.framework"
-            BlueprintName = "CharactersAPI"
-            ReferencedContainer = "container:CharactersAPI.xcodeproj">
+            BlueprintIdentifier = "5B968C5F256759F700E54B66"
+            BuildableName = "ImageLoader.framework"
+            BlueprintName = "ImageLoader"
+            ReferencedContainer = "container:ImageLoader.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
