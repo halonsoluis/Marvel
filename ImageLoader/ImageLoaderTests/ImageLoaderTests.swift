@@ -133,7 +133,5 @@ class ImageLoaderTests: XCTestCase {
         super.tearDown()
 
         KingfisherManager.shared.cache.clearCache()
-        try! KingfisherManager.shared.cache.diskStorage.removeAll()
-        try! KingfisherManager.shared.cache.memoryStorage.removeAll()
     }
 }
