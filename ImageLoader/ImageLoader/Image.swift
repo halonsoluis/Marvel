@@ -21,13 +21,3 @@ public protocol Image {
     func prefetch(completion: @escaping ImageLoadCompleted)
     func render(on imageView: UniversalImageView, completion: @escaping ImageLoadCompleted)
 }
-
-public extension Image {
-    func prefetch() {
-        prefetch(completion: { _ in })
-    }
-
-    func render(on imageView: UniversalImageView) {
-        render(on: imageView, completion: { _ in })
-    }
-}
