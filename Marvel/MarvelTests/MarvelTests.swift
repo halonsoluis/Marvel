@@ -8,26 +8,47 @@
 import XCTest
 @testable import Marvel
 
-class MarvelTests: XCTestCase {
+import UIKit
+import CharactersAPI
+import ImageLoader
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+class MainComposer {
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+    func main() {
+        let client = URLSessionHTTPClient(session: URLSession.shared)
+        let charactersLoader = MarvelCharactersFeedLoader(client: client)
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        let prefetchImageHandler = { (url: URL, modifiedKey: String) in
+            ImageLoader(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
         }
-    }
 
+        let loadImageHandler = { (url: URL, modifiedKey: String, imageView: UIImageView) in
+            ImageLoader(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: { _ in })
+        }
+
+        _ = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+    }
 }
+
+
+class MarvelTests: XCTestCase {
+    func test_MainComposerIntegration() {
+        let sut = MainComposer()
+        sut.main()
+    }
+}
+//
+//class mainComposerfake {
+//
+//    func result(result: Result<[MarvelCharacter], Error>) -> Void {
+//        switch result {
+//        case .success(let items):
+//            if let item = items.first, let image = item.thumbnail, let modified = item.modified {
+//                let imageLoader = ImageLoader(url: image, uniqueKey: modified)
+//                imageLoader.image.prefetch() { _ in }
+//            }
+//        default:
+//            break
+//        }
+//    }
+//}
