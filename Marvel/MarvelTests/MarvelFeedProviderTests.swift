@@ -170,6 +170,10 @@ class MarvelFeedProviderTests: XCTestCase {
         charactersLoader.charactersCalledWith?.completion(.success([item]))
 
         XCTAssertEqual(sut.items, [item])
+
+        sut.perform(action: .loadFromStart)
+        XCTAssertEqual(sut.items, [])
+
     }
 
     func testPerform_loadMore() {
