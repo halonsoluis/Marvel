@@ -181,6 +181,28 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5BD7CFB8257091BD00F6EB7F /* System Internals */ = {
+			isa = PBXGroup;
+			children = (
+				5BFA3F94256C93950057BD82 /* Assets.xcassets */,
+				5BFA3F99256C93950057BD82 /* Info.plist */,
+				5BFA3F96256C93950057BD82 /* LaunchScreen.storyboard */,
+				5BFA3FBE256C93DE0057BD82 /* Marvel.entitlements */,
+				5BFA3F8D256C93940057BD82 /* SceneDelegate.swift */,
+				5BFA3F8B256C93940057BD82 /* AppDelegate.swift */,
+			);
+			name = "System Internals";
+			sourceTree = "<group>";
+		};
+		5BD7CFB92570921700F6EB7F /* CharactersFeedUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				5BFA3F8F256C93940057BD82 /* FeedViewController.swift */,
+				5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */,
+			);
+			name = CharactersFeedUseCase;
+			sourceTree = "<group>";
+		};
 		5BFA3F7F256C93940057BD82 = {
 			isa = PBXGroup;
 			children = (
@@ -205,14 +227,8 @@
 		5BFA3F8A256C93940057BD82 /* Marvel */ = {
 			isa = PBXGroup;
 			children = (
-				5BFA3FBE256C93DE0057BD82 /* Marvel.entitlements */,
-				5BFA3F8B256C93940057BD82 /* AppDelegate.swift */,
-				5BFA3F8D256C93940057BD82 /* SceneDelegate.swift */,
-				5BFA3F8F256C93940057BD82 /* FeedViewController.swift */,
-				5BFA3F94256C93950057BD82 /* Assets.xcassets */,
-				5BFA3F96256C93950057BD82 /* LaunchScreen.storyboard */,
-				5BFA3F99256C93950057BD82 /* Info.plist */,
-				5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */,
+				5BD7CFB92570921700F6EB7F /* CharactersFeedUseCase */,
+				5BD7CFB8257091BD00F6EB7F /* System Internals */,
 				5BD7CFA52570878100F6EB7F /* MainComposer.swift */,
 			);
 			path = Marvel;
