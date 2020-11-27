@@ -12,7 +12,7 @@ import ImageLoader
 
 class MainComposer {
 
-    func main() {
+    private var itemProvider: MarvelFeedProvider {
         let client = URLSessionHTTPClient(session: URLSession.shared)
         let charactersLoader = MarvelCharactersFeedLoader(client: client)
 
@@ -24,8 +24,10 @@ class MainComposer {
             ImageLoader(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: { _ in })
         }
 
-        let itemProvider = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+        return MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+    }
 
-        let feedView = FeedViewController(feedDataProvider: itemProvider)
+    var feedView: FeedViewController {
+        FeedViewController(feedDataProvider: itemProvider)
     }
 }

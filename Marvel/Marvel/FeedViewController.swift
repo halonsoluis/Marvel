@@ -22,7 +22,7 @@ class FeedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
         feedDataProvider?.onItemsChangeCallback = newItemsReceived
         feedDataProvider?.perform(action: .loadFromStart)
     }
