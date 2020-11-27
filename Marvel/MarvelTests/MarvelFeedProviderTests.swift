@@ -17,7 +17,7 @@ class MarvelFeedProvider {
     enum Action {
         case loadFromStart
         case loadMore
-        case openItem(index: Int)
+        case openItem(id: Int)
         case openSearch
     }
 
@@ -42,8 +42,8 @@ class MarvelFeedProvider {
             loadFromStart()
         case .loadMore:
             loadMore()
-        case .openItem(let index):
-            openItem(at: index)
+        case .openItem(let id):
+            openItem(at: id)
         case .openSearch:
             openSearch()
         }
@@ -64,8 +64,17 @@ class MarvelFeedProvider {
         switch result {
         case .success(let characters):
             items.append(contentsOf: characters)
+            prefetchImagesForNewItems(newItems: items)
         case .failure(let error):
             break //Display errors?
+        }
+    }
+
+    private func prefetchImagesForNewItems(newItems: [MarvelCharacter]) {
+        newItems.forEach { item in
+            if let image = item.thumbnail, let modified = item.modified {
+                prefetchImageHandler(image, modified)
+            }
         }
     }
 
@@ -154,6 +163,8 @@ class MarvelFeedProviderTests: XCTestCase {
 
         sut.perform(action: .loadFromStart)
         XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
+
+        XCTAssertEqual(sut.items, [])
     }
 
     func testPerform_loadMore() {
@@ -168,18 +179,22 @@ class MarvelFeedProviderTests: XCTestCase {
 
         sut.perform(action: .loadMore)
         XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 2)
+
+        XCTAssertEqual(sut.items, [])
     }
 
     func testPerform_openItem() {
         let (sut, charactersLoader) = createSUT()
 
-        sut.perform(action: .openItem(index: 1))
+        sut.perform(action: .openItem(id: 1))
 
         XCTAssertEqual(charactersLoader.characterCallCount, 1)
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
 
         XCTAssertEqual(charactersLoader.characterCalledWith?.id, 1)
+
+        XCTAssertEqual(sut.items, [])
     }
 
     func testPerform_openSearch() {
@@ -190,5 +205,7 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.characterCallCount, 0)
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
+
+        XCTAssertEqual(sut.items, [])
     }
 }

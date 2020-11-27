@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct MarvelCharacter {
+public struct MarvelCharacter: Equatable {
     public let id: Int?
     public let name: String?
     public let description: String?
