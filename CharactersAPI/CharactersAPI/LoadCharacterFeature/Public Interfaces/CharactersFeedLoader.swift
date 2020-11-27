@@ -13,6 +13,14 @@ public struct MarvelCharacter: Equatable {
     public let description: String?
     public let modified: String?
     public let thumbnail: URL?
+
+    public init(id: Int?, name: String?, description: String?, modified: String?, thumbnail: URL?) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.modified = modified
+        self.thumbnail = thumbnail
+    }
 }
 
 public typealias SingleCharacterFeedLoaderResult = (Result<MarvelCharacter?, Error>) -> Void

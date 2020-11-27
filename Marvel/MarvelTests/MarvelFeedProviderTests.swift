@@ -165,6 +165,11 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
 
         XCTAssertEqual(sut.items, [])
+
+        let item = MarvelCharacter(id: 1, name: "name", description: "description", modified: "modified", thumbnail: nil)
+        charactersLoader.charactersCalledWith?.completion(.success([item]))
+
+        XCTAssertEqual(sut.items, [item])
     }
 
     func testPerform_loadMore() {
@@ -181,6 +186,11 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 2)
 
         XCTAssertEqual(sut.items, [])
+
+        let item = MarvelCharacter(id: 1, name: "name", description: "description", modified: "modified", thumbnail: nil)
+        charactersLoader.charactersCalledWith?.completion(.success([item]))
+
+        XCTAssertEqual(sut.items, [item])
     }
 
     func testPerform_openItem() {
@@ -193,6 +203,11 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
 
         XCTAssertEqual(charactersLoader.characterCalledWith?.id, 1)
+
+        XCTAssertEqual(sut.items, [])
+
+        let item = MarvelCharacter(id: 1, name: "name", description: "description", modified: "modified", thumbnail: nil)
+        charactersLoader.characterCalledWith?.completion(.success(item))
 
         XCTAssertEqual(sut.items, [])
     }
