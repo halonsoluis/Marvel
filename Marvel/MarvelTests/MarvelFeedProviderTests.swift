@@ -12,7 +12,13 @@ import CharactersAPI
 import Foundation
 import UIKit
 
-class MarvelFeedProvider {
+protocol FeedDataProvider {
+    var items: [MarvelCharacter] { get }
+
+    func perform(action: MarvelFeedProvider.Action)
+}
+
+class MarvelFeedProvider: FeedDataProvider {
 
     enum Action {
         case loadFromStart
@@ -25,8 +31,9 @@ class MarvelFeedProvider {
     private var prefetchImageHandler: (URL, String) -> Void
     private var loadImageHandler: (URL, String, UIImageView) -> Void
 
-    var items: [MarvelCharacter] = []
     private var nextPage = 0
+
+    var items: [MarvelCharacter] = []
 
     init(charactersLoader: CharacterFeedLoader,
          prefetchImageHandler: @escaping (URL, String) -> Void,

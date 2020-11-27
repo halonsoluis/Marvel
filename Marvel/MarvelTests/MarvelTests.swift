@@ -37,18 +37,3 @@ class MarvelTests: XCTestCase {
         sut.main()
     }
 }
-//
-//class mainComposerfake {
-//
-//    func result(result: Result<[MarvelCharacter], Error>) -> Void {
-//        switch result {
-//        case .success(let items):
-//            if let item = items.first, let image = item.thumbnail, let modified = item.modified {
-//                let imageLoader = ImageLoader(url: image, uniqueKey: modified)
-//                imageLoader.image.prefetch() { _ in }
-//            }
-//        default:
-//            break
-//        }
-//    }
-//}
