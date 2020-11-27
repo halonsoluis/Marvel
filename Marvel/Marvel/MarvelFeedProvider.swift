@@ -12,6 +12,7 @@ import UIKit
 
 protocol FeedDataProvider {
     var items: [MarvelCharacter] { get }
+    var onItemsChangeCallback: (() -> Void)? { get set }
 
     func perform(action: MarvelFeedProvider.Action)
 }
@@ -31,7 +32,12 @@ class MarvelFeedProvider: FeedDataProvider {
 
     private var nextPage = 0
 
-    var items: [MarvelCharacter] = []
+    var items: [MarvelCharacter] = [] {
+        didSet {
+            onItemsChangeCallback?()
+        }
+    }
+    var onItemsChangeCallback: (() -> Void)?
 
     init(charactersLoader: CharacterFeedLoader,
          prefetchImageHandler: @escaping (URL, String) -> Void,
