@@ -13,9 +13,20 @@ import Foundation
 import UIKit
 
 class MarvelFeedProvider {
-    var charactersLoader: CharacterFeedLoader
-    var prefetchImageHandler: (URL, String) -> Void
-    var loadImageHandler: (URL, String, UIImageView) -> Void
+
+    enum Action {
+        case loadFromStart
+        case loadMore
+        case openItem(index: Int)
+        case openSearch
+    }
+
+    private var charactersLoader: CharacterFeedLoader
+    private var prefetchImageHandler: (URL, String) -> Void
+    private var loadImageHandler: (URL, String, UIImageView) -> Void
+
+    var items: [MarvelCharacter] = []
+    private var nextPage = 0
 
     init(charactersLoader: CharacterFeedLoader,
          prefetchImageHandler: @escaping (URL, String) -> Void,
@@ -24,28 +35,143 @@ class MarvelFeedProvider {
         self.prefetchImageHandler = prefetchImageHandler
         self.loadImageHandler = loadImageHandler
     }
+
+    func perform(action: Action) {
+        switch action {
+        case .loadFromStart:
+            loadFromStart()
+        case .loadMore:
+            loadMore()
+        case .openItem(let index):
+            openItem(at: index)
+        case .openSearch:
+            openSearch()
+        }
+    }
+
+    private func loadFromStart() {
+        nextPage = 0
+        items.removeAll()
+        charactersLoader.characters(page: 0, completion: handleCharactersResult)
+    }
+
+    private func loadMore() {
+        nextPage += 1
+        charactersLoader.characters(page: nextPage, completion: handleCharactersResult)
+    }
+
+    private func handleCharactersResult(result: Result<[MarvelCharacter], Error>) {
+        switch result {
+        case .success(let characters):
+            items.append(contentsOf: characters)
+        case .failure(let error):
+            break //Display errors?
+        }
+    }
+
+    private func openItem(at index: Int) {
+        charactersLoader.character(id: index) { [weak self] result in
+            switch result {
+            case let .success(item):
+                if let item = item {
+                    self?.displayCharacterDetails(item: item)
+                } else {
+                    // What to do here?
+                }
+            case .failure(let error):
+                break
+            }
+        }
+    }
+
+    private func displayCharacterDetails(item: MarvelCharacter) {
+
+    }
+
+    private func openSearch() {
+        nextPage = 0
+        items.removeAll()
+    }
+
+     func result(result: Result<[MarvelCharacter], Error>) -> [MarvelCharacter] {
+        switch result {
+        case .success(let items):
+            if let item = items.first, let image = item.thumbnail, let modified = item.modified {
+                prefetchImageHandler(image, modified)
+            }
+            return items
+        case .failure(let error):
+            return []
+        }
+    }
 }
 
 
 class MarvelFeedProviderTests: XCTestCase {
 
-    struct FakeCharacterFeedLoader: CharacterFeedLoader {
+    class CharacterFeedLoaderSpy: CharacterFeedLoader {
+        var characterCallCount = 0
         func character(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {
-
+            characterCallCount += 1
         }
+
+        var charactersCallCount = 0
         func characters(page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
-
+            charactersCallCount += 1
         }
+        var searchCallCount = 0
         func search(by name: String, in page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
-
+            searchCallCount += 1
         }
     }
 
-    func testComposer_init() {
-        let charactersLoader: CharacterFeedLoader = FakeCharacterFeedLoader()
+    func createSUT() -> (sut: MarvelFeedProvider, fakeCharacterFeedLoader: CharacterFeedLoaderSpy) {
+        let charactersLoader = CharacterFeedLoaderSpy()
         let prefetchImageHandler: (URL, String) -> Void  = { _, _ in }
         let loadImageHandler: (URL, String, UIImageView) -> Void = { _, _, _ in }
 
-        _ = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+        let sut = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+
+        return (sut, charactersLoader)
+    }
+
+    func testPerform_loadFromStart() {
+        let (sut, charactersLoader) = createSUT()
+
+        sut.perform(action: .loadFromStart)
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 1)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+    }
+
+    func testPerform_loadMore() {
+        let (sut, charactersLoader) = createSUT()
+
+        sut.perform(action: .loadMore)
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 1)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+    }
+
+    func testPerform_openItem() {
+        let (sut, charactersLoader) = createSUT()
+
+        sut.perform(action: .openItem(index: 1))
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 1)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+    }
+
+    func testPerform_openSearch() {
+        let (sut, charactersLoader) = createSUT()
+
+        sut.perform(action: .openSearch)
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
     }
 }
