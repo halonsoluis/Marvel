@@ -24,6 +24,8 @@ class MainComposer {
             ImageLoader(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: { _ in })
         }
 
-        _ = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+        let itemProvider = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+
+        let feedView = FeedViewController(feedDataProvider: itemProvider)
     }
 }

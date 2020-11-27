@@ -16,7 +16,7 @@
 		5BD7CFA62570878100F6EB7F /* MainComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA52570878100F6EB7F /* MainComposer.swift */; };
 		5BFA3F8C256C93940057BD82 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFA3F8B256C93940057BD82 /* AppDelegate.swift */; };
 		5BFA3F8E256C93940057BD82 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFA3F8D256C93940057BD82 /* SceneDelegate.swift */; };
-		5BFA3F90256C93940057BD82 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFA3F8F256C93940057BD82 /* ViewController.swift */; };
+		5BFA3F90256C93940057BD82 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFA3F8F256C93940057BD82 /* FeedViewController.swift */; };
 		5BFA3F93256C93940057BD82 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BFA3F91256C93940057BD82 /* Main.storyboard */; };
 		5BFA3F95256C93950057BD82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BFA3F94256C93950057BD82 /* Assets.xcassets */; };
 		5BFA3F98256C93950057BD82 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BFA3F96256C93950057BD82 /* LaunchScreen.storyboard */; };
@@ -114,7 +114,7 @@
 		5BFA3F88256C93940057BD82 /* Marvel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Marvel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BFA3F8B256C93940057BD82 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5BFA3F8D256C93940057BD82 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		5BFA3F8F256C93940057BD82 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5BFA3F8F256C93940057BD82 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		5BFA3F92256C93940057BD82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5BFA3F94256C93950057BD82 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5BFA3F97256C93950057BD82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -210,7 +210,7 @@
 				5BFA3FBE256C93DE0057BD82 /* Marvel.entitlements */,
 				5BFA3F8B256C93940057BD82 /* AppDelegate.swift */,
 				5BFA3F8D256C93940057BD82 /* SceneDelegate.swift */,
-				5BFA3F8F256C93940057BD82 /* ViewController.swift */,
+				5BFA3F8F256C93940057BD82 /* FeedViewController.swift */,
 				5BFA3F91256C93940057BD82 /* Main.storyboard */,
 				5BFA3F94256C93950057BD82 /* Assets.xcassets */,
 				5BFA3F96256C93950057BD82 /* LaunchScreen.storyboard */,
@@ -421,7 +421,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5BFA3F90256C93940057BD82 /* ViewController.swift in Sources */,
+				5BFA3F90256C93940057BD82 /* FeedViewController.swift in Sources */,
 				5BD7CFA62570878100F6EB7F /* MainComposer.swift in Sources */,
 				5BD7CFA22570876600F6EB7F /* MarvelFeedProvider.swift in Sources */,
 				5BFA3F8C256C93940057BD82 /* AppDelegate.swift in Sources */,
