@@ -111,21 +111,28 @@ class MarvelFeedProviderTests: XCTestCase {
 
     class CharacterFeedLoaderSpy: CharacterFeedLoader {
         var characterCallCount = 0
+        var characterCalledWith: (id: Int, completion: SingleCharacterFeedLoaderResult)?
         func character(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {
             characterCallCount += 1
+            characterCalledWith = (id: id, completion: completion)
         }
 
         var charactersCallCount = 0
+        var charactersCalledWith: (page: Int, completion: MultipleCharacterFeedLoaderResult)?
         func characters(page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
             charactersCallCount += 1
+            charactersCalledWith = (page: page, completion: completion)
         }
+
         var searchCallCount = 0
+        var searchCalledWith: (name: String, page: Int, completion: MultipleCharacterFeedLoaderResult)?
         func search(by name: String, in page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
             searchCallCount += 1
+            searchCalledWith = (name: name, page: page, completion: completion)
         }
     }
 
-    func createSUT() -> (sut: MarvelFeedProvider, fakeCharacterFeedLoader: CharacterFeedLoaderSpy) {
+    func createSUT() -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy) {
         let charactersLoader = CharacterFeedLoaderSpy()
         let prefetchImageHandler: (URL, String) -> Void  = { _, _ in }
         let loadImageHandler: (URL, String, UIImageView) -> Void = { _, _, _ in }
@@ -139,20 +146,28 @@ class MarvelFeedProviderTests: XCTestCase {
         let (sut, charactersLoader) = createSUT()
 
         sut.perform(action: .loadFromStart)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
 
         XCTAssertEqual(charactersLoader.characterCallCount, 0)
         XCTAssertEqual(charactersLoader.charactersCallCount, 1)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
+
+        sut.perform(action: .loadFromStart)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
     }
 
     func testPerform_loadMore() {
         let (sut, charactersLoader) = createSUT()
 
         sut.perform(action: .loadMore)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 1)
 
         XCTAssertEqual(charactersLoader.characterCallCount, 0)
         XCTAssertEqual(charactersLoader.charactersCallCount, 1)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
+
+        sut.perform(action: .loadMore)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 2)
     }
 
     func testPerform_openItem() {
@@ -163,6 +178,8 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.characterCallCount, 1)
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
+
+        XCTAssertEqual(charactersLoader.characterCalledWith?.id, 1)
     }
 
     func testPerform_openSearch() {
