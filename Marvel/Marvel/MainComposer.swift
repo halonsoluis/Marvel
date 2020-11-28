@@ -21,7 +21,7 @@ protocol FeedDataProvider {
     func perform(action: MarvelFeedProvider.Action)
 }
 
-enum Route {
+enum Route: Equatable {
     case list
     case search
     case details(for: MarvelCharacter)

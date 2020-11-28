@@ -139,6 +139,28 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
     }
+
+    func testPerform_openSearch_triggerSearchRoute() {
+        var route: Route!
+        let (sut, _, _) = createSUT(router: { route = $0 })
+
+        sut.perform(action: .openSearch)
+
+        XCTAssertEqual(route, Route.search)
+    }
+
+    func testPerform_openItemWithItems_triggerDetailsRoute() {
+        var route: Route!
+        let (sut, charactersLoader, items) = createSUT(itemCount: 1, router: { route = $0 })
+        sut.items = items
+
+        sut.perform(action: .openItem(index: 0))
+
+        charactersLoader.characterCalledWith?.completion(.success(items.first))
+
+        XCTAssertEqual(route, Route.details(for: items[0]))
+    }
+
 }
 
 // MARK - Helpers
@@ -166,12 +188,13 @@ extension MarvelFeedProviderTests {
         }
     }
 
-    func createSUT(itemCount: Int = 0) -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy, items: [MarvelCharacter]) {
-        let charactersLoader = CharacterFeedLoaderSpy()
-        let prefetchImageHandler: (URL, String) -> Void  = { _, _ in }
-        let loadImageHandler: (URL, String, UIImageView) -> Void = { _, _, _ in }
-        let router: (Route) -> Void = { _ in }
-
+    func createSUT(
+        itemCount: Int = 0,
+        charactersLoader: CharacterFeedLoaderSpy = CharacterFeedLoaderSpy(),
+        prefetchImageHandler: @escaping (URL, String) -> Void  = { _, _ in },
+        loadImageHandler: @escaping (URL, String, UIImageView) -> Void = { _, _, _ in },
+        router: @escaping (Route) -> Void = { _ in }
+    ) -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy, items: [MarvelCharacter]) {
         let sut = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler, router: router)
 
         return (sut, charactersLoader, createItems(amount: itemCount))
