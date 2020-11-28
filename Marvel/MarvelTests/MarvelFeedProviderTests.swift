@@ -68,7 +68,8 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(sut.items, [item])
 
         sut.perform(action: .loadFromStart)
-        XCTAssertEqual(sut.items, [])
+        charactersLoader.charactersCalledWith?.completion(.success([item]))
+        XCTAssertEqual(sut.items, [item])
 
     }
 
@@ -93,26 +94,43 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(sut.items, [item])
 
         sut.perform(action: .loadMore)
-        XCTAssertEqual(sut.items, [item])
+        charactersLoader.charactersCalledWith?.completion(.success([item]))
+        XCTAssertEqual(sut.items, [item, item])
+    }
+
+    func testPerform_openItemWithNoItemsReturnNoItems() {
+        let (sut, charactersLoader) = createSUT()
+
+        sut.perform(action: .openItem(index: 0))
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+
+        XCTAssertNil(charactersLoader.characterCalledWith?.id)
+
+        XCTAssertEqual(sut.items, [])
     }
 
     func testPerform_openItem() {
         let (sut, charactersLoader) = createSUT()
 
-        sut.perform(action: .openItem(id: 1))
+        let items = [
+            MarvelCharacter(id: 1, name: "name", description: "description", modified: "modified", thumbnail: nil),
+            MarvelCharacter(id: 2, name: "name2", description: "description2", modified: "modified2", thumbnail: nil)
+        ]
+
+        sut.items = items
+
+        sut.perform(action: .openItem(index: 1))
 
         XCTAssertEqual(charactersLoader.characterCallCount, 1)
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
 
-        XCTAssertEqual(charactersLoader.characterCalledWith?.id, 1)
+        XCTAssertEqual(charactersLoader.characterCalledWith?.id, 2)
 
-        XCTAssertEqual(sut.items, [])
-
-        let item = MarvelCharacter(id: 1, name: "name", description: "description", modified: "modified", thumbnail: nil)
-        charactersLoader.characterCalledWith?.completion(.success(item))
-
-        XCTAssertEqual(sut.items, [])
+        XCTAssertEqual(sut.items, items)
     }
 
     func testPerform_openSearch() {
