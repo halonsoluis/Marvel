@@ -11,6 +11,5 @@ import XCTest
 class MarvelTests: XCTestCase {
     func test_MainComposerIntegration() {
         let sut = MainComposer()
-      //  let view = sut.feedView
     }
 }

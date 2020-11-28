@@ -41,8 +41,9 @@ class MarvelFeedProviderTests: XCTestCase {
         let charactersLoader = CharacterFeedLoaderSpy()
         let prefetchImageHandler: (URL, String) -> Void  = { _, _ in }
         let loadImageHandler: (URL, String, UIImageView) -> Void = { _, _, _ in }
+        let router: (Route) -> Void = { _ in }
 
-        let sut = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+        let sut = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler, router: router)
 
         return (sut, charactersLoader)
     }

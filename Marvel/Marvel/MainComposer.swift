@@ -10,21 +10,58 @@ import UIKit
 import CharactersAPI
 import ImageLoader
 
+typealias Router = (_ route: Route) -> Void
+typealias PrefetchImageHandler = (_ url: URL, _ uniqueKey: String) -> Void
+typealias LoadImageHandler = (_ url: URL, _ uniqueKey: String, _ destinationView: UIImageView) -> Void
+
+protocol FeedDataProvider {
+    var items: [MarvelCharacter] { get }
+    var onItemsChangeCallback: (() -> Void)? { get set }
+
+    func perform(action: MarvelFeedProvider.Action)
+}
+
+enum Route {
+    case list
+    case search
+    case details(for: MarvelCharacter)
+}
+
 class MainComposer {
 
-    private lazy var itemProvider: MarvelFeedProvider = {
+    private var loadImageHandler: LoadImageHandler
+    private var prefetchImageHandler: PrefetchImageHandler
+    private var router: Router
+
+    init() {
+        prefetchImageHandler = { (url: URL, modifiedKey: String) in
+            ImageLoader(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
+        }
+        loadImageHandler = { (url: URL, modifiedKey: String, imageView: UIImageView) in
+            ImageLoader(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: { _ in })
+        }
+        router = { (route: Route) in
+            switch route {
+            case .details(for: let item):
+                break
+            case .list:
+                break
+            case .search:
+                break
+            }
+        }
+    }
+
+    private lazy var itemProvider: FeedDataProvider = {
         let client = URLSessionHTTPClient(session: URLSession.shared)
         let charactersLoader = MarvelCharactersFeedLoader(client: client)
 
-        let prefetchImageHandler = { (url: URL, modifiedKey: String) in
-            ImageLoader(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
-        }
-
-        let loadImageHandler = { (url: URL, modifiedKey: String, imageView: UIImageView) in
-            ImageLoader(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: { _ in })
-        }
-
-        return MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler)
+        return MarvelFeedProvider(
+            charactersLoader: charactersLoader,
+            prefetchImageHandler: prefetchImageHandler,
+            loadImageHandler: loadImageHandler,
+            router: router
+        )
     }()
 
     lazy var feedView: FeedViewController = {
