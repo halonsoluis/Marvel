@@ -14,6 +14,135 @@ import UIKit
 
 class MarvelFeedProviderTests: XCTestCase {
 
+    func testPerform_loadFromStart_leadsToASingleAPICall() {
+        let (sut, charactersLoader,_) = createSUT()
+
+        sut.perform(action: .loadFromStart)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 1)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+    }
+
+    func testPerform_loadFromStart_AlwaysLoadsTheFirstPage() {
+        let (sut, charactersLoader,_) = createSUT()
+
+        sut.perform(action: .loadFromStart)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
+
+        sut.perform(action: .loadFromStart)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
+    }
+
+    func testPerform_loadFromStart_returnsLoadedItemsWhenReady() {
+        let (sut, charactersLoader, items) = createSUT(itemCount: 2)
+
+        sut.perform(action: .loadFromStart)
+        charactersLoader.charactersCalledWith?.completion(
+            .success(items)
+        )
+        XCTAssertEqual(sut.items, items)
+    }
+
+    func testPerform_loadFromStart_alwaysCleanPreviousItemsWhenCalled() {
+        let (sut, charactersLoader, items) = createSUT(itemCount: 2)
+
+        sut.perform(action: .loadFromStart)
+        charactersLoader.charactersCalledWith?.completion(
+            .success(items)
+        )
+        XCTAssertEqual(sut.items.count, 2)
+
+        sut.perform(action: .loadFromStart)
+        let newitems = createItems(amount: 10)
+        charactersLoader.charactersCalledWith?.completion(.success(newitems))
+        XCTAssertEqual(sut.items, newitems)
+    }
+
+    func testPerform_loadMore_leadsToASingleAPICall() {
+        let (sut, charactersLoader, _) = createSUT()
+
+        sut.perform(action: .loadMore)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 1)
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 1)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+    }
+
+    func testPerform_loadMore_RequestNextPage() {
+        let (sut, charactersLoader, _) = createSUT()
+
+        sut.perform(action: .loadMore)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 1)
+
+        sut.perform(action: .loadMore)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 2)
+    }
+
+    func testPerform_loadMore_returnsLoadedItemsWhenReady() {
+        let (sut, charactersLoader, items) = createSUT(itemCount: 2)
+
+        sut.perform(action: .loadMore)
+        charactersLoader.charactersCalledWith?.completion(
+            .success(items)
+        )
+        XCTAssertEqual(sut.items, items)
+    }
+
+    func testPerform_loadMore_doNotCleanPreviousItemsWhenCalled() {
+        let (sut, charactersLoader, items) = createSUT(itemCount: 2)
+
+        sut.perform(action: .loadMore)
+        charactersLoader.charactersCalledWith?.completion(
+            .success(items)
+        )
+        XCTAssertEqual(sut.items.count, 2)
+
+        sut.perform(action: .loadMore)
+        charactersLoader.charactersCalledWith?.completion(.success(createItems(amount: 10)))
+
+        XCTAssertEqual(sut.items.count, 12)
+    }
+
+    func testPerform_openItemWithNoItems_PerformNoCalls() {
+        let (sut, charactersLoader, _) = createSUT()
+
+        sut.perform(action: .openItem(index: 0))
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+    }
+
+    func testPerform_openItemWithItems_PerformCallsForItemInIndex() {
+        let (sut, charactersLoader, items) = createSUT(itemCount: 2)
+        sut.items = items
+
+        sut.perform(action: .openItem(index: 0))
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 1)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+
+        XCTAssertEqual(charactersLoader.characterCalledWith?.id, items[0].id)
+    }
+
+
+    func testPerform_openSearch_performNoAPICalls() {
+        let (sut, charactersLoader, _) = createSUT()
+
+        sut.perform(action: .openSearch)
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+    }
+}
+
+// MARK - Helpers
+extension MarvelFeedProviderTests {
     class CharacterFeedLoaderSpy: CharacterFeedLoader {
         var characterCallCount = 0
         var characterCalledWith: (id: Int, completion: SingleCharacterFeedLoaderResult)?
@@ -37,7 +166,7 @@ class MarvelFeedProviderTests: XCTestCase {
         }
     }
 
-    func createSUT() -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy) {
+    func createSUT(itemCount: Int = 0) -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy, items: [MarvelCharacter]) {
         let charactersLoader = CharacterFeedLoaderSpy()
         let prefetchImageHandler: (URL, String) -> Void  = { _, _ in }
         let loadImageHandler: (URL, String, UIImageView) -> Void = { _, _, _ in }
@@ -45,104 +174,11 @@ class MarvelFeedProviderTests: XCTestCase {
 
         let sut = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler, router: router)
 
-        return (sut, charactersLoader)
+        return (sut, charactersLoader, createItems(amount: itemCount))
     }
 
-    func testPerform_loadFromStart() {
-        let (sut, charactersLoader) = createSUT()
-
-        sut.perform(action: .loadFromStart)
-        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
-
-        XCTAssertEqual(charactersLoader.characterCallCount, 0)
-        XCTAssertEqual(charactersLoader.charactersCallCount, 1)
-        XCTAssertEqual(charactersLoader.searchCallCount, 0)
-
-        sut.perform(action: .loadFromStart)
-        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
-
-        XCTAssertEqual(sut.items, [])
-
-        let item = MarvelCharacter(id: 1, name: "name", description: "description", modified: "modified", thumbnail: nil)
-        charactersLoader.charactersCalledWith?.completion(.success([item]))
-
-        XCTAssertEqual(sut.items, [item])
-
-        sut.perform(action: .loadFromStart)
-        charactersLoader.charactersCalledWith?.completion(.success([item]))
-        XCTAssertEqual(sut.items, [item])
-
-    }
-
-    func testPerform_loadMore() {
-        let (sut, charactersLoader) = createSUT()
-
-        sut.perform(action: .loadMore)
-        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 1)
-
-        XCTAssertEqual(charactersLoader.characterCallCount, 0)
-        XCTAssertEqual(charactersLoader.charactersCallCount, 1)
-        XCTAssertEqual(charactersLoader.searchCallCount, 0)
-
-        sut.perform(action: .loadMore)
-        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 2)
-
-        XCTAssertEqual(sut.items, [])
-
-        let item = MarvelCharacter(id: 1, name: "name", description: "description", modified: "modified", thumbnail: nil)
-        charactersLoader.charactersCalledWith?.completion(.success([item]))
-
-        XCTAssertEqual(sut.items, [item])
-
-        sut.perform(action: .loadMore)
-        charactersLoader.charactersCalledWith?.completion(.success([item]))
-        XCTAssertEqual(sut.items, [item, item])
-    }
-
-    func testPerform_openItemWithNoItemsReturnNoItems() {
-        let (sut, charactersLoader) = createSUT()
-
-        sut.perform(action: .openItem(index: 0))
-
-        XCTAssertEqual(charactersLoader.characterCallCount, 0)
-        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
-        XCTAssertEqual(charactersLoader.searchCallCount, 0)
-
-        XCTAssertNil(charactersLoader.characterCalledWith?.id)
-
-        XCTAssertEqual(sut.items, [])
-    }
-
-    func testPerform_openItem() {
-        let (sut, charactersLoader) = createSUT()
-
-        let items = [
-            MarvelCharacter(id: 1, name: "name", description: "description", modified: "modified", thumbnail: nil),
-            MarvelCharacter(id: 2, name: "name2", description: "description2", modified: "modified2", thumbnail: nil)
-        ]
-
-        sut.items = items
-
-        sut.perform(action: .openItem(index: 1))
-
-        XCTAssertEqual(charactersLoader.characterCallCount, 1)
-        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
-        XCTAssertEqual(charactersLoader.searchCallCount, 0)
-
-        XCTAssertEqual(charactersLoader.characterCalledWith?.id, 2)
-
-        XCTAssertEqual(sut.items, items)
-    }
-
-    func testPerform_openSearch() {
-        let (sut, charactersLoader) = createSUT()
-
-        sut.perform(action: .openSearch)
-
-        XCTAssertEqual(charactersLoader.characterCallCount, 0)
-        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
-        XCTAssertEqual(charactersLoader.searchCallCount, 0)
-
-        XCTAssertEqual(sut.items, [])
+    private func createItems(amount: Int) -> [MarvelCharacter] {
+        let itemBuilder = { MarvelCharacter(id: Int.random(in: 1...100), name: "name", description: "description", modified: "modified", thumbnail: nil) }
+        return Array(repeating: itemBuilder(), count: amount)
     }
 }
