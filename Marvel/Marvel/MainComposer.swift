@@ -14,7 +14,7 @@ typealias Router = (_ route: Route) -> Void
 typealias PrefetchImageHandler = (_ url: URL, _ uniqueKey: String) -> Void
 typealias LoadImageHandler = (_ url: URL, _ uniqueKey: String, _ destinationView: UIImageView) -> Void
 
-struct BasicCharacterData {
+struct BasicCharacterData: Equatable {
     let id: Int?
     let name: String?
     let thumbnail: URL?

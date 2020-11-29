@@ -42,7 +42,7 @@ class MarvelFeedProviderTests: XCTestCase {
         charactersLoader.charactersCalledWith?.completion(
             .success(items)
         )
-        XCTAssertEqual(sut.items, items)
+        XCTAssertEqual(sut.items, items.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
     }
 
     func testPerform_loadFromStart_alwaysCleanPreviousItemsWhenCalled() {
@@ -55,9 +55,9 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(sut.items.count, 2)
 
         sut.perform(action: .loadFromStart)
-        let newitems = createItems(amount: 10)
-        charactersLoader.charactersCalledWith?.completion(.success(newitems))
-        XCTAssertEqual(sut.items, newitems)
+        let newItems = createItems(amount: 10)
+        charactersLoader.charactersCalledWith?.completion(.success(newItems))
+        XCTAssertEqual(sut.items, newItems.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
     }
 
     func testPerform_loadMore_leadsToASingleAPICall() {
@@ -88,7 +88,7 @@ class MarvelFeedProviderTests: XCTestCase {
         charactersLoader.charactersCalledWith?.completion(
             .success(items)
         )
-        XCTAssertEqual(sut.items, items)
+        XCTAssertEqual(sut.items, items.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
     }
 
     func testPerform_loadMore_doNotCleanPreviousItemsWhenCalled() {
@@ -118,7 +118,7 @@ class MarvelFeedProviderTests: XCTestCase {
 
     func testPerform_openItemWithItems_PerformCallsForItemInIndex() {
         let (sut, charactersLoader, items) = createSUT(itemCount: 2)
-        sut.items = items
+        sut.items = items.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) }
 
         sut.perform(action: .openItem(index: 0))
 
@@ -130,29 +130,59 @@ class MarvelFeedProviderTests: XCTestCase {
     }
 
 
-    func testPerform_openSearch_performNoAPICalls() {
+    func testPerform_searchWithInvalidText_performNoAPICalls() {
         let (sut, charactersLoader, _) = createSUT()
 
-        sut.perform(action: .openSearch)
+        sut.perform(action: .search(name: ""))
 
         XCTAssertEqual(charactersLoader.characterCallCount, 0)
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
     }
 
-    func testPerform_openSearch_triggerSearchRoute() {
-        var route: Route!
-        let (sut, _, _) = createSUT(router: { route = $0 })
+    func testPerform_searchWithValidText_performNoAPICalls() {
+        let (sut, charactersLoader, _) = createSUT()
 
-        sut.perform(action: .openSearch)
+        sut.perform(action: .search(name: "sdfsdf"))
 
-        XCTAssertEqual(route, Route.search)
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
     }
+
+    func testPerform_searchWithValidText_performSearchAPICalls() {
+        let (sut, charactersLoader, _) = createSUT()
+
+        sut.perform(action: .search(name: "sdfsdf"))
+        sut.perform(action: .loadFromStart)
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 1)
+
+        XCTAssertEqual(charactersLoader.searchCalledWith?.name, "sdfsdf")
+        XCTAssertEqual(charactersLoader.searchCalledWith?.page, 0)
+    }
+
+    func testPerform_searchWithValidText_LoadMore_performSearchAPICalls() {
+        let (sut, charactersLoader, _) = createSUT()
+
+        sut.perform(action: .search(name: "sdfsdf"))
+        sut.perform(action: .loadMore)
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 1)
+
+        XCTAssertEqual(charactersLoader.searchCalledWith?.name, "sdfsdf")
+        XCTAssertEqual(charactersLoader.searchCalledWith?.page, 1)
+    }
+
 
     func testPerform_openItemWithItems_triggerDetailsRoute() {
         var route: Route!
         let (sut, charactersLoader, items) = createSUT(itemCount: 1, router: { route = $0 })
-        sut.items = items
+        sut.items = items.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) }
 
         sut.perform(action: .openItem(index: 0))
 

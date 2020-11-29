@@ -16,7 +16,7 @@ class MarvelFeedProvider: FeedDataProvider {
         case loadFromStart
         case loadMore
         case openItem(index: Int)
-        case openSearch
+        case search(name: String?)
         case prepareForDisplay(indexes: [Int])
         case setHeroImage(index: Int, on: UIImageView)
     }
@@ -27,6 +27,7 @@ class MarvelFeedProvider: FeedDataProvider {
     private var router: (_ route: Route) -> Void
 
     private var nextPage = 0
+    private var searchCriteria: String?
 
     var items: [BasicCharacterData] = [] {
         didSet {
@@ -55,8 +56,8 @@ class MarvelFeedProvider: FeedDataProvider {
             if index < items.count, let itemId = items[index].id {
                 openItem(at: itemId)
             }
-        case .openSearch:
-            openSearch()
+        case .search(let name):
+            searchCriteria = name
         case .prepareForDisplay(let indexes):
             prefetchImagesForNewItems(newItems: indexes.compactMap {
                 guard items.count > $0 else {
@@ -77,11 +78,12 @@ class MarvelFeedProvider: FeedDataProvider {
 
     private func loadFromStart() {
         nextPage = 0
-        charactersLoader.characters(page: 0) { [weak self] result in
+
+        func completion(result: Result<[MarvelCharacter], Error>) {
             switch result {
             case .success(let characters):
-                self?.items.removeAll()
-                self?.items.append(
+                items.removeAll()
+                items.append(
                     contentsOf: characters.map {
                         BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified)
                     }
@@ -90,14 +92,21 @@ class MarvelFeedProvider: FeedDataProvider {
                 break //Display errors?
             }
         }
+
+        if let criteria = searchCriteria, criteria.count > 3 {
+            charactersLoader.search(by: criteria, in: 0, completion: completion)
+        } else {
+            charactersLoader.characters(page: 0, completion: completion)
+        }
     }
 
     private func loadMore() {
         nextPage += 1
-        charactersLoader.characters(page: nextPage) { [weak self] result in
+
+        func completion(result: Result<[MarvelCharacter], Error>) {
             switch result {
             case .success(let characters):
-                self?.items.append(
+                items.append(
                     contentsOf: characters.map {
                         BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified)
                     }
@@ -105,6 +114,12 @@ class MarvelFeedProvider: FeedDataProvider {
             case .failure(let error):
                 break //Display errors?
             }
+        }
+
+        if let criteria = searchCriteria {
+            charactersLoader.search(by: criteria, in: nextPage, completion: completion)
+        } else {
+            charactersLoader.characters(page: nextPage, completion: completion)
         }
     }
 

@@ -89,13 +89,19 @@ class FeedViewController: UIViewController {
         searchBar.searchBarStyle = .default
         searchBar.placeholder = "Try introducing a name here"
         searchBar.autocapitalizationType = .none
+        searchBar.searchTextField.textColor = .black
 
+        searchBar.searchTextField.addTarget(self, action:  #selector(updateSearchCriteria), for: .editingChanged)
         return searchBar
     }
 
     @objc func handleRefreshControl() {
         tableView.refreshControl?.beginRefreshing()
         feedDataProvider?.perform(action: .loadFromStart)
+    }
+
+    @objc func updateSearchCriteria() {
+        feedDataProvider?.perform(action: .search(name: searchBar.text))
     }
 }
 
