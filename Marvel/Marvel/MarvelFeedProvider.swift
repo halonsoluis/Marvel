@@ -28,7 +28,7 @@ class MarvelFeedProvider: FeedDataProvider {
 
     private var nextPage = 0
 
-    var items: [MarvelCharacter] = [] {
+    var items: [BasicCharacterData] = [] {
         didSet {
             onItemsChangeCallback?()
         }
@@ -81,7 +81,11 @@ class MarvelFeedProvider: FeedDataProvider {
             switch result {
             case .success(let characters):
                 self?.items.removeAll()
-                self?.items.append(contentsOf: characters)
+                self?.items.append(
+                    contentsOf: characters.map {
+                        BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified)
+                    }
+                )
             case .failure(let error):
                 break //Display errors?
             }
@@ -93,14 +97,18 @@ class MarvelFeedProvider: FeedDataProvider {
         charactersLoader.characters(page: nextPage) { [weak self] result in
             switch result {
             case .success(let characters):
-                self?.items.append(contentsOf: characters)
+                self?.items.append(
+                    contentsOf: characters.map {
+                        BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified)
+                    }
+                )
             case .failure(let error):
                 break //Display errors?
             }
         }
     }
 
-    private func prefetchImagesForNewItems(newItems: [MarvelCharacter]) {
+    private func prefetchImagesForNewItems(newItems: [BasicCharacterData]) {
         newItems.forEach { item in
             if let image = item.thumbnail, let modified = item.modified {
                 prefetchImageHandler(image, modified)

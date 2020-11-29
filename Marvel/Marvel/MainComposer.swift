@@ -14,8 +14,15 @@ typealias Router = (_ route: Route) -> Void
 typealias PrefetchImageHandler = (_ url: URL, _ uniqueKey: String) -> Void
 typealias LoadImageHandler = (_ url: URL, _ uniqueKey: String, _ destinationView: UIImageView) -> Void
 
+struct BasicCharacterData {
+    let id: Int?
+    let name: String?
+    let thumbnail: URL?
+    let modified: String?
+}
+
 protocol FeedDataProvider {
-    var items: [MarvelCharacter] { get }
+    var items: [BasicCharacterData] { get }
     var onItemsChangeCallback: (() -> Void)? { get set }
 
     func perform(action: MarvelFeedProvider.Action)
