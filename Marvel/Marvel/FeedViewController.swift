@@ -96,7 +96,7 @@ class FeedViewController: UIViewController {
     }
 }
 
-extension FeedViewController: UITableViewDataSource, UITableViewDelegate {
+extension FeedViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -114,7 +114,9 @@ extension FeedViewController: UITableViewDataSource, UITableViewDelegate {
         cell.setup(using: feedDataProvider, itemAt: indexPath.row)
         return cell
     }
+}
 
+extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         feedDataProvider?.perform(action: .openItem(index: indexPath.row))
     }
