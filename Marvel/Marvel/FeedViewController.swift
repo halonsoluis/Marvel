@@ -89,7 +89,7 @@ class FeedViewController: UIViewController {
         searchBar.searchBarStyle = .default
         searchBar.placeholder = "Try introducing a name here"
         searchBar.autocapitalizationType = .none
-        searchBar.searchTextField.textColor = .black
+        searchBar.searchTextField.textColor = .white
 
         searchBar.searchTextField.addTarget(self, action:  #selector(updateSearchCriteria), for: .editingChanged)
         return searchBar
