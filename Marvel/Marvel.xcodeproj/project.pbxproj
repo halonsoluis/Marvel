@@ -15,6 +15,7 @@
 		5BD7CFA22570876600F6EB7F /* MarvelFeedProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */; };
 		5BD7CFA62570878100F6EB7F /* MainComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA52570878100F6EB7F /* MainComposer.swift */; };
 		5BD8DF5A257313D000F5294A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5BD8DF59257313D000F5294A /* SnapKit */; };
+		5BD8DF612573228500F5294A /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD8DF602573228500F5294A /* ItemCell.swift */; };
 		5BFA3F8C256C93940057BD82 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFA3F8B256C93940057BD82 /* AppDelegate.swift */; };
 		5BFA3F8E256C93940057BD82 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFA3F8D256C93940057BD82 /* SceneDelegate.swift */; };
 		5BFA3F90256C93940057BD82 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFA3F8F256C93940057BD82 /* FeedViewController.swift */; };
@@ -111,6 +112,7 @@
 		5BD7CF9825706FBB00F6EB7F /* MarvelFeedProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelFeedProviderTests.swift; sourceTree = "<group>"; };
 		5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelFeedProvider.swift; sourceTree = "<group>"; };
 		5BD7CFA52570878100F6EB7F /* MainComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainComposer.swift; sourceTree = "<group>"; };
+		5BD8DF602573228500F5294A /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		5BFA3F88256C93940057BD82 /* Marvel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Marvel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BFA3F8B256C93940057BD82 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5BFA3F8D256C93940057BD82 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 			children = (
 				5BFA3F8F256C93940057BD82 /* FeedViewController.swift */,
 				5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */,
+				5BD8DF602573228500F5294A /* ItemCell.swift */,
 			);
 			name = CharactersFeedUseCase;
 			sourceTree = "<group>";
@@ -443,6 +446,7 @@
 			files = (
 				5BFA3F90256C93940057BD82 /* FeedViewController.swift in Sources */,
 				5BD7CFA62570878100F6EB7F /* MainComposer.swift in Sources */,
+				5BD8DF612573228500F5294A /* ItemCell.swift in Sources */,
 				5BD7CFA22570876600F6EB7F /* MarvelFeedProvider.swift in Sources */,
 				5BFA3F8C256C93940057BD82 /* AppDelegate.swift in Sources */,
 				5BFA3F8E256C93940057BD82 /* SceneDelegate.swift in Sources */,
