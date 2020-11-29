@@ -44,8 +44,10 @@ class FeedViewController: UIViewController {
     }
 
     func layoutUI() {
-        title = "Marvel"
         view.backgroundColor = .black
+        navigationController?.navigationBar.barTintColor = .black
+
+        navigationItem.titleView = UIImageView(image: UIImage(named: "icn-nav-marvel"))
 
         view.addSubview(searchBar)
         view.addSubview(tableView)
@@ -83,7 +85,8 @@ class FeedViewController: UIViewController {
 
     private func createSearchBar() -> UISearchBar {
         let searchBar = UISearchBar()
-        searchBar.searchBarStyle = .prominent
+        searchBar.barTintColor = .black
+        searchBar.searchBarStyle = .default
         searchBar.placeholder = "Try introducing a name here"
         searchBar.autocapitalizationType = .none
 
