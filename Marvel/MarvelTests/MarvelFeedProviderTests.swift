@@ -133,28 +133,37 @@ class MarvelFeedProviderTests: XCTestCase {
     func testPerform_searchWithInvalidText_performNoAPICalls() {
         let (sut, charactersLoader, _) = createSUT()
 
+        sut.perform(action: .search(name: "ab"))
+
+        XCTAssertEqual(charactersLoader.characterCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+    }
+
+    func testPerform_searchWithEmptyText_performsCharactersAPICalls() {
+        let (sut, charactersLoader, _) = createSUT()
+
         sut.perform(action: .search(name: ""))
 
         XCTAssertEqual(charactersLoader.characterCallCount, 0)
-        XCTAssertEqual(charactersLoader.charactersCallCount, 0)
+        XCTAssertEqual(charactersLoader.charactersCallCount, 1)
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
     }
 
-    func testPerform_searchWithValidText_performNoAPICalls() {
+    func testPerform_searchWithValidText_performsSearchPICalls() {
         let (sut, charactersLoader, _) = createSUT()
 
         sut.perform(action: .search(name: "sdfsdf"))
 
         XCTAssertEqual(charactersLoader.characterCallCount, 0)
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
-        XCTAssertEqual(charactersLoader.searchCallCount, 0)
+        XCTAssertEqual(charactersLoader.searchCallCount, 1)
     }
 
-    func testPerform_searchWithValidText_performSearchAPICalls() {
+    func testPerform_searchWithValidText_performsSearchAPICalls() {
         let (sut, charactersLoader, _) = createSUT()
 
         sut.perform(action: .search(name: "sdfsdf"))
-        sut.perform(action: .loadFromStart)
 
         XCTAssertEqual(charactersLoader.characterCallCount, 0)
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
@@ -164,18 +173,17 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.searchCalledWith?.page, 0)
     }
 
-    func testPerform_searchWithValidText_LoadMore_performSearchAPICalls() {
+    func testPerform_searchWithValidText_LoadMore_performsSearchAPICalls() {
         let (sut, charactersLoader, _) = createSUT()
 
         sut.perform(action: .search(name: "sdfsdf"))
-        sut.perform(action: .loadMore)
 
         XCTAssertEqual(charactersLoader.characterCallCount, 0)
         XCTAssertEqual(charactersLoader.charactersCallCount, 0)
         XCTAssertEqual(charactersLoader.searchCallCount, 1)
 
         XCTAssertEqual(charactersLoader.searchCalledWith?.name, "sdfsdf")
-        XCTAssertEqual(charactersLoader.searchCalledWith?.page, 1)
+        XCTAssertEqual(charactersLoader.searchCalledWith?.page, 0)
     }
 
 

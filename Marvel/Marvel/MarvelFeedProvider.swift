@@ -57,7 +57,13 @@ class MarvelFeedProvider: FeedDataProvider {
                 openItem(at: itemId)
             }
         case .search(let name):
-            searchCriteria = name
+            if let search = name, search.count > 3 {
+                searchCriteria = search
+                loadFromStart()
+            } else if name == "" {
+                searchCriteria = nil
+                loadFromStart()
+            }
         case .prepareForDisplay(let indexes):
             prefetchImagesForNewItems(newItems: indexes.compactMap {
                 guard items.count > $0 else {
