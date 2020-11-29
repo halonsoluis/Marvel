@@ -8,10 +8,13 @@ import Foundation
 import UIKit
 import SnapKit
 
-class FeedViewController: UITableViewController {
+class FeedViewController: UIViewController {
 
-    var feedDataProvider: FeedDataProvider?
-    
+    private lazy var searchBar: UISearchBar = createSearchBar()
+    private lazy var tableView: UITableView = createTableView()
+
+    private var feedDataProvider: FeedDataProvider?
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -24,14 +27,14 @@ class FeedViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        prepareTableView()
+        layoutUI()
 
         feedDataProvider?.onItemsChangeCallback = newItemsReceived
         feedDataProvider?.perform(action: .loadFromStart)
     }
 
     func newItemsReceived() {
-        guard let items = feedDataProvider?.items else {
+        guard feedDataProvider?.items != nil else {
             return
         }
         DispatchQueue.main.async {
@@ -40,7 +43,28 @@ class FeedViewController: UITableViewController {
         }
     }
 
-    func prepareTableView() {
+    func layoutUI() {
+        title = "Marvel"
+        view.backgroundColor = .black
+
+        view.addSubview(searchBar)
+        view.addSubview(tableView)
+
+        searchBar.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.width.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.height.equalTo(44)
+        }
+
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(searchBar.snp.bottom)
+            make.right.left.bottom.equalToSuperview()
+        }
+    }
+
+    func createTableView() -> UITableView {
+        let tableView = UITableView()
         tableView.allowsMultipleSelection = false
         tableView.keyboardDismissMode = .onDrag
         tableView.rowHeight = 180
@@ -49,14 +73,21 @@ class FeedViewController: UITableViewController {
         tableView.register(ItemCell.self, forCellReuseIdentifier: "ItemCell")
 
         tableView.delegate = self
+        tableView.dataSource = self
         tableView.prefetchDataSource = self
 
         tableView.refreshControl = UIRefreshControl()
-        tableView.refreshControl?.addTarget(
-            self, action:
-            #selector(handleRefreshControl),
-            for: .valueChanged
-        )
+        tableView.refreshControl?.addTarget(self, action:  #selector(handleRefreshControl), for: .valueChanged)
+        return tableView
+    }
+
+    private func createSearchBar() -> UISearchBar {
+        let searchBar = UISearchBar()
+        searchBar.searchBarStyle = .prominent
+        searchBar.placeholder = "Try introducing a name here"
+        searchBar.autocapitalizationType = .none
+
+        return searchBar
     }
 
     @objc func handleRefreshControl() {
@@ -65,12 +96,16 @@ class FeedViewController: UITableViewController {
     }
 }
 
-extension FeedViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int { 1 }
+extension FeedViewController: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { feedDataProvider?.items.count ?? 0 }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        feedDataProvider?.items.count ?? 0
+    }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         guard let feedDataProvider = feedDataProvider,
               let cell: ItemCell = tableView.dequeueReusableCell(withIdentifier: "ItemCell") as? ItemCell
@@ -80,7 +115,7 @@ extension FeedViewController {
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         feedDataProvider?.perform(action: .openItem(index: indexPath.row))
     }
 }
