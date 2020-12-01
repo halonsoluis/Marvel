@@ -10,7 +10,6 @@ import SnapKit
 
 class FeedViewController: UIViewController {
 
-    private lazy var searchBar: UISearchBar = createSearchBar()
     private lazy var tableView: UITableView = createTableView()
 
     private var feedDataProvider: FeedDataProvider?
@@ -20,8 +19,9 @@ class FeedViewController: UIViewController {
     }
 
     init(feedDataProvider: FeedDataProvider) {
-        self.feedDataProvider = feedDataProvider
         super.init(nibName: nil, bundle: nil)
+
+        self.feedDataProvider = feedDataProvider
     }
     
     override func viewDidLoad() {
@@ -45,24 +45,33 @@ class FeedViewController: UIViewController {
 
     func layoutUI() {
         view.backgroundColor = .black
-        navigationController?.navigationBar.barTintColor = .black
+
+        navigationController?.navigationBar.tintColor = .red
+        navigationController?.navigationBar.barStyle = .black
 
         navigationItem.titleView = UIImageView(image: UIImage(named: "icn-nav-marvel"))
+        navigationItem.hidesSearchBarWhenScrolling = true
+        navigationItem.searchController = createSearchController()
 
-        view.addSubview(searchBar)
         view.addSubview(tableView)
 
-        searchBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.width.equalToSuperview()
-            make.centerX.equalToSuperview()
-            make.height.equalTo(44)
-        }
-
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom)
+            make.top.equalToSuperview()
             make.right.left.bottom.equalToSuperview()
         }
+    }
+
+    func createSearchController() -> UISearchController {
+        let search = UISearchController(searchResultsController: nil)
+
+        search.searchResultsUpdater = self
+        search.obscuresBackgroundDuringPresentation = false
+
+        search.searchBar.placeholder = "Try introducing a name here"
+        search.searchBar.autocapitalizationType = .none
+        search.searchBar.searchTextField.textColor = .white
+
+        return search
     }
 
     func createTableView() -> UITableView {
@@ -83,26 +92,12 @@ class FeedViewController: UIViewController {
         return tableView
     }
 
-    private func createSearchBar() -> UISearchBar {
-        let searchBar = UISearchBar()
-        searchBar.barTintColor = .black
-        searchBar.searchBarStyle = .default
-        searchBar.placeholder = "Try introducing a name here"
-        searchBar.autocapitalizationType = .none
-        searchBar.searchTextField.textColor = .white
-
-        searchBar.searchTextField.addTarget(self, action:  #selector(updateSearchCriteria), for: .editingChanged)
-        return searchBar
-    }
-
     @objc func handleRefreshControl() {
         tableView.refreshControl?.beginRefreshing()
         feedDataProvider?.perform(action: .loadFromStart)
     }
 
-    @objc func updateSearchCriteria() {
-        feedDataProvider?.perform(action: .search(name: searchBar.text))
-    }
+
 }
 
 extension FeedViewController: UITableViewDataSource {
@@ -135,5 +130,11 @@ extension FeedViewController: UITableViewDelegate {
 extension FeedViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         feedDataProvider?.perform(action: .prepareForDisplay(indexes: indexPaths.map { $0.row }))
+    }
+}
+
+extension FeedViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        feedDataProvider?.perform(action: .search(name: searchController.searchBar.text))
     }
 }
