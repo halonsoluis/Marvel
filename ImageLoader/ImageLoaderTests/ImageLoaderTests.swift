@@ -9,22 +9,23 @@ import XCTest
 import Foundation
 import ImageLoader
 @testable import Kingfisher
-import AppKit
 
-//Taken from https://stackoverflow.com/a/40748898/2683201
-extension NSImage {
-    convenience init(color: NSColor, size: NSSize) {
-        self.init(size: size)
-        lockFocus()
-        color.drawSwatch(in: NSRect(origin: .zero, size: size))
-        unlockFocus()
+import UIKit
+
+//Taken from https://stackoverflow.com/a/48441178/2683201
+extension UIColor {
+    func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { rendererContext in
+            self.setFill()
+            rendererContext.fill(CGRect(origin: .zero, size: size))
+        }
     }
 }
 
 class ImageLoaderTests: XCTestCase {
 
     class MockImageDownloader: ImageDownloader {
-        static var image: NSImage?
+        static var image: UIImage?
 
         override func downloadImage(
             with url: URL,
@@ -32,7 +33,7 @@ class ImageLoaderTests: XCTestCase {
             completionHandler: ((Result<ImageLoadingResult, KingfisherError>) -> Void)? = nil) -> DownloadTask? {
             if let image = Self.image {
                 completionHandler?(
-                    .success(ImageLoadingResult(image: image, url: url, originalData: image.tiffRepresentation!))
+                    .success(ImageLoadingResult(image: image, url: url, originalData: image.pngData()!))
                 )
             } else {
                 completionHandler?(
@@ -107,7 +108,7 @@ class ImageLoaderTests: XCTestCase {
         return receivedError
     }
 
-    private func receivedErrorFromRender(from imageLoader: ImageLoader, view: NSImageView) -> Error? {
+    private func receivedErrorFromRender(from imageLoader: ImageLoader, view: UIImageView) -> Error? {
         let expect = expectation(description: "A request to render is made")
 
         var receivedError: Error?
@@ -119,10 +120,10 @@ class ImageLoaderTests: XCTestCase {
         return receivedError
     }
 
-    private func createSUT(uniqueKey: String = UUID().uuidString, image: NSImage? = NSImage(color: .black, size: NSSize(width: 1, height: 1))) -> (imageLoader: ImageLoader, view: NSImageView){
+    private func createSUT(uniqueKey: String = UUID().uuidString, image: UIImage? = UIColor.black.image(CGSize(width: 1, height: 1))) -> (imageLoader: ImageLoader, view: UIImageView){
         let url = URL(string: "https://www.anyurl.com/image.png")!
         let imageLoader = ImageLoader(url: url, uniqueKey: uniqueKey)
-        let view = NSImageView()
+        let view = UIImageView()
 
         MockImageDownloader.image = image
 

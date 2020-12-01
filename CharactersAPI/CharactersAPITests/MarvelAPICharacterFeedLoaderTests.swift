@@ -56,7 +56,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
                 XCTAssertEqual(character!.id, item["id"] as? Int)
                 XCTAssertEqual(character!.description, item["description"] as? String)
                 XCTAssertEqual(character!.modified, item["modified"] as? String)
-                XCTAssertEqual(character!.thumbnail?.absoluteString, "\(thumbnail["path"]!).\(thumbnail["extension"]!)")
+                XCTAssertEqual(character!.thumbnail?.absoluteString, "\(thumbnail["path"]!.replacingOccurrences(of: "http:", with: "https:")).\(thumbnail["extension"]!)")
             case .failure:
                 XCTFail("A valid item is expected as a result to the received response")
             }

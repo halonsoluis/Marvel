@@ -17,6 +17,6 @@ extension Image {
         guard let url = path, let type = `extension` else {
             return nil
         }
-        return URL(string: "\(url).\(type)")
+        return URL(string: "\(url.replacingOccurrences(of: "http:", with: "https:")).\(type)")
     }
 }
