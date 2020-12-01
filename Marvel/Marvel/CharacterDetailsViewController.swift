@@ -120,7 +120,7 @@ extension CharacterDetailsViewController {
         let imageView = UIImageView()
         imageView.accessibilityIdentifier = "heroImage"
         imageView.backgroundColor = .red
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
 
         return imageView
     }
