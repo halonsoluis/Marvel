@@ -42,7 +42,7 @@ class MarvelFeedProviderTests: XCTestCase {
         charactersLoader.charactersCalledWith?.completion(
             .success(items)
         )
-        XCTAssertEqual(sut.items, items.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
+        XCTAssertEqual(sut.items, items.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
     }
 
     func testPerform_loadFromStart_alwaysCleanPreviousItemsWhenCalled() {
@@ -57,7 +57,7 @@ class MarvelFeedProviderTests: XCTestCase {
         sut.perform(action: .loadFromStart)
         let newItems = createItems(amount: 10)
         charactersLoader.charactersCalledWith?.completion(.success(newItems))
-        XCTAssertEqual(sut.items, newItems.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
+        XCTAssertEqual(sut.items, newItems.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
     }
 
     func testPerform_loadMore_leadsToASingleAPICall() {
@@ -88,7 +88,7 @@ class MarvelFeedProviderTests: XCTestCase {
         charactersLoader.charactersCalledWith?.completion(
             .success(items)
         )
-        XCTAssertEqual(sut.items, items.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
+        XCTAssertEqual(sut.items, items.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
     }
 
     func testPerform_loadMore_doNotCleanPreviousItemsWhenCalled() {
@@ -118,7 +118,7 @@ class MarvelFeedProviderTests: XCTestCase {
 
     func testPerform_openItemWithItems_PerformCallsForItemInIndex() {
         let (sut, charactersLoader, items) = createSUT(itemCount: 2)
-        sut.items = items.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) }
+        sut.items = items.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) }
 
         sut.perform(action: .openItem(index: 0))
 
@@ -190,7 +190,7 @@ class MarvelFeedProviderTests: XCTestCase {
     func testPerform_openItemWithItems_triggerDetailsRoute() {
         var route: Route!
         let (sut, charactersLoader, items) = createSUT(itemCount: 1, router: { route = $0 })
-        sut.items = items.map { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) }
+        sut.items = items.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) }
 
         sut.perform(action: .openItem(index: 0))
 
@@ -239,7 +239,7 @@ extension MarvelFeedProviderTests {
     }
 
     private func createItems(amount: Int) -> [MarvelCharacter] {
-        let itemBuilder = { MarvelCharacter(id: Int.random(in: 1...100), name: "name", description: "description", modified: "modified", thumbnail: nil) }
+        let itemBuilder = { MarvelCharacter(id: Int.random(in: 1...100), name: "name", description: "description", modified: "modified", thumbnail: URL(string: "https://any-url.com")!) }
         return Array(repeating: itemBuilder(), count: amount)
     }
 }
