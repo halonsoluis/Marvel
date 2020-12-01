@@ -71,11 +71,22 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.searchCallCount, 0)
     }
 
-    func testPerform_loadMore_RequestNextPage() {
+    func testPerform_loadMore_RequestNextPageBeforeCompletionDoesNotProceed() {
         let (sut, charactersLoader, _) = createSUT()
 
         sut.perform(action: .loadMore)
         XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 1)
+
+        sut.perform(action: .loadMore)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 1)
+    }
+
+    func testPerform_loadMore_RequestNextPageAfterCompletionProceeds() {
+        let (sut, charactersLoader, _) = createSUT()
+
+        sut.perform(action: .loadMore)
+        XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 1)
+        charactersLoader.charactersCalledWith?.completion(.success([]))
 
         sut.perform(action: .loadMore)
         XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 2)
