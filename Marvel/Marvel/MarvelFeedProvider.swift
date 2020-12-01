@@ -152,12 +152,6 @@ class MarvelFeedProvider: FeedDataProvider {
         }
     }
 
-    private func openSearch() {
-        nextPage = 0
-        items.removeAll()
-        router(.search)
-    }
-
      func result(result: Result<[MarvelCharacter], Error>) -> [MarvelCharacter] {
         switch result {
         case .success(let items):
