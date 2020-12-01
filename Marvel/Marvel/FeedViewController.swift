@@ -10,7 +10,12 @@ import SnapKit
 
 class FeedViewController: UIViewController {
 
-    private lazy var tableView: UITableView = createTableView()
+    enum Section: CaseIterable {
+        case main
+    }
+    private let cellReuseIdentifier = "ItemCell"
+    private lazy var tableView: UITableView = UITableView()
+    private lazy var dataSource: UITableViewDiffableDataSource<Section, BasicCharacterData> = makeDataSource()
 
     private var feedDataProvider: FeedDataProvider?
 
@@ -29,18 +34,29 @@ class FeedViewController: UIViewController {
 
         layoutUI()
 
+        prepareTableView()
+        updateDataSource()
+
         feedDataProvider?.onItemsChangeCallback = newItemsReceived
+
         feedDataProvider?.perform(action: .loadFromStart)
     }
 
     func newItemsReceived() {
-        guard feedDataProvider?.items != nil else {
-            return
-        }
         DispatchQueue.main.async {
-            self.tableView.reloadData()
+            self.updateDataSource()
             self.tableView.refreshControl?.endRefreshing()
         }
+    }
+
+    func updateDataSource() {
+        guard let feedDataProvider = feedDataProvider else { return }
+
+        var snapshot = NSDiffableDataSourceSnapshot<Section, BasicCharacterData>()
+        snapshot.appendSections([Section.main])
+        snapshot.appendItems(feedDataProvider.items, toSection: .main)
+
+        self.dataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func layoutUI() {
@@ -74,8 +90,7 @@ class FeedViewController: UIViewController {
         return search
     }
 
-    func createTableView() -> UITableView {
-        let tableView = UITableView()
+    func prepareTableView() {
         tableView.allowsMultipleSelection = false
         tableView.keyboardDismissMode = .onDrag
         tableView.rowHeight = 180
@@ -84,12 +99,11 @@ class FeedViewController: UIViewController {
         tableView.register(ItemCell.self, forCellReuseIdentifier: "ItemCell")
 
         tableView.delegate = self
-        tableView.dataSource = self
         tableView.prefetchDataSource = self
 
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.addTarget(self, action:  #selector(handleRefreshControl), for: .valueChanged)
-        return tableView
+        tableView.dataSource = dataSource
     }
 
     @objc func handleRefreshControl() {
@@ -97,27 +111,19 @@ class FeedViewController: UIViewController {
         feedDataProvider?.perform(action: .loadFromStart)
     }
 
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let tableViewHeight = tableView.bounds.height
+        let tableViewContentHeight = tableView.contentSize.height
+        let tableViewContentBottomInset = tableView.contentInset.bottom
+        let currentVerticalPosition = scrollView.contentOffset.y + tableViewHeight - tableViewContentBottomInset
 
-}
+        let reloadDistance = tableViewHeight * 2
 
-extension FeedViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        if currentVerticalPosition > (tableViewContentHeight - reloadDistance) {
+            feedDataProvider?.perform(action: .loadMore)
+        }
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        feedDataProvider?.items.count ?? 0
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        guard let feedDataProvider = feedDataProvider,
-              let cell: ItemCell = tableView.dequeueReusableCell(withIdentifier: "ItemCell") as? ItemCell
-        else { return UITableViewCell() }
-
-        cell.setup(using: feedDataProvider, itemAt: indexPath.row)
-        return cell
-    }
 }
 
 extension FeedViewController: UITableViewDelegate {
@@ -136,5 +142,26 @@ extension FeedViewController: UITableViewDataSourcePrefetching {
 extension FeedViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         feedDataProvider?.perform(action: .search(name: searchController.searchBar.text))
+    }
+}
+
+private extension FeedViewController {
+    func makeDataSource() -> UITableViewDiffableDataSource<Section, BasicCharacterData> {
+        let reuseIdentifier = cellReuseIdentifier
+
+        return UITableViewDiffableDataSource(
+            tableView: tableView,
+            cellProvider: { [weak self] tableView, indexPath, character in
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: reuseIdentifier,
+                    for: indexPath
+                ) as? ItemCell
+
+                if let feedDataProvider = self?.feedDataProvider {
+                    cell?.setup(using: feedDataProvider, itemAt: indexPath.row)
+                }
+                return cell
+            }
+        )
     }
 }

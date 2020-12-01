@@ -35,6 +35,7 @@ class MarvelFeedProvider: FeedDataProvider {
         }
     }
     var onItemsChangeCallback: (() -> Void)?
+    var workInProgress = false
 
     init(charactersLoader: CharacterFeedLoader,
          prefetchImageHandler: @escaping (URL, String) -> Void,
@@ -53,8 +54,8 @@ class MarvelFeedProvider: FeedDataProvider {
         case .loadMore:
             loadMore()
         case .openItem(let index):
-            if index < items.count, let itemId = items[index].id {
-                openItem(at: itemId)
+            if index < items.count {
+                openItem(at: items[index].id)
             }
         case .search(let name):
             if let search = name, search.count > 3 {
@@ -76,13 +77,14 @@ class MarvelFeedProvider: FeedDataProvider {
             
             let item = items[index]
 
-            if let image = item.thumbnail, let modified = item.modified {
-                loadImageHandler(image, modified, imageField)
-            }
+            loadImageHandler(item.thumbnail, item.modified, imageField)
         }
     }
 
     private func loadFromStart() {
+        guard !workInProgress else { return }
+        workInProgress = true
+
         nextPage = 0
 
         func completion(result: Result<[MarvelCharacter], Error>) {
@@ -90,13 +92,14 @@ class MarvelFeedProvider: FeedDataProvider {
             case .success(let characters):
                 items.removeAll()
                 items.append(
-                    contentsOf: characters.map {
+                    contentsOf: characters.compactMap {
                         BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified)
                     }
                 )
             case .failure(let error):
                 break //Display errors?
             }
+            workInProgress = false
         }
 
         if let criteria = searchCriteria, criteria.count > 3 {
@@ -107,19 +110,23 @@ class MarvelFeedProvider: FeedDataProvider {
     }
 
     private func loadMore() {
+        guard !workInProgress else { return }
+        workInProgress = true
+
         nextPage += 1
 
         func completion(result: Result<[MarvelCharacter], Error>) {
             switch result {
             case .success(let characters):
                 items.append(
-                    contentsOf: characters.map {
+                    contentsOf: characters.compactMap {
                         BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified)
                     }
                 )
             case .failure(let error):
                 break //Display errors?
             }
+            workInProgress = false
         }
 
         if let criteria = searchCriteria {
@@ -131,9 +138,7 @@ class MarvelFeedProvider: FeedDataProvider {
 
     private func prefetchImagesForNewItems(newItems: [BasicCharacterData]) {
         newItems.forEach { item in
-            if let image = item.thumbnail, let modified = item.modified {
-                prefetchImageHandler(image, modified)
-            }
+            prefetchImageHandler(item.thumbnail, item.modified)
         }
     }
 
