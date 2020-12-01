@@ -98,8 +98,14 @@ class FeedViewController: UIViewController {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let position = scrollView.contentOffset.y
-        if position > (tableView.contentSize.height - 100 - scrollView.frame.size.height) {
+        let tableViewHeight = tableView.bounds.height
+        let tableViewContentHeight = tableView.contentSize.height
+        let tableViewContentBottomInset = tableView.contentInset.bottom
+        let currentVerticalPosition = scrollView.contentOffset.y + tableViewHeight - tableViewContentBottomInset
+
+        let reloadDistance = tableViewHeight * 2
+
+        if currentVerticalPosition > (tableViewContentHeight - reloadDistance) {
             feedDataProvider?.perform(action: .loadMore)
         }
     }
