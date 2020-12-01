@@ -19,10 +19,10 @@ jobs:
           scheme: CI
           workspace: Marvel.xcworkspace
         run: |
-          xcodebuild build-for-testing -scheme "$scheme" -workspace $workspace CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO MACOSX_DEPLOYMENT_TARGET=10.15
+          xcodebuild build-for-testing -scheme "$scheme" -workspace $workspace CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator14.2
       - name: Test
         env:
           scheme: CI
           workspace: Marvel.xcworkspace
         run: |
-          xcodebuild test-without-building -scheme "$scheme" -workspace $workspace CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO MACOSX_DEPLOYMENT_TARGET=10.15
+          xcodebuild test-without-building -scheme "$scheme" -workspace $workspace CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator14.2
