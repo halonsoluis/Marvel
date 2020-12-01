@@ -20,19 +20,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// 2. Create a new UIWindow using the windowScene constructor which takes in a window scene.
         let window = UIWindow(windowScene: windowScene)
 
-        let composer = MainComposer()
-
-        /// 3. Create a view hierarchy programmatically
-        let viewController = composer.feedView
-        let navigation = UINavigationController(rootViewController: viewController)
-
-        /// 4. Set the root view controller of the window with your view controller
-        window.rootViewController = navigation
-
         /// 5. Set the window and call makeKeyAndVisible()
         self.window = window
         window.makeKeyAndVisible()
 
+        MainComposer(baseView: window).start()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

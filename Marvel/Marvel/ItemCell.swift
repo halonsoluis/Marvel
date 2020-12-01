@@ -38,7 +38,8 @@ class ItemCell: UITableViewCell {
 
         name.snp.makeConstraints { make in
             make.centerY.equalToSuperview().multipliedBy(1.5)
-            make.right.equalToSuperview().inset(16)
+            make.left.equalToSuperview().inset(16)
+            make.right.equalToSuperview().inset(16).priority(.low)
         }
     }
 
