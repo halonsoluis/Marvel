@@ -35,6 +35,7 @@ class MarvelFeedProvider: FeedDataProvider {
         }
     }
     var onItemsChangeCallback: (() -> Void)?
+    var workInProgress = false
 
     init(charactersLoader: CharacterFeedLoader,
          prefetchImageHandler: @escaping (URL, String) -> Void,
@@ -83,6 +84,9 @@ class MarvelFeedProvider: FeedDataProvider {
     }
 
     private func loadFromStart() {
+        guard !workInProgress else { return }
+        workInProgress = true
+
         nextPage = 0
 
         func completion(result: Result<[MarvelCharacter], Error>) {
@@ -97,6 +101,7 @@ class MarvelFeedProvider: FeedDataProvider {
             case .failure(let error):
                 break //Display errors?
             }
+            workInProgress = false
         }
 
         if let criteria = searchCriteria, criteria.count > 3 {
@@ -107,6 +112,9 @@ class MarvelFeedProvider: FeedDataProvider {
     }
 
     private func loadMore() {
+        guard !workInProgress else { return }
+        workInProgress = true
+
         nextPage += 1
 
         func completion(result: Result<[MarvelCharacter], Error>) {
@@ -120,6 +128,7 @@ class MarvelFeedProvider: FeedDataProvider {
             case .failure(let error):
                 break //Display errors?
             }
+            workInProgress = false
         }
 
         if let criteria = searchCriteria {
