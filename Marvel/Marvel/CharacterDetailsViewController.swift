@@ -38,13 +38,6 @@ class CharacterDetailsViewController: UIViewController {
         drawCharacter()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        heroImage.sizeToFit()
-        view.setNeedsLayout()
-    }
-
     private func drawCharacter() {
         if let thumbnail = item.thumbnail, let modified = item.modified {
             loadImageHandler(thumbnail, modified, heroImage) { [weak self] _ in
@@ -58,6 +51,7 @@ class CharacterDetailsViewController: UIViewController {
                         make.height.equalTo(imageHeight)
                     }
                 }
+                strongSelf.stack.layoutIfNeeded()
             }
         }
         heroName.setTitle(item.name, for: .normal)
@@ -68,40 +62,34 @@ class CharacterDetailsViewController: UIViewController {
 
         view.backgroundColor = .black
         navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.isTranslucent = true
 
-        navigationItem.titleView = UIImageView(image: UIImage(named: "icn-nav-marvel"))
+        view.addSubview(scrollBar)
+        scrollBar.addSubview(stack)
 
-        //view.addSubview(stack)
+        scrollBar.translatesAutoresizingMaskIntoConstraints = false
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        heroName.translatesAutoresizingMaskIntoConstraints = false
 
-       // scrollBar.addSubview(stack)
+        stack.addArrangedSubview(heroImage)
+        stack.addArrangedSubview(heroDescription)
 
-        view.addSubview(heroImage)
-        view.addSubview(heroDescription)
-        view.addSubview(heroName)
+        heroImage.addSubview(heroName)
 
-//        scrollBar.snp.makeConstraints { make in
-//            make.edges.equalToSuperview()
-//        }
-
-//        stack.snp.makeConstraints { make in
-//            make.top.left.right.equalToSuperview()
-//            make.width.equalTo(view.snp.width)
-//        }
-
-        heroImage.snp.makeConstraints { make in
-            make.top.width.centerX.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(200)
+        scrollBar.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.bottom.left.right.equalToSuperview()
         }
 
-        heroDescription.snp.makeConstraints { make in
-            make.top.equalTo(heroImage.snp.bottom).offset(16)
-            make.centerX.equalToSuperview()
-            make.width.equalToSuperview().inset(8)
+        stack.snp.makeConstraints { make in
+            make.topMargin.equalTo(scrollBar.contentLayoutGuide.snp.top)
+            make.bottomMargin.equalToSuperview()
+            make.width.equalTo(self.view)
         }
 
         heroName.snp.makeConstraints { make in
-            make.right.equalTo(heroImage.snp.right).inset(16)
-            make.bottom.equalTo(heroImage.snp.bottom).inset(16)
+            make.right.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(20)
         }
     }
 }
@@ -112,16 +100,20 @@ extension CharacterDetailsViewController {
         let scrollView = UIScrollView()
         scrollView.bounces = true
         scrollView.bouncesZoom = true
+        scrollView.alwaysBounceHorizontal = false
         scrollView.isDirectionalLockEnabled = true
+        scrollView.contentInset = UIEdgeInsets.zero
+        
         return scrollView
     }
 
     private func createStackView() -> UIStackView {
-        let scrollView = UIStackView()
-        scrollView.alignment = .leading
-        scrollView.axis = .vertical
-        scrollView.distribution = .equalSpacing
-        return scrollView
+        let stack = UIStackView()
+        stack.alignment = .leading
+        stack.axis = .vertical
+        stack.distribution = .equalSpacing
+        stack.spacing = 16
+        return stack
     }
 
     private func createHeroImageView() -> UIImageView {
@@ -129,10 +121,6 @@ extension CharacterDetailsViewController {
         imageView.accessibilityIdentifier = "heroImage"
         imageView.backgroundColor = .red
         imageView.contentMode = .scaleAspectFit
-
-        imageView.autoresizingMask = .flexibleBottomMargin
-        imageView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        imageView.setContentHuggingPriority(.defaultLow, for: .vertical)
 
         return imageView
     }
@@ -142,9 +130,10 @@ extension CharacterDetailsViewController {
         descriptionLabel.textColor = .white
         descriptionLabel.backgroundColor = .clear
         descriptionLabel.font = UIFont.boldSystemFont(ofSize: 17)
-        descriptionLabel.accessibilityIdentifier = "name"
+        descriptionLabel.accessibilityIdentifier = "description"
         descriptionLabel.lineBreakMode = .byWordWrapping
         descriptionLabel.numberOfLines = 0
+
         return descriptionLabel
     }
 
@@ -153,7 +142,7 @@ extension CharacterDetailsViewController {
         nameLabel.setTitleColor(.black, for: .normal)
         nameLabel.titleLabel?.adjustsFontSizeToFitWidth = false
         nameLabel.titleLabel?.autoresizesSubviews = true
-        nameLabel.autoresizingMask = [.flexibleRightMargin, .flexibleTopMargin]
+        nameLabel.autoresizingMask = [.flexibleLeftMargin]
         nameLabel.backgroundColor = .clear
         nameLabel.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
         nameLabel.accessibilityIdentifier = "name"
