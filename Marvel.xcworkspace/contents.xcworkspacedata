@@ -5,12 +5,12 @@
       location = "group:Marvel/Marvel.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:README.md">
-   </FileRef>
-   <FileRef
       location = "group:CharactersAPI/CharactersAPI.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:ImageLoader/ImageLoader.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:README.md">
    </FileRef>
 </Workspace>
