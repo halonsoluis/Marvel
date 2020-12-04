@@ -50,14 +50,45 @@ Of course, this was evolving as the needs of the app were getting more clear. Fo
 
 ### Current Architecture
 
-[//]: # "(...) Insert photo here and description, update diagrams"
+<p align="center">
+<img src="Docs/Images/Marvel Characters- 03-12-20.svg">
+</p>
+
+Notice that there's an strong dependency from **Marvel** to **CharactersAPI**, this is technical debt that will be addressed.
+
+`MainComposer` Can be extracted out of **Marvel** target, making it to effectively **MarvelUI**. This will then allow for easily interchange of UI technology, hence making easier, for example, the adoption of SwiftUI.
+
+Most of the dependencies between frameworks were resolved in the MainComposer by functions that behave as adapters between frameworks.
+
 ### UI Architectural Pattern
 
 MVC was used in previous iteration of the app. Nevertheless, I have come to appreaciate MVVM over it. VIPER has a lot to offer but for the size of this project and at this point, better not to go for a strict approach.
 
 Hence, for current project, learnings from the three of them were applied. I have noticed that I have a preference for compositional architecture and evolutionary design. :)
 
+Basically, the UI interacts with the rest of the app by producing calls to an API provided by the viewModel and listening for changesm. In the case of using **Combine** or **RxSwift** the exposed callback will not be needed, given that `items` is observable
+
+```swift
+protocol FeedDataProvider {
+    var items: [BasicCharacterData] { get }
+    var onItemsChangeCallback: (() -> Void)? { get set }
+
+    func perform(action: Action)
+}
+
+enum Action {
+    case loadFromStart
+    case loadMore
+    case openItem(index: Int)
+    case search(name: String?)
+    case prepareForDisplay(indexes: [Int])
+    case setHeroImage(index: Int, on: UIImageView)
+}
+```
+
 **Start simple, Continue simple, Compose, Repeat**
+
+
 
 ## Code quality
 
@@ -93,7 +124,7 @@ Marvel project's target was then set to iOS and project dependencies updated acc
 
 For the UI creation the first step was to remove the Storyboard and all references to it. A totally different approach as previous version.
 
-Snapkit was decided to be used, mainly for reducing a bit of the hassle of handling autolayout native way of defining constrains. Don't judge me, is way more easy to read and spot issues, also it may be related to that for the last 2 years it has been the way to go in my daily job.
+**Snapkit** was decided to be used, mainly for reducing a bit of the hassle of handling autolayout native way of defining constrains. Don't judge me, is way more easy to read and spot issues, also it may be related to that for the last 2 years it has been the way to go in my daily job.
 
 Talking about spotting issues, I started to consider the option to introduce a tool for code injection to facilitate the speed of development (changes in code reflected inmediately in the interface), but as it's a relatively easy interface this idea was desestimated.
 
@@ -105,16 +136,14 @@ The code is presented as a **Workspace** that includes the following **Projects*
 <img src="Docs/Images/ProjectStructure.png">
 </p>
 
-**CharactersAPI**
+- **CharactersAPI**
 Includes the Business logic and works as a platform agnostic provider for data retrieved from the Marvel API.
 
-**ImageLoader**
+- **ImageLoader**
 Protects the rest of the app from the 3rd party library Kingfisher. It could have been solved by using a single file that could work as a facade. It's platform agnostic.
 
-**Marvel**
+- **Marvel**
 Includes UI, ModelViews and the MainComposer. Ideally the MainComposer should be extracted.
-
-**SPM is used for handling external dependencies.**
 
 ## 3rd Party Libraries
 
@@ -128,15 +157,17 @@ SnapKit is a DSL to make Auto Layout easy on both iOS and OS X.
 
 Kingfisher is a powerful, pure-Swift library for downloading and caching images from the web. It provides you a chance to use a pure-Swift way to work with remote images in your next app.
 
+**SPM is used for handling external dependencies.**
+
 # Extra Features:
 
-- [ ] Performance
+- [x] Performance
 - [ ] Universal App
+- The app works in all platforms but the visuals are not adjusted. Mainly cuz at this point I have made the mistake of using UIScreen.main for obtaining the size of the viewport.
 - [ ] Use of Size Classes
 - [ ] Animations
 - [ ] Custom view controller transitions/presentations
-- [ ] Documentation
-- [ ] Nice little big details
+- [x] Documentation
 
 [//]: # "Links"
 
