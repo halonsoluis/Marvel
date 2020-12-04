@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ImageLoader {
+public struct ImageCreator {
 
     let url: URL
     let uniqueKey: String

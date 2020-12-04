@@ -45,7 +45,16 @@ protocol FeedDataProvider {
     var items: [BasicCharacterData] { get }
     var onItemsChangeCallback: (() -> Void)? { get set }
 
-    func perform(action: MarvelFeedProvider.Action)
+    func perform(action: Action)
+}
+
+enum Action {
+    case loadFromStart
+    case loadMore
+    case openItem(index: Int)
+    case search(name: String?)
+    case prepareForDisplay(indexes: [Int])
+    case setHeroImage(index: Int, on: UIImageView)
 }
 
 enum Route: Equatable {
@@ -73,11 +82,11 @@ class MainComposer {
     }
 
     private func loadImageHandlerWithCompletion(url: URL, modifiedKey: String, imageView: UIImageView, completion: @escaping (Error?)->Void) {
-        ImageLoader(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: completion)
+        ImageCreator(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: completion)
     }
 
     private func prefetchImageHandler(url: URL, modifiedKey: String) {
-        ImageLoader(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
+        ImageCreator(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
     }
 
     private lazy var itemProvider: FeedDataProvider = {
