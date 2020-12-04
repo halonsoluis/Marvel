@@ -12,15 +12,6 @@ import UIKit
 
 class MarvelFeedProvider: FeedDataProvider {
 
-    enum Action {
-        case loadFromStart
-        case loadMore
-        case openItem(index: Int)
-        case search(name: String?)
-        case prepareForDisplay(indexes: [Int])
-        case setHeroImage(index: Int, on: UIImageView)
-    }
-
     private var charactersLoader: CharacterFeedLoader
     private var prefetchImageHandler: (_ url: URL, _ uniqueKey: String) -> Void
     private var loadImageHandler: (_ url: URL, _ uniqueKey: String, _ destinationView: UIImageView) -> Void

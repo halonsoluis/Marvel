@@ -45,7 +45,16 @@ protocol FeedDataProvider {
     var items: [BasicCharacterData] { get }
     var onItemsChangeCallback: (() -> Void)? { get set }
 
-    func perform(action: MarvelFeedProvider.Action)
+    func perform(action: Action)
+}
+
+enum Action {
+    case loadFromStart
+    case loadMore
+    case openItem(index: Int)
+    case search(name: String?)
+    case prepareForDisplay(indexes: [Int])
+    case setHeroImage(index: Int, on: UIImageView)
 }
 
 enum Route: Equatable {
