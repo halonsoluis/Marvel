@@ -96,7 +96,7 @@ class ImageLoaderTests: XCTestCase {
         XCTAssertNotNil(receivedError)
     }
 
-    private func receivedErrorFromPrefetch(from imageLoader: ImageLoader) -> Error? {
+    private func receivedErrorFromPrefetch(from imageLoader: ImageCreator) -> Error? {
         let expect = expectation(description: "A request to prefetch is made")
 
         var receivedError: Error?
@@ -108,7 +108,7 @@ class ImageLoaderTests: XCTestCase {
         return receivedError
     }
 
-    private func receivedErrorFromRender(from imageLoader: ImageLoader, view: UIImageView) -> Error? {
+    private func receivedErrorFromRender(from imageLoader: ImageCreator, view: UIImageView) -> Error? {
         let expect = expectation(description: "A request to render is made")
 
         var receivedError: Error?
@@ -120,9 +120,9 @@ class ImageLoaderTests: XCTestCase {
         return receivedError
     }
 
-    private func createSUT(uniqueKey: String = UUID().uuidString, image: UIImage? = UIColor.black.image(CGSize(width: 1, height: 1))) -> (imageLoader: ImageLoader, view: UIImageView){
+    private func createSUT(uniqueKey: String = UUID().uuidString, image: UIImage? = UIColor.black.image(CGSize(width: 1, height: 1))) -> (imageLoader: ImageCreator, view: UIImageView){
         let url = URL(string: "https://www.anyurl.com/image.png")!
-        let imageLoader = ImageLoader(url: url, uniqueKey: uniqueKey)
+        let imageLoader = ImageCreator(url: url, uniqueKey: uniqueKey)
         let view = UIImageView()
 
         MockImageDownloader.image = image

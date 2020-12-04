@@ -73,11 +73,11 @@ class MainComposer {
     }
 
     private func loadImageHandlerWithCompletion(url: URL, modifiedKey: String, imageView: UIImageView, completion: @escaping (Error?)->Void) {
-        ImageLoader(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: completion)
+        ImageCreator(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: completion)
     }
 
     private func prefetchImageHandler(url: URL, modifiedKey: String) {
-        ImageLoader(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
+        ImageCreator(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
     }
 
     private lazy var itemProvider: FeedDataProvider = {
