@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5BD4F3E6256CA5350016B3CF /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; };
-		5BD4F3E7256CA5350016B3CF /* CharactersAPI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		5BD4F3E8256CA5350016B3CF /* ImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; };
-		5BD4F3E9256CA5350016B3CF /* ImageLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5BD4F3E6256CA5350016B3CF /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; platformFilter = ios; };
+		5BD4F3E7256CA5350016B3CF /* CharactersAPI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5BD4F3E8256CA5350016B3CF /* ImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; platformFilter = ios; };
+		5BD4F3E9256CA5350016B3CF /* ImageLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5BD7CF9925706FBB00F6EB7F /* MarvelFeedProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CF9825706FBB00F6EB7F /* MarvelFeedProviderTests.swift */; };
 		5BD7CFA22570876600F6EB7F /* MarvelFeedProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */; };
 		5BD7CFA62570878100F6EB7F /* MainComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA52570878100F6EB7F /* MainComposer.swift */; };
@@ -488,13 +488,11 @@
 		5BD4F3DA256CA4D90016B3CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ImageLoader;
-			platformFilter = ios;
 			targetProxy = 5BD4F3D9256CA4D90016B3CF /* PBXContainerItemProxy */;
 		};
 		5BD4F3DC256CA4D90016B3CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CharactersAPI;
-			platformFilter = ios;
 			targetProxy = 5BD4F3DB256CA4D90016B3CF /* PBXContainerItemProxy */;
 		};
 		5BFA3FA0256C93950057BD82 /* PBXTargetDependency */ = {
@@ -653,7 +651,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = halonso.Marvel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -675,7 +673,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = halonso.Marvel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
