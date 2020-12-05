@@ -38,30 +38,35 @@ class CharacterDetailsViewController: UIViewController {
         drawCharacter()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        adjustHeroImageAspect()
+    }
+
     private func drawCharacter() {
         if let thumbnail = item.thumbnail, let modified = item.modified {
-            loadImageHandler(thumbnail, modified, heroImage) { [weak self] _ in
-                 guard
-                    let strongSelf = self,
-                    let imageSize = strongSelf.heroImage.image?.size
-                else { return }
-
-                let superviewWidth = strongSelf.view.bounds.width
-                let ratio = superviewWidth / imageSize.width
-                let imageHeight = imageSize.height * ratio
-
-                strongSelf.heroImage.sizeToFit()
-
-                strongSelf.heroImage.snp.updateConstraints { make in
-                    make.height.equalTo(imageHeight)
-                    make.width.equalTo(superviewWidth)
-                }
-
-                strongSelf.stack.layoutIfNeeded()
-            }
+            loadImageHandler(thumbnail, modified, heroImage, { _ in })
         }
         heroName.setTitle(item.name, for: .normal)
         heroDescription.text = item.description
+    }
+
+    private func adjustHeroImageAspect() {
+        guard let imageSize = heroImage.image?.size else { return }
+
+        let superviewWidth = view.bounds.width
+        let ratio = superviewWidth / imageSize.width
+        let imageHeight = imageSize.height * ratio
+
+        heroImage.sizeToFit()
+
+        heroImage.snp.updateConstraints { make in
+            make.height.equalTo(imageHeight).priority(.high)
+            make.width.equalTo(superviewWidth).priority(.medium)
+        }
+
+        stack.layoutIfNeeded()
     }
 
     private func setupUI() {
@@ -76,6 +81,7 @@ class CharacterDetailsViewController: UIViewController {
         scrollBar.translatesAutoresizingMaskIntoConstraints = false
         stack.translatesAutoresizingMaskIntoConstraints = false
         heroName.translatesAutoresizingMaskIntoConstraints = false
+        heroImage.translatesAutoresizingMaskIntoConstraints = false
 
         stack.addArrangedSubview(heroImage)
         stack.addArrangedSubview(heroDescription)
