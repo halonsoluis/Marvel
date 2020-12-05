@@ -41,16 +41,22 @@ class CharacterDetailsViewController: UIViewController {
     private func drawCharacter() {
         if let thumbnail = item.thumbnail, let modified = item.modified {
             loadImageHandler(thumbnail, modified, heroImage) { [weak self] _ in
-                guard let strongSelf = self else { return }
+                 guard
+                    let strongSelf = self,
+                    let imageSize = strongSelf.heroImage.image?.size
+                else { return }
 
-                if let size = strongSelf.heroImage.image?.size {
-                    let ratio = UIScreen.main.bounds.width / size.width
-                    let imageHeight = size.height * ratio
+                let superviewWidth = strongSelf.view.bounds.width
+                let ratio = superviewWidth / imageSize.width
+                let imageHeight = imageSize.height * ratio
 
-                    strongSelf.heroImage.snp.updateConstraints { make in
-                        make.height.equalTo(imageHeight)
-                    }
+                strongSelf.heroImage.sizeToFit()
+
+                strongSelf.heroImage.snp.updateConstraints { make in
+                    make.height.equalTo(imageHeight)
+                    make.width.equalTo(superviewWidth)
                 }
+
                 strongSelf.stack.layoutIfNeeded()
             }
         }
@@ -87,6 +93,10 @@ class CharacterDetailsViewController: UIViewController {
             make.width.equalTo(self.view)
         }
 
+        heroDescription.snp.makeConstraints { make in
+            make.width.equalToSuperview().inset(20)
+        }
+
         heroName.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(16)
             make.bottom.equalToSuperview().inset(20)
@@ -109,10 +119,12 @@ extension CharacterDetailsViewController {
 
     private func createStackView() -> UIStackView {
         let stack = UIStackView()
-        stack.alignment = .leading
+        stack.alignment = .center
         stack.axis = .vertical
         stack.distribution = .equalSpacing
         stack.spacing = 16
+        stack.layoutMargins.right = 4
+        stack.layoutMargins.left = 4
         return stack
     }
 
@@ -120,7 +132,7 @@ extension CharacterDetailsViewController {
         let imageView = UIImageView()
         imageView.accessibilityIdentifier = "heroImage"
         imageView.backgroundColor = .red
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
 
         return imageView
     }
@@ -133,6 +145,7 @@ extension CharacterDetailsViewController {
         descriptionLabel.accessibilityIdentifier = "description"
         descriptionLabel.lineBreakMode = .byWordWrapping
         descriptionLabel.numberOfLines = 0
+        descriptionLabel.textAlignment = .center
 
         return descriptionLabel
     }
