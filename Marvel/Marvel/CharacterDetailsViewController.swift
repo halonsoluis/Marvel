@@ -11,7 +11,7 @@ import SnapKit
 import CharactersAPI
 
 class CharacterDetailsViewController: UIViewController {
-    private let item: MarvelCharacter
+    private let item: MarvelCharacter?
     private let loadImageHandler: (URL, String, UIImageView, @escaping (Error?) -> Void) -> Void
 
     private lazy var scrollBar: UIScrollView = self.createScrollBar()
@@ -20,7 +20,7 @@ class CharacterDetailsViewController: UIViewController {
     private lazy var heroName: UIButton = self.createNameButton()
     private lazy var heroImage: UIImageView = self.createHeroImageView()
 
-    init(item: MarvelCharacter, loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void) {
+    init(item: MarvelCharacter? = nil, loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void) {
         self.item = item
         self.loadImageHandler = loadImageHandler
 
@@ -35,7 +35,9 @@ class CharacterDetailsViewController: UIViewController {
         super.viewDidLoad()
 
         setupUI()
-        drawCharacter()
+        if let item = item {
+            drawCharacter(item: item)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -44,12 +46,15 @@ class CharacterDetailsViewController: UIViewController {
         adjustHeroImageAspect()
     }
 
-    private func drawCharacter() {
+    func drawCharacter(item: MarvelCharacter) {
+
         if let thumbnail = item.thumbnail, let modified = item.modified {
             loadImageHandler(thumbnail, modified, heroImage, { _ in })
         }
         heroName.setTitle(item.name, for: .normal)
         heroDescription.text = item.description
+
+        adjustHeroImageAspect()
     }
 
     private func adjustHeroImageAspect() {
@@ -66,7 +71,7 @@ class CharacterDetailsViewController: UIViewController {
             make.width.equalTo(superviewWidth).priority(.medium)
         }
 
-        stack.layoutIfNeeded()
+        stack.setNeedsLayout()
     }
 
     private func setupUI() {

@@ -64,17 +64,27 @@ enum Route: Equatable {
 class MainComposer {
     private let baseView: UIWindow
 
+    private lazy var splitView: UISplitViewController = createSplitView()
+    private lazy var splitViewDelegate: SplitViewDelegate = SplitViewDelegate()
+    private lazy var feedViewVC = FeedViewController(feedDataProvider: itemProvider)
+    private lazy var characterDetailsVC = CharacterDetailsViewController(loadImageHandler: loadImageHandlerWithCompletion)
+
     init(baseView: UIWindow) {
         self.baseView = baseView
     }
 
     func start() {
-        let baseNavigation = UINavigationController(rootViewController: feedView())
-        baseView.rootViewController = baseNavigation
+        baseView.rootViewController = splitView
     }
 
-    func feedView() -> FeedViewController {
-        FeedViewController(feedDataProvider: itemProvider)
+    private func createSplitView() -> UISplitViewController {
+        let splitView = UISplitViewController()
+        splitView.delegate = splitViewDelegate
+
+        splitView.viewControllers.append(UINavigationController(rootViewController: feedViewVC))
+        splitView.viewControllers.append(characterDetailsVC)
+
+        return splitView
     }
 
     private func loadImageHandler(url: URL, modifiedKey: String, imageView: UIImageView) {
@@ -108,16 +118,27 @@ class MainComposer {
 
 // MARK - Navigation
 extension MainComposer {
-    func characterDetails(item: MarvelCharacter) -> UIViewController {
-        CharacterDetailsViewController(item: item, loadImageHandler: loadImageHandlerWithCompletion)
-    }
 
     private func router(route: Route, using baseWindow: UIWindow ) {
         switch route {
         case .details(for: let item):
             DispatchQueue.main.async {
-                (self.baseView.rootViewController as? UINavigationController)?.pushViewController(self.characterDetails(item: item), animated: true)
+                self.characterDetailsVC.drawCharacter(item: item)
+                self.splitView.showDetailViewController(self.characterDetailsVC, sender: nil)
             }
+        }
+    }
+}
+
+extension MainComposer {
+    class SplitViewDelegate: UISplitViewControllerDelegate {
+
+        func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
+            return true
+        }
+
+        func primaryViewController(forCollapsing splitViewController: UISplitViewController) -> UIViewController? {
+            return splitViewController.viewControllers.first
         }
     }
 }
