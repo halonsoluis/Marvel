@@ -11,7 +11,7 @@ import SnapKit
 import CharactersAPI
 
 class CharacterDetailsViewController: UIViewController {
-    private let item: MarvelCharacter
+    private let item: MarvelCharacter?
     private let loadImageHandler: (URL, String, UIImageView, @escaping (Error?) -> Void) -> Void
 
     private lazy var scrollBar: UIScrollView = self.createScrollBar()
@@ -20,7 +20,7 @@ class CharacterDetailsViewController: UIViewController {
     private lazy var heroName: UIButton = self.createNameButton()
     private lazy var heroImage: UIImageView = self.createHeroImageView()
 
-    init(item: MarvelCharacter, loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void) {
+    init(item: MarvelCharacter? = nil, loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void) {
         self.item = item
         self.loadImageHandler = loadImageHandler
 
@@ -35,27 +35,43 @@ class CharacterDetailsViewController: UIViewController {
         super.viewDidLoad()
 
         setupUI()
-        drawCharacter()
+        if let item = item {
+            drawCharacter(item: item)
+        }
     }
 
-    private func drawCharacter() {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        adjustHeroImageAspect()
+    }
+
+    func drawCharacter(item: MarvelCharacter) {
+
         if let thumbnail = item.thumbnail, let modified = item.modified {
-            loadImageHandler(thumbnail, modified, heroImage) { [weak self] _ in
-                guard let strongSelf = self else { return }
-
-                if let size = strongSelf.heroImage.image?.size {
-                    let ratio = UIScreen.main.bounds.width / size.width
-                    let imageHeight = size.height * ratio
-
-                    strongSelf.heroImage.snp.updateConstraints { make in
-                        make.height.equalTo(imageHeight)
-                    }
-                }
-                strongSelf.stack.layoutIfNeeded()
-            }
+            loadImageHandler(thumbnail, modified, heroImage, { _ in })
         }
         heroName.setTitle(item.name, for: .normal)
         heroDescription.text = item.description
+
+        adjustHeroImageAspect()
+    }
+
+    private func adjustHeroImageAspect() {
+        guard let imageSize = heroImage.image?.size else { return }
+
+        let superviewWidth = view.bounds.width
+        let ratio = superviewWidth / imageSize.width
+        let imageHeight = imageSize.height * ratio
+
+        heroImage.sizeToFit()
+
+        heroImage.snp.updateConstraints { make in
+            make.height.equalTo(imageHeight).priority(.high)
+            make.width.equalTo(superviewWidth).priority(.medium)
+        }
+
+        stack.setNeedsLayout()
     }
 
     private func setupUI() {
@@ -70,6 +86,7 @@ class CharacterDetailsViewController: UIViewController {
         scrollBar.translatesAutoresizingMaskIntoConstraints = false
         stack.translatesAutoresizingMaskIntoConstraints = false
         heroName.translatesAutoresizingMaskIntoConstraints = false
+        heroImage.translatesAutoresizingMaskIntoConstraints = false
 
         stack.addArrangedSubview(heroImage)
         stack.addArrangedSubview(heroDescription)
@@ -85,6 +102,10 @@ class CharacterDetailsViewController: UIViewController {
             make.topMargin.equalTo(scrollBar.contentLayoutGuide.snp.top)
             make.bottomMargin.equalToSuperview()
             make.width.equalTo(self.view)
+        }
+
+        heroDescription.snp.makeConstraints { make in
+            make.width.equalToSuperview().inset(20)
         }
 
         heroName.snp.makeConstraints { make in
@@ -109,10 +130,12 @@ extension CharacterDetailsViewController {
 
     private func createStackView() -> UIStackView {
         let stack = UIStackView()
-        stack.alignment = .leading
+        stack.alignment = .center
         stack.axis = .vertical
         stack.distribution = .equalSpacing
         stack.spacing = 16
+        stack.layoutMargins.right = 4
+        stack.layoutMargins.left = 4
         return stack
     }
 
@@ -120,7 +143,7 @@ extension CharacterDetailsViewController {
         let imageView = UIImageView()
         imageView.accessibilityIdentifier = "heroImage"
         imageView.backgroundColor = .red
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
 
         return imageView
     }
@@ -133,6 +156,7 @@ extension CharacterDetailsViewController {
         descriptionLabel.accessibilityIdentifier = "description"
         descriptionLabel.lineBreakMode = .byWordWrapping
         descriptionLabel.numberOfLines = 0
+        descriptionLabel.textAlignment = .center
 
         return descriptionLabel
     }

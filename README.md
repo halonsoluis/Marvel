@@ -17,9 +17,9 @@ Using this app, users will be able to browse through the Marvel library of chara
 <!-- Portfolio Gallery Grid -->
 
 <p align="center">
-<img src="Docs/Images/Screenshot 2020-12-03 at 00.45.21.png" width="25%">
-<img src="Docs/Images/Screenshot 2020-12-03 at 00.45.07.png" width="25%">
-<img src="Docs/Images/Screenshot 2020-12-03 at 00.53.47.png" width="25%">
+<img src="Docs/Images/iOS Main View.png" width="32%">
+<img src="Docs/Images/iOS Main View Scrolled Up.png" width="32%">
+<img src="Docs/Images/iOS Detailed View.png" width="32%">
 </p>
 
 [//]: # "Features"
@@ -87,7 +87,6 @@ enum Action {
 ```
 
 **Start simple, Continue simple, Compose, Repeat**
-
 
 
 ## Code quality
@@ -161,9 +160,17 @@ Kingfisher is a powerful, pure-Swift library for downloading and caching images 
 
 # Extra Features:
 
-- [x] Performance
-- [ ] Universal App
-- The app works in all platforms but the visuals are not adjusted. Mainly cuz at this point I have made the mistake of using UIScreen.main for obtaining the size of the viewport.
+- [ ] Performance
+  - There are some glitches when new data is received. I would have expected that the DiffableDataSource would make it work. But is not what I see now.
+- [x] Universal App
+
+<p align="center">
+<img src="Docs/Images/iOS MainView.png" width="48%">
+<img src="Docs/Images/iOS DetailView.png" width="48%">
+<img src="Docs/Images/iPadOS.png" width="100%">
+<img src="Docs/Images/macOS.png" width="100%">
+</p>
+
 - [ ] Use of Size Classes
 - [ ] Animations
 - [ ] Custom view controller transitions/presentations

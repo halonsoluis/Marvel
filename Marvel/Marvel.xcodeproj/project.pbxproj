@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5BD4F3E6256CA5350016B3CF /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; };
-		5BD4F3E7256CA5350016B3CF /* CharactersAPI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		5BD4F3E8256CA5350016B3CF /* ImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; };
-		5BD4F3E9256CA5350016B3CF /* ImageLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5B14F0D4257D1D510003572D /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B14F0D3257D1D510003572D /* MainQueueDispatchDecorator.swift */; };
+		5BD4F3E6256CA5350016B3CF /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; platformFilter = ios; };
+		5BD4F3E7256CA5350016B3CF /* CharactersAPI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5BD4F3E8256CA5350016B3CF /* ImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; platformFilter = ios; };
+		5BD4F3E9256CA5350016B3CF /* ImageLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5BD7CF9925706FBB00F6EB7F /* MarvelFeedProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CF9825706FBB00F6EB7F /* MarvelFeedProviderTests.swift */; };
 		5BD7CFA22570876600F6EB7F /* MarvelFeedProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */; };
 		5BD7CFA62570878100F6EB7F /* MainComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA52570878100F6EB7F /* MainComposer.swift */; };
@@ -108,6 +109,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5B14F0D3257D1D510003572D /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 		5BD4F3AD256CA3410016B3CF /* CharactersAPI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CharactersAPI.xcodeproj; path = ../CharactersAPI/CharactersAPI.xcodeproj; sourceTree = "<group>"; };
 		5BD4F3B9256CA3520016B3CF /* ImageLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImageLoader.xcodeproj; path = ../ImageLoader/ImageLoader.xcodeproj; sourceTree = "<group>"; };
 		5BD7CF9825706FBB00F6EB7F /* MarvelFeedProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelFeedProviderTests.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				5BD7CFB92570921700F6EB7F /* CharactersFeedUseCase */,
 				5BD7CFB8257091BD00F6EB7F /* System Internals */,
 				5BD7CFA52570878100F6EB7F /* MainComposer.swift */,
+				5B14F0D3257D1D510003572D /* MainQueueDispatchDecorator.swift */,
 			);
 			path = Marvel;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B14F0D4257D1D510003572D /* MainQueueDispatchDecorator.swift in Sources */,
 				5BD8DF7C2573449200F5294A /* CharacterDetailsViewController.swift in Sources */,
 				5BFA3F90256C93940057BD82 /* FeedViewController.swift in Sources */,
 				5BD7CFA62570878100F6EB7F /* MainComposer.swift in Sources */,
@@ -488,13 +492,11 @@
 		5BD4F3DA256CA4D90016B3CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ImageLoader;
-			platformFilter = ios;
 			targetProxy = 5BD4F3D9256CA4D90016B3CF /* PBXContainerItemProxy */;
 		};
 		5BD4F3DC256CA4D90016B3CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CharactersAPI;
-			platformFilter = ios;
 			targetProxy = 5BD4F3DB256CA4D90016B3CF /* PBXContainerItemProxy */;
 		};
 		5BFA3FA0256C93950057BD82 /* PBXTargetDependency */ = {
@@ -653,7 +655,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = halonso.Marvel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -675,7 +677,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = halonso.Marvel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

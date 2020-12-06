@@ -32,31 +32,28 @@ class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        layoutUI()
-
         prepareTableView()
         updateDataSource()
 
-        feedDataProvider?.onItemsChangeCallback = newItemsReceived
+        layoutUI()
 
+        feedDataProvider?.onItemsChangeCallback = newItemsReceived
         feedDataProvider?.perform(action: .loadFromStart)
     }
 
     func newItemsReceived() {
-        DispatchQueue.main.async {
-            self.updateDataSource()
-            self.tableView.refreshControl?.endRefreshing()
-        }
+        self.updateDataSource(animated: true)
+        self.tableView.refreshControl?.endRefreshing()
     }
 
-    func updateDataSource() {
+    func updateDataSource(animated: Bool = false) {
         guard let feedDataProvider = feedDataProvider else { return }
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, BasicCharacterData>()
         snapshot.appendSections([Section.main])
         snapshot.appendItems(feedDataProvider.items, toSection: .main)
 
-        self.dataSource.apply(snapshot, animatingDifferences: true)
+        self.dataSource.apply(snapshot, animatingDifferences: animated)
     }
 
     func layoutUI() {
@@ -72,8 +69,7 @@ class FeedViewController: UIViewController {
         view.addSubview(tableView)
 
         tableView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.right.left.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
 
@@ -84,8 +80,7 @@ class FeedViewController: UIViewController {
         search.obscuresBackgroundDuringPresentation = false
 
         search.searchBar.placeholder = "Try introducing a name here"
-        search.searchBar.autocapitalizationType = .none
-        search.searchBar.searchTextField.textColor = .white
+        search.searchBar.autocapitalizationType = .words
 
         return search
     }
@@ -108,7 +103,7 @@ class FeedViewController: UIViewController {
 
     @objc func handleRefreshControl() {
         tableView.refreshControl?.beginRefreshing()
-        feedDataProvider?.perform(action: .loadFromStart)
+        self.feedDataProvider?.perform(action: .loadFromStart)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

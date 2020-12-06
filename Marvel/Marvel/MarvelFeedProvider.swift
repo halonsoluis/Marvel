@@ -65,10 +65,12 @@ class MarvelFeedProvider: FeedDataProvider {
             })
         case .setHeroImage(let index, let imageField):
             guard index < items.count else { return }
-            
+
             let item = items[index]
 
-            loadImageHandler(item.thumbnail, item.modified, imageField)
+            DispatchQueue.main.async {
+                self.loadImageHandler(item.thumbnail, item.modified, imageField)
+            }
         }
     }
 
