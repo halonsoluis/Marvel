@@ -42,10 +42,8 @@ class FeedViewController: UIViewController {
     }
 
     func newItemsReceived() {
-        DispatchQueue.main.async {
-            self.updateDataSource(animated: true)
-            self.tableView.refreshControl?.endRefreshing()
-        }
+        self.updateDataSource(animated: true)
+        self.tableView.refreshControl?.endRefreshing()
     }
 
     func updateDataSource(animated: Bool = false) {
@@ -105,10 +103,7 @@ class FeedViewController: UIViewController {
 
     @objc func handleRefreshControl() {
         tableView.refreshControl?.beginRefreshing()
-
-        DispatchQueue.global(qos: .userInteractive).async {
-            self.feedDataProvider?.perform(action: .loadFromStart)
-        }
+        self.feedDataProvider?.perform(action: .loadFromStart)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

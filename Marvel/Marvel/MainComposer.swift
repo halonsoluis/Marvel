@@ -41,7 +41,7 @@ struct BasicCharacterData: Hashable {
     }
 }
 
-protocol FeedDataProvider {
+protocol FeedDataProvider: class {
     var items: [BasicCharacterData] { get }
     var onItemsChangeCallback: (() -> Void)? { get set }
 
@@ -66,7 +66,7 @@ class MainComposer {
 
     private lazy var splitView: UISplitViewController = createSplitView()
     private lazy var splitViewDelegate: SplitViewDelegate = SplitViewDelegate()
-    private lazy var feedViewVC = FeedViewController(feedDataProvider: itemProvider)
+    private lazy var feedViewVC = FeedViewController(feedDataProvider: MainQueueDispatchDecorator(itemProvider))
     private lazy var characterDetailsVC = CharacterDetailsViewController(loadImageHandler: loadImageHandlerWithCompletion)
 
     init(baseView: UIWindow) {
