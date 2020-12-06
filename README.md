@@ -18,7 +18,7 @@ Using this app, users will be able to browse through the Marvel library of chara
 
 <p align="center">
 <img src="Docs/Images/iOS Main View.png" width="32%">
-<img src="Docs/Images/iOS Main View Scrolled Up.png" width="32%">
+<img src="Docs/Images/iOS Main View Scrolled UP.png" width="32%">
 <img src="Docs/Images/iOS Detailed View.png" width="32%">
 </p>
 
@@ -165,8 +165,8 @@ Kingfisher is a powerful, pure-Swift library for downloading and caching images 
 - [x] Universal App
 
 <p align="center">
-<img src="Docs/Images/iOS MainView.png" width="48%">
-<img src="Docs/Images/iOS DetailView.png" width="48%">
+<img src="Docs/Images/iOS Main View.png" width="48%">
+<img src="Docs/Images/iOS Detailed View.png" width="48%">
 <img src="Docs/Images/iPadOS.png" width="100%">
 <img src="Docs/Images/macOS.png" width="100%">
 </p>
