@@ -22,9 +22,7 @@ class MarvelFeedProvider: FeedDataProvider {
 
     var items: [BasicCharacterData] = [] {
         didSet {
-            DispatchQueue.main.async {
-                self.onItemsChangeCallback?()
-            }
+            onItemsChangeCallback?()
         }
     }
     var onItemsChangeCallback: (() -> Void)?
@@ -41,12 +39,6 @@ class MarvelFeedProvider: FeedDataProvider {
     }
 
     func perform(action: Action) {
-        DispatchQueue.global(qos: .background).async {
-            self.internalPerform(action: action)
-        }
-    }
-
-    private func internalPerform(action: Action) {
         switch action {
         case .loadFromStart:
             loadFromStart()

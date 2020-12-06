@@ -38,7 +38,6 @@ class FeedViewController: UIViewController {
         layoutUI()
 
         feedDataProvider?.onItemsChangeCallback = newItemsReceived
-
         feedDataProvider?.perform(action: .loadFromStart)
     }
 
@@ -106,7 +105,10 @@ class FeedViewController: UIViewController {
 
     @objc func handleRefreshControl() {
         tableView.refreshControl?.beginRefreshing()
-        feedDataProvider?.perform(action: .loadFromStart)
+
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.feedDataProvider?.perform(action: .loadFromStart)
+        }
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

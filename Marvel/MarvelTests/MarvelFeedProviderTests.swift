@@ -244,7 +244,12 @@ extension MarvelFeedProviderTests {
         loadImageHandler: @escaping (URL, String, UIImageView) -> Void = { _, _, _ in },
         router: @escaping (Route) -> Void = { _ in }
     ) -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy, items: [MarvelCharacter]) {
-        let sut = MarvelFeedProvider(charactersLoader: charactersLoader, prefetchImageHandler: prefetchImageHandler, loadImageHandler: loadImageHandler, router: router)
+        let sut = MarvelFeedProvider(
+            charactersLoader: charactersLoader,
+            prefetchImageHandler: prefetchImageHandler,
+            loadImageHandler: loadImageHandler,
+            router: router
+        )
 
         return (sut, charactersLoader, createItems(amount: itemCount))
     }
