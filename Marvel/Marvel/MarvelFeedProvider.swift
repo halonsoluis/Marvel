@@ -22,7 +22,9 @@ class MarvelFeedProvider: FeedDataProvider {
 
     var items: [BasicCharacterData] = [] {
         didSet {
-            onItemsChangeCallback?()
+            DispatchQueue.main.async {
+                self.onItemsChangeCallback?()
+            }
         }
     }
     var onItemsChangeCallback: (() -> Void)?
@@ -39,6 +41,12 @@ class MarvelFeedProvider: FeedDataProvider {
     }
 
     func perform(action: Action) {
+        DispatchQueue.global(qos: .background).async {
+            self.internalPerform(action: action)
+        }
+    }
+
+    private func internalPerform(action: Action) {
         switch action {
         case .loadFromStart:
             loadFromStart()
@@ -65,10 +73,12 @@ class MarvelFeedProvider: FeedDataProvider {
             })
         case .setHeroImage(let index, let imageField):
             guard index < items.count else { return }
-            
+
             let item = items[index]
 
-            loadImageHandler(item.thumbnail, item.modified, imageField)
+            DispatchQueue.main.async {
+                self.loadImageHandler(item.thumbnail, item.modified, imageField)
+            }
         }
     }
 

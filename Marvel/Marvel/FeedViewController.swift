@@ -32,10 +32,10 @@ class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        layoutUI()
-
         prepareTableView()
         updateDataSource()
+
+        layoutUI()
 
         feedDataProvider?.onItemsChangeCallback = newItemsReceived
 
@@ -44,19 +44,19 @@ class FeedViewController: UIViewController {
 
     func newItemsReceived() {
         DispatchQueue.main.async {
-            self.updateDataSource()
+            self.updateDataSource(animated: true)
             self.tableView.refreshControl?.endRefreshing()
         }
     }
 
-    func updateDataSource() {
+    func updateDataSource(animated: Bool = false) {
         guard let feedDataProvider = feedDataProvider else { return }
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, BasicCharacterData>()
         snapshot.appendSections([Section.main])
         snapshot.appendItems(feedDataProvider.items, toSection: .main)
 
-        self.dataSource.apply(snapshot, animatingDifferences: true)
+        self.dataSource.apply(snapshot, animatingDifferences: animated)
     }
 
     func layoutUI() {
@@ -72,8 +72,7 @@ class FeedViewController: UIViewController {
         view.addSubview(tableView)
 
         tableView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.right.left.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
 
@@ -84,8 +83,7 @@ class FeedViewController: UIViewController {
         search.obscuresBackgroundDuringPresentation = false
 
         search.searchBar.placeholder = "Try introducing a name here"
-        search.searchBar.autocapitalizationType = .none
-        search.searchBar.searchTextField.textColor = .white
+        search.searchBar.autocapitalizationType = .words
 
         return search
     }
