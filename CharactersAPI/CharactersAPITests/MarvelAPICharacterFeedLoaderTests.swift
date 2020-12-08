@@ -45,7 +45,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
     
     func test_load_anItemFromJSONResponse() {
         let (client, sut, _) = makeSUT()
-        let (response, item, _, _, _, _, _, thumbnail) = makeValidJSONResponse(amountOfItems: 1)
+        let (response, item, _, thumbnail) = makeValidJSONResponse(amountOfItems: 1)
         client.returnedJSON = response
 
         let expect = expectation(description: "Waiting for expectation")

@@ -215,6 +215,13 @@ class MarvelFeedProviderTests: XCTestCase {
 // MARK - Helpers
 extension MarvelFeedProviderTests {
     class CharacterFeedLoaderSpy: CharacterFeedLoader {
+        var publicationCallCount = 0
+        var publicationCalledWith: (characterId: Int, type: MarvelPublication.Kind, page: Int, completion: MultiplePublicationFeedLoaderResult)?
+        func publication(characterId: Int, type: MarvelPublication.Kind, page: Int, completion: @escaping MultiplePublicationFeedLoaderResult) {
+            publicationCallCount += 1
+            publicationCalledWith = (characterId: characterId, type: type, page: page, completion: completion)
+        }
+
         var characterCallCount = 0
         var characterCalledWith: (id: Int, completion: SingleCharacterFeedLoaderResult)?
         func character(id: Int, completion: @escaping SingleCharacterFeedLoaderResult) {

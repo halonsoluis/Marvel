@@ -8,72 +8,10 @@
 import XCTest
 
 extension XCTestCase {
-    func makeValidJSONResponse(amountOfItems: Int, statusCode: Int = 200) -> (response: [String: Any], item: [String: Any], urls: [[String: String]], events: [String: Any], comics: [String: Any], series: [String: Any], stories: [String: Any], thumbnail: [String: String]) {
+    func makeValidJSONResponse(amountOfItems: Int, statusCode: Int = 200) -> (response: [String: Any], item: [String: Any], urls: [[String: String]], thumbnail: [String: String]) {
         let thumbnail: [String: String] = [
             "path": "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784",
             "extension": "jpg"
-        ]
-
-        let comics: [String: Any] = [
-            "available": 2,
-            "collectionURI": "http://gateway.marvel.com/v1/public/characters/1011334/comics",
-            "items": [
-                [
-                    "resourceURI": "http://gateway.marvel.com/v1/public/comics/21366",
-                    "name": "Avengers: The Initiative (2007) #14"
-                ],
-                [
-                    "resourceURI": "http://gateway.marvel.com/v1/public/comics/24571",
-                    "name": "Avengers: The Initiative (2007) #14 (SPOTLIGHT VARIANT)"
-                ],
-            ],
-            "returned": 2
-        ]
-
-        let series: [String: Any] = [
-            "available": 2,
-            "collectionURI": "http://gateway.marvel.com/v1/public/characters/1011334/series",
-            "items": [
-                [
-                    "resourceURI": "http://gateway.marvel.com/v1/public/series/1945",
-                    "name": "Avengers: The Initiative (2007 - 2010)"
-                ],
-                [
-                    "resourceURI": "http://gateway.marvel.com/v1/public/series/2045",
-                    "name": "Marvel Premiere (1972 - 1981)"
-                ]
-            ],
-            "returned": 2
-        ]
-
-        let stories: [String: Any] = [
-            "available": 2,
-            "collectionURI": "http://gateway.marvel.com/v1/public/characters/1011334/stories",
-            "items": [
-                [
-                    "resourceURI": "http://gateway.marvel.com/v1/public/stories/19947",
-                    "name": "Cover #19947",
-                    "type": "cover"
-                ],
-                [
-                    "resourceURI": "http://gateway.marvel.com/v1/public/stories/19948",
-                    "name": "The 3-D Man!",
-                    "type": "interiorStory"
-                ],
-            ],
-            "returned": 2
-        ]
-
-        let events: [String: Any] = [
-            "available": 1,
-            "collectionURI": "http://gateway.marvel.com/v1/public/characters/1011334/events",
-            "items": [
-                [
-                    "resourceURI": "http://gateway.marvel.com/v1/public/events/269",
-                    "name": "Secret Invasion"
-                ]
-            ],
-            "returned": 1
         ]
 
         let urls: [[String: String]] = [
@@ -97,12 +35,6 @@ extension XCTestCase {
             "description": "A description for 3D Man",
             "modified": "2014-04-29T14:18:17-0400",
             "thumbnail": thumbnail,
-            "resourceURI": "http://gateway.marvel.com/v1/public/characters/1011334",
-
-            "comics": comics,
-            "series": series,
-            "stories": stories,
-            "events": events,
             "urls": urls
         ]
 
@@ -117,6 +49,44 @@ extension XCTestCase {
                 "results": Array(repeating: item, count: amountOfItems)
             ]
         ]
-        return (response, item, urls, events, comics, series, stories, thumbnail)
+        return (response, item, urls, thumbnail)
+    }
+
+    func makeValidJSONResponse(publicationAmount: Int, statusCode: Int = 200) -> (response: [String: Any], item: [String: Any], thumbnail: [String: String]) {
+        let thumbnail: [String: String] = [
+            "path": "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784",
+            "extension": "jpg"
+        ]
+
+        let item: [String: Any] = [
+            "id": 50769,
+            "digitalId": 0,
+            "title": "Original Sin (2014) #6 (Dell'otto Variant)",
+            "issueNumber": 6,
+            "variantDescription": "Dell'otto Variant",
+            "description": "Who Pulled The Trigger?",
+            "modified": "2014-07-08T16:45:06-0400",
+            "isbn": "",
+            "upc": "75960608034200621",
+            "diamondCode": "",
+            "ean": "",
+            "issn": "",
+            "format": "Comic",
+            "pageCount": 32,
+            "thumbnail": thumbnail
+        ]
+
+        let response: [String: Any] = [
+            "code": statusCode,
+            "status": "Ok",
+            "data": [
+                "offset": 0,
+                "limit": 20,
+                "total": 33,
+                "count": publicationAmount,
+                "results": Array(repeating: item, count: publicationAmount)
+            ]
+        ]
+        return (response, item, thumbnail)
     }
 }

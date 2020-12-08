@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum RouteComposer {
+enum RouteComposer: Equatable {
     ///Fetches lists of characters.
     case characters
     ///Fetches a single character by id.

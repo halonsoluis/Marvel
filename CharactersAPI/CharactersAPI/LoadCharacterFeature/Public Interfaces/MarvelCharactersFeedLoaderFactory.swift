@@ -34,4 +34,8 @@ public final class MarvelCharactersFeedLoader: CharacterFeedLoader {
     public func search(by name: String, in page: Int, completion: @escaping MultipleCharacterFeedLoaderResult) {
         characterFeedLoader.search(by: name, in: page, completion: completion)
     }
+
+    public func publication(characterId: Int, type: MarvelPublication.Kind, page: Int, completion: @escaping MultiplePublicationFeedLoaderResult) {
+        characterFeedLoader.publication(characterId: characterId, type: type, page: page, completion: completion)
+    }
 }
