@@ -13,11 +13,6 @@ struct MarvelCharacterItem: Codable {
     let description: String?
     let modified: String?
     let thumbnail: Image?
-    let resourceURI: String?
 
-    let comics: List<ComicSummary>?
-    let series: List<SeriesSummary>?
-    let stories: List<StorySummary>?
-    let events: List<EventSummary>?
     let urls: [LinkURL]?
 }
