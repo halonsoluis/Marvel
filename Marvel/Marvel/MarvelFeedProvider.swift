@@ -38,7 +38,7 @@ class MarvelFeedProvider: FeedDataProvider {
         self.router = router
     }
 
-    func perform(action: Action) {
+    func perform(action: CharactersFeedUserAction) {
         switch action {
         case .loadFromStart:
             loadFromStart()

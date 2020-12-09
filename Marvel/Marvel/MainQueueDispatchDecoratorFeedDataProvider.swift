@@ -6,15 +6,16 @@
 //
 
 import Foundation
+import CharactersAPI
 
-final class MainQueueDispatchDecorator: FeedDataProvider {
+final class MainQueueDispatchDecoratorFeedDataProvider: FeedDataProvider {
     private let decoratee: FeedDataProvider
 
     init(_ decoratee: FeedDataProvider){
         self.decoratee = decoratee
     }
 
-    func perform(action: Action) {
+    func perform(action: CharactersFeedUserAction) {
         DispatchQueue.global(qos: .userInitiated).async {
             self.decoratee.perform(action: action)
         }
