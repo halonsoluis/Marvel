@@ -17,16 +17,16 @@ class FeedViewController: UIViewController {
     private lazy var tableView: UITableView = UITableView()
     private lazy var dataSource: UITableViewDiffableDataSource<Section, BasicCharacterData> = makeDataSource()
 
-    private var feedDataProvider: FeedDataProvider?
+    private var feedDataProvider: FeedDataProvider
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     init(feedDataProvider: FeedDataProvider) {
-        super.init(nibName: nil, bundle: nil)
-
         self.feedDataProvider = feedDataProvider
+
+        super.init(nibName: nil, bundle: nil)
     }
     
     override func viewDidLoad() {
@@ -37,8 +37,8 @@ class FeedViewController: UIViewController {
 
         layoutUI()
 
-        feedDataProvider?.onItemsChangeCallback = newItemsReceived
-        feedDataProvider?.perform(action: .loadFromStart)
+        feedDataProvider.onItemsChangeCallback = newItemsReceived
+        feedDataProvider.perform(action: .loadFromStart)
     }
 
     func newItemsReceived() {
@@ -47,7 +47,6 @@ class FeedViewController: UIViewController {
     }
 
     func updateDataSource(animated: Bool = false) {
-        guard let feedDataProvider = feedDataProvider else { return }
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, BasicCharacterData>()
         snapshot.appendSections([Section.main])
@@ -103,7 +102,7 @@ class FeedViewController: UIViewController {
 
     @objc func handleRefreshControl() {
         tableView.refreshControl?.beginRefreshing()
-        self.feedDataProvider?.perform(action: .loadFromStart)
+        feedDataProvider.perform(action: .loadFromStart)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -115,7 +114,7 @@ class FeedViewController: UIViewController {
         let reloadDistance = tableViewHeight * 2
 
         if currentVerticalPosition > (tableViewContentHeight - reloadDistance) {
-            feedDataProvider?.perform(action: .loadMore)
+            feedDataProvider.perform(action: .loadMore)
         }
     }
 
@@ -123,20 +122,20 @@ class FeedViewController: UIViewController {
 
 extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        feedDataProvider?.perform(action: .openItem(index: indexPath.row))
+        feedDataProvider.perform(action: .openItem(index: indexPath.row))
     }
 }
 
 
 extension FeedViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        feedDataProvider?.perform(action: .prepareForDisplay(indexes: indexPaths.map { $0.row }))
+        feedDataProvider.perform(action: .prepareForDisplay(indexes: indexPaths.map { $0.row }))
     }
 }
 
 extension FeedViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        feedDataProvider?.perform(action: .search(name: searchController.searchBar.text))
+        feedDataProvider.perform(action: .search(name: searchController.searchBar.text))
     }
 }
 
