@@ -9,7 +9,7 @@ import Foundation
 import CharactersAPI
 import UIKit
 
-enum CharactersDetailsFeedUserAction {
+enum CharactersDetailsUserAction {
     case loadFromStart(characterId: Int, type: MarvelPublication.Kind)
     case loadMore(characterId: Int, type: MarvelPublication.Kind)
     case prepareForDisplay(indexes: [Int])

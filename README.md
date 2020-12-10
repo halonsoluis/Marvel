@@ -52,7 +52,7 @@ Of course, this was evolving as the needs of the app were getting more clear. Fo
 ### Current Architecture
 
 <p align="center">
-<img src="Docs/Images/Marvel Characters- 03-12-20.svg">
+<img src="Docs/Images/Marvel Characters 10-12-20.svg">
 </p>
 
 Notice that there's an strong dependency from **Marvel** to **CharactersAPI**, this is technical debt that will be addressed.

@@ -9,7 +9,7 @@ import Foundation
 import CharactersAPI
 import UIKit
 
-class PublicationFeedProvider: PublicationFeedDataProvider {
+final class PublicationFeedProvider: PublicationFeedDataProvider {
 
     private var charactersLoader: CharacterFeedLoader
     private var prefetchImageHandler: (_ url: URL, _ uniqueKey: String) -> Void
@@ -32,7 +32,7 @@ class PublicationFeedProvider: PublicationFeedDataProvider {
         self.loadImageHandler = loadImageHandler
     }
 
-    func perform(action: CharactersDetailsFeedUserAction) {
+    func perform(action: CharactersDetailsUserAction) {
         switch action {
         case let .loadFromStart(characterId, type):
             loadFromStart(characterId: characterId, type: type)

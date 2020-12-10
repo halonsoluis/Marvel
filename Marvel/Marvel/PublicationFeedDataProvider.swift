@@ -12,5 +12,5 @@ protocol PublicationFeedDataProvider: class {
     var items: [MarvelPublication] { get }
     var onItemsChangeCallback: (() -> Void)? { get set }
 
-    func perform(action: CharactersDetailsFeedUserAction)
+    func perform(action: CharactersDetailsUserAction)
 }
