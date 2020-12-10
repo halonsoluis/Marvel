@@ -32,18 +32,12 @@ class PublicationFeedProvider: PublicationFeedDataProvider {
         self.loadImageHandler = loadImageHandler
     }
 
-    func perform(action: CharactersFeedUserAction) {
+    func perform(action: CharactersDetailsFeedUserAction) {
         switch action {
-        case .loadFromStart:
-            loadFromStart()
-        case .loadMore:
-            loadMore()
-        case .openItem(let index):
-            if index < items.count {
-                openItem(at: items[index].id!)
-            }
-        case .search:
-            break
+        case let .loadFromStart(characterId, type):
+            loadFromStart(characterId: characterId, type: type)
+        case let .loadMore(characterId, type):
+            loadMore(characterId: characterId, type: type)
         case .prepareForDisplay(let indexes):
             prefetchImagesForNewItems(newItems: indexes.compactMap {
                 guard items.count > $0 else {
@@ -56,13 +50,15 @@ class PublicationFeedProvider: PublicationFeedDataProvider {
 
             let item = items[index]
 
-            DispatchQueue.main.async {
-                self.loadImageHandler(item.thumbnail!, item.modified!, imageField)
+            if let thumbnail = item.thumbnail, let modified = item.modified {
+                DispatchQueue.main.async {
+                    self.loadImageHandler(thumbnail, modified, imageField)
+                }
             }
         }
     }
 
-    private func loadFromStart() {
+    private func loadFromStart(characterId: Int, type: MarvelPublication.Kind) {
         guard !workInProgress else { return }
         workInProgress = true
 
@@ -82,14 +78,14 @@ class PublicationFeedProvider: PublicationFeedDataProvider {
         }
 
         charactersLoader.publication(
-            characterId: 1011334,
-            type: .comics,
+            characterId: characterId,
+            type: type,
             page: 0,
             completion: completion
         )
     }
 
-    private func loadMore() {
+    private func loadMore(characterId: Int, type: MarvelPublication.Kind) {
         guard !workInProgress else { return }
         workInProgress = true
 
@@ -108,12 +104,11 @@ class PublicationFeedProvider: PublicationFeedDataProvider {
         }
 
         charactersLoader.publication(
-            characterId: 1011334,
-            type: .comics,
+            characterId: characterId,
+            type: type,
             page: nextPage,
             completion: completion
         )
-
     }
 
     private func prefetchImagesForNewItems(newItems: [MarvelPublication]) {

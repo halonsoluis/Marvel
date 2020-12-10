@@ -9,16 +9,24 @@ import Foundation
 import UIKit
 import CharactersAPI
 
+extension MarvelPublication {
+    var isPresentable: Bool {
+        thumbnail != nil
+    }
+}
+
 final class PublicationCollection: UIViewController, UICollectionViewDataSource {
-    lazy var section: UILabel = createSection()
+    lazy var sectionName: UILabel = createSection()
     lazy var collection: UICollectionView = createCollection()
 
-    let sectionName: String
+    let characterId: Int
+    let section: MarvelPublication.Kind
     let loadImageHandler: (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void
     let feedDataProvider: PublicationFeedDataProvider
 
-    init(sectionName: String, loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void, feedDataProvider: PublicationFeedDataProvider) {
-        self.sectionName = sectionName
+    init(characterId: Int, section: MarvelPublication.Kind, loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void, feedDataProvider: PublicationFeedDataProvider) {
+        self.characterId = characterId
+        self.section = section
         self.loadImageHandler = loadImageHandler
         self.feedDataProvider = feedDataProvider
 
@@ -34,31 +42,34 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource 
 
         setupUI()
         feedDataProvider.onItemsChangeCallback = newItemsReceived
-        feedDataProvider.perform(action: .loadFromStart)
+        feedDataProvider.perform(action: .loadFromStart(characterId: characterId, type: section))
     }
 
     func newItemsReceived() {
         //Update data
+        let presentableItems = feedDataProvider.items.filter { $0.isPresentable }.isEmpty
+        view.isHidden = presentableItems
+
         collection.reloadData()
     }
 
     func setupUI() {
         view.backgroundColor = .black
 
-        view.addSubview(section)
+        view.addSubview(sectionName)
         view.addSubview(collection)
 
-        section.translatesAutoresizingMaskIntoConstraints = false
+        sectionName.translatesAutoresizingMaskIntoConstraints = false
         collection.translatesAutoresizingMaskIntoConstraints = false
 
-        section.snp.makeConstraints { make in
+        sectionName.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(4)
             make.width.equalToSuperview()
             make.centerX.equalToSuperview()
         }
 
         collection.snp.makeConstraints { make in
-            make.top.equalTo(section.snp.bottom).offset(8)
+            make.top.equalTo(sectionName.snp.bottom).offset(8)
             make.width.equalToSuperview()
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().inset(4)
@@ -96,14 +107,14 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource 
 // MARK: Initialisers
 extension PublicationCollection {
     private func createSection() -> UILabel {
-        let section = UILabel()
+        let sectionName = UILabel()
 
-        section.textColor = .red
-        section.font = UIFont.boldSystemFont(ofSize: 17)
-        section.text = sectionName
-        section.textAlignment = .justified
+        sectionName.textColor = .red
+        sectionName.font = UIFont.boldSystemFont(ofSize: 17)
+        sectionName.text = section.rawValue
+        sectionName.textAlignment = .justified
 
-        return section
+        return sectionName
     }
 
     private func createCollection() -> UICollectionView {

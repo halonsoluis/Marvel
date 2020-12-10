@@ -15,7 +15,7 @@ final class MainQueueDispatchDecoratorPublicationFeedDataProvider: PublicationFe
         self.decoratee = decoratee
     }
 
-    func perform(action: CharactersFeedUserAction) {
+    func perform(action: CharactersDetailsFeedUserAction) {
         DispatchQueue.global(qos: .userInitiated).async {
             self.decoratee.perform(action: action)
         }

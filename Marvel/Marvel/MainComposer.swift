@@ -108,7 +108,8 @@ extension MainComposer {
 
                 let sections = MarvelPublication.Kind.allCases.map { publicationKind in
                     PublicationCollection(
-                        sectionName: publicationKind.rawValue,
+                        characterId: item.id!,
+                        section: publicationKind,
                         loadImageHandler: strongSelf.loadImageHandlerWithCompletion,
                         feedDataProvider: strongSelf.publicationFeedDataProvider()
                     )
