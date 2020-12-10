@@ -1,16 +1,17 @@
 //
-//  MainQueueDispatchDecoratorFeedDataProvider.swift
+//  MainQueueDispatchDecoratorPublicationFeedDataProvider.swift
 //  Marvel
 //
-//  Created by Hugo Alonso on 06/12/2020.
+//  Created by Hugo Alonso on 10/12/2020.
 //
 
 import Foundation
+import CharactersAPI
 
-final class MainQueueDispatchDecoratorFeedDataProvider: FeedDataProvider {
-    private let decoratee: FeedDataProvider
+final class MainQueueDispatchDecoratorPublicationFeedDataProvider: PublicationFeedDataProvider {
+    private let decoratee: PublicationFeedDataProvider
 
-    init(_ decoratee: FeedDataProvider){
+    init(_ decoratee: PublicationFeedDataProvider){
         self.decoratee = decoratee
     }
 
@@ -40,7 +41,7 @@ final class MainQueueDispatchDecoratorFeedDataProvider: FeedDataProvider {
         }
     }
 
-    var items: [BasicCharacterData] {
+    var items: [MarvelPublication] {
         decoratee.items
     }
 }
