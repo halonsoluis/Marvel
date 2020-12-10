@@ -11,7 +11,6 @@ import SnapKit
 import CharactersAPI
 
 class CharacterDetailsViewController: UIViewController {
-    private let item: MarvelCharacter?
     private let loadImageHandler: (URL, String, UIImageView, @escaping (Error?) -> Void) -> Void
     private let feedDataProvider: () -> PublicationFeedDataProvider
 
@@ -20,14 +19,11 @@ class CharacterDetailsViewController: UIViewController {
     private lazy var heroDescription: UILabel = self.createDescriptionLabel()
     private lazy var heroName: UIButton = self.createNameButton()
     private lazy var heroImage: UIImageView = self.createHeroImageView()
-    private lazy var comicsSection: PublicationCollection = createPublicationView(section: "Comics", feedDataProvider: feedDataProvider())
-    private lazy var seriesSection: PublicationCollection = createPublicationView(section: "Series", feedDataProvider: feedDataProvider())
-    private lazy var eventsSection: PublicationCollection = createPublicationView(section: "Events", feedDataProvider: feedDataProvider())
 
-    init(item: MarvelCharacter? = nil,
-         loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void,
+    private var sections: [PublicationCollection] = []
+
+    init(loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void,
          feedDataProvider: @escaping () -> PublicationFeedDataProvider) {
-        self.item = item
         self.loadImageHandler = loadImageHandler
         self.feedDataProvider = feedDataProvider
 
@@ -42,9 +38,6 @@ class CharacterDetailsViewController: UIViewController {
         super.viewDidLoad()
 
         setupUI()
-        if let item = item {
-            drawCharacter(item: item)
-        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -53,7 +46,7 @@ class CharacterDetailsViewController: UIViewController {
         adjustHeroImageAspect()
     }
 
-    func drawCharacter(item: MarvelCharacter) {
+    func drawCharacter(item: MarvelCharacter, sections: [PublicationCollection]) {
 
         if let thumbnail = item.thumbnail, let modified = item.modified {
             loadImageHandler(thumbnail, modified, heroImage, { _ in })
@@ -62,6 +55,19 @@ class CharacterDetailsViewController: UIViewController {
         heroDescription.text = item.description
 
         adjustHeroImageAspect()
+
+        self.sections.map { $0.view }.forEach { $0?.removeFromSuperview() }
+
+        self.sections = sections
+
+        sections.forEach { publication in
+            stack.addArrangedSubview(publication.view)
+
+            publication.view.snp.makeConstraints { make in
+                make.width.equalToSuperview().inset(20)
+            }
+        }
+
     }
 
     private func adjustHeroImageAspect() {
@@ -97,10 +103,6 @@ class CharacterDetailsViewController: UIViewController {
 
         stack.addArrangedSubview(heroImage)
         stack.addArrangedSubview(heroDescription)
-        
-        stack.addArrangedSubview(comicsSection.view)
-        stack.addArrangedSubview(seriesSection.view)
-        stack.addArrangedSubview(eventsSection.view)
 
         heroImage.addSubview(heroName)
 
@@ -119,18 +121,6 @@ class CharacterDetailsViewController: UIViewController {
             make.width.equalToSuperview().inset(20)
         }
 
-        comicsSection.view.snp.makeConstraints { make in
-            make.width.equalToSuperview().inset(20)
-        }
-
-        seriesSection.view.snp.makeConstraints { make in
-            make.width.equalToSuperview().inset(20)
-        }
-
-        eventsSection.view.snp.makeConstraints { make in
-            make.width.equalToSuperview().inset(20)
-        }
-
         heroName.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(16)
             make.bottom.equalToSuperview().inset(20)
@@ -140,10 +130,6 @@ class CharacterDetailsViewController: UIViewController {
 
 // MARK: Initialisers
 extension CharacterDetailsViewController {
-
-    private func createPublicationView(section: String, feedDataProvider: PublicationFeedDataProvider) -> PublicationCollection {
-        return PublicationCollection(sectionName: section, loadImageHandler: loadImageHandler, feedDataProvider: feedDataProvider)
-    }
 
     private func createScrollBar() -> UIScrollView {
         let scrollView = UIScrollView()

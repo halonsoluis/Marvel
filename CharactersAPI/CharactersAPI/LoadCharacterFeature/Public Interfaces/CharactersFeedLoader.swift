@@ -25,7 +25,7 @@ public struct MarvelCharacter: Equatable {
 
 public struct MarvelPublication: Equatable {
 
-    public enum Kind: CaseIterable {
+    public enum Kind: String, CaseIterable {
         case comics
         case events
         case series

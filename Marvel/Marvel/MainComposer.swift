@@ -96,12 +96,26 @@ class MainComposer {
 // MARK - Navigation
 extension MainComposer {
 
+    func publicationFeedDataProvider() -> PublicationFeedDataProvider {
+        MainQueueDispatchDecoratorPublicationFeedDataProvider(self.publicationsProvider())
+    }
+
     private func router(route: Route, using baseWindow: UIWindow ) {
         switch route {
         case .details(for: let item):
-            DispatchQueue.main.async {
-                self.characterDetailsVC.drawCharacter(item: item)
-                self.splitView.showDetailViewController(self.characterDetailsVC, sender: nil)
+            DispatchQueue.main.async { [weak self] in
+                guard let strongSelf = self else { return }
+
+                let sections = MarvelPublication.Kind.allCases.map { publicationKind in
+                    PublicationCollection(
+                        sectionName: publicationKind.rawValue,
+                        loadImageHandler: strongSelf.loadImageHandlerWithCompletion,
+                        feedDataProvider: strongSelf.publicationFeedDataProvider()
+                    )
+                }
+
+                strongSelf.characterDetailsVC.drawCharacter(item: item, sections: sections)
+                strongSelf.splitView.showDetailViewController(strongSelf.characterDetailsVC, sender: nil)
             }
         }
     }
