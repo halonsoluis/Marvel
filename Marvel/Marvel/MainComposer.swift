@@ -23,8 +23,13 @@ class MainComposer {
 
     private lazy var splitView: UISplitViewController = createSplitView()
     private lazy var splitViewDelegate: SplitViewDelegate = SplitViewDelegate()
-    private lazy var feedViewVC = FeedViewController(feedDataProvider: MainQueueDispatchDecorator(itemProvider))
-    private lazy var characterDetailsVC = CharacterDetailsViewController(loadImageHandler: loadImageHandlerWithCompletion)
+    private lazy var feedViewVC = FeedViewController(
+        feedDataProvider: MainQueueDispatchDecoratorFeedDataProvider(itemProvider)
+    )
+    private lazy var characterDetailsVC = CharacterDetailsViewController(
+        loadImageHandler: loadImageHandlerWithCompletion,
+        feedDataProvider: MainQueueDispatchDecoratorPublicationFeedDataProvider(publicationsProvider)
+    )
 
     init(baseView: UIWindow) {
         self.baseView = baseView
@@ -69,6 +74,21 @@ class MainComposer {
             prefetchImageHandler: prefetchImageHandler,
             loadImageHandler: loadImageHandler,
             router: routerIntercept
+        )
+    }()
+
+    private lazy var publicationsProvider: PublicationFeedDataProvider = {
+        let client = URLSessionHTTPClient(session: URLSession.shared)
+        let charactersLoader = MarvelCharactersFeedLoader(client: client)
+
+        func routerIntercept(route: Route) {
+            router(route: route, using: baseView)
+        }
+
+        return PublicationFeedProvider(
+            charactersLoader: charactersLoader,
+            prefetchImageHandler: prefetchImageHandler,
+            loadImageHandler: loadImageHandler
         )
     }()
 }
