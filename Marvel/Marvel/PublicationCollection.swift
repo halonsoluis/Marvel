@@ -47,9 +47,7 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource 
 
     func newItemsReceived() {
         //Update data
-        let presentableItems = feedDataProvider.items.filter { $0.isPresentable }.isEmpty
-        view.isHidden = presentableItems
-
+        view.isHidden = feedDataProvider.items.isEmpty
         collection.reloadData()
     }
 

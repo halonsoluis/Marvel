@@ -69,7 +69,7 @@ class PublicationFeedProvider: PublicationFeedDataProvider {
             case .success(let characters):
                 items.removeAll()
                 items.append(
-                    contentsOf: characters
+                    contentsOf: characters.filter { $0.thumbnail != nil }
                 )
             case .failure(let error):
                 break //Display errors?
@@ -95,7 +95,7 @@ class PublicationFeedProvider: PublicationFeedDataProvider {
             switch result {
             case .success(let characters):
                 items.append(
-                    contentsOf: characters
+                    contentsOf: characters.filter { $0.thumbnail != nil }
                 )
             case .failure(let error):
                 break //Display errors?
