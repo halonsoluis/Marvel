@@ -13,20 +13,20 @@ import CharactersAPI
 class CharacterDetailsViewController: UIViewController {
     private let item: MarvelCharacter?
     private let loadImageHandler: (URL, String, UIImageView, @escaping (Error?) -> Void) -> Void
-    private let feedDataProvider: PublicationFeedDataProvider
+    private let feedDataProvider: () -> PublicationFeedDataProvider
 
     private lazy var scrollBar: UIScrollView = self.createScrollBar()
     private lazy var stack: UIStackView = self.createStackView()
     private lazy var heroDescription: UILabel = self.createDescriptionLabel()
     private lazy var heroName: UIButton = self.createNameButton()
     private lazy var heroImage: UIImageView = self.createHeroImageView()
-    private lazy var comicsSection: PublicationCollection = createPublicationView(section: "Comics", feedDataProvider: feedDataProvider)
-    private lazy var seriesSection: PublicationCollection = createPublicationView(section: "Series", feedDataProvider: feedDataProvider)
-    private lazy var eventsSection: PublicationCollection = createPublicationView(section: "Events", feedDataProvider: feedDataProvider)
+    private lazy var comicsSection: PublicationCollection = createPublicationView(section: "Comics", feedDataProvider: feedDataProvider())
+    private lazy var seriesSection: PublicationCollection = createPublicationView(section: "Series", feedDataProvider: feedDataProvider())
+    private lazy var eventsSection: PublicationCollection = createPublicationView(section: "Events", feedDataProvider: feedDataProvider())
 
     init(item: MarvelCharacter? = nil,
          loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void,
-         feedDataProvider: PublicationFeedDataProvider) {
+         feedDataProvider: @escaping () -> PublicationFeedDataProvider) {
         self.item = item
         self.loadImageHandler = loadImageHandler
         self.feedDataProvider = feedDataProvider
@@ -99,8 +99,8 @@ class CharacterDetailsViewController: UIViewController {
         stack.addArrangedSubview(heroDescription)
         
         stack.addArrangedSubview(comicsSection.view)
-        //stack.addArrangedSubview(seriesSection.view)
-        //stack.addArrangedSubview(eventsSection.view)
+        stack.addArrangedSubview(seriesSection.view)
+        stack.addArrangedSubview(eventsSection.view)
 
         heroImage.addSubview(heroName)
 
@@ -122,14 +122,14 @@ class CharacterDetailsViewController: UIViewController {
         comicsSection.view.snp.makeConstraints { make in
             make.width.equalToSuperview().inset(20)
         }
-//
-//        seriesSection.view.snp.makeConstraints { make in
-//            make.width.equalToSuperview().inset(20)
-//        }
-//
-//        eventsSection.view.snp.makeConstraints { make in
-//            make.width.equalToSuperview().inset(20)
-//        }
+
+        seriesSection.view.snp.makeConstraints { make in
+            make.width.equalToSuperview().inset(20)
+        }
+
+        eventsSection.view.snp.makeConstraints { make in
+            make.width.equalToSuperview().inset(20)
+        }
 
         heroName.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(16)

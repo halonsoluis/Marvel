@@ -58,7 +58,7 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource 
         }
 
         collection.snp.makeConstraints { make in
-            make.top.equalTo(section.snp.bottom).inset(8)
+            make.top.equalTo(section.snp.bottom).offset(8)
             make.width.equalToSuperview()
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().inset(4)

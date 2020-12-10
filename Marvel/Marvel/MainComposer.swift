@@ -28,7 +28,7 @@ class MainComposer {
     )
     private lazy var characterDetailsVC = CharacterDetailsViewController(
         loadImageHandler: loadImageHandlerWithCompletion,
-        feedDataProvider: MainQueueDispatchDecoratorPublicationFeedDataProvider(publicationsProvider)
+        feedDataProvider: { MainQueueDispatchDecoratorPublicationFeedDataProvider(self.publicationsProvider()) }
     )
 
     init(baseView: UIWindow) {
@@ -77,7 +77,7 @@ class MainComposer {
         )
     }()
 
-    private lazy var publicationsProvider: PublicationFeedDataProvider = {
+    private func publicationsProvider() -> PublicationFeedDataProvider  {
         let client = URLSessionHTTPClient(session: URLSession.shared)
         let charactersLoader = MarvelCharactersFeedLoader(client: client)
 
@@ -90,7 +90,7 @@ class MainComposer {
             prefetchImageHandler: prefetchImageHandler,
             loadImageHandler: loadImageHandler
         )
-    }()
+    }
 }
 
 // MARK - Navigation
