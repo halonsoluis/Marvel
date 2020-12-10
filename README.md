@@ -17,9 +17,10 @@ Using this app, users will be able to browse through the Marvel library of chara
 <!-- Portfolio Gallery Grid -->
 
 <p align="center">
-<img src="Docs/Images/iOS Main View.png" width="32%">
-<img src="Docs/Images/iOS Main View Scrolled UP.png" width="32%">
-<img src="Docs/Images/iOS Detailed View.png" width="32%">
+<img src="Docs/Images/iOS Main View.png" width="24%">
+<img src="Docs/Images/iOS Main View Scrolled UP.png" width="24%">
+<img src="Docs/Images/iOS Detailed View.png" width="24%">
+<img src="Docs/Images/iOS Detailed View Scrolled.png" width="24%">
 </p>
 
 [//]: # "Features"
@@ -27,12 +28,12 @@ Using this app, users will be able to browse through the Marvel library of chara
 This app is able to:
 
 - [x] Communicate with the Public Marvel API.
-- [x] See a list/collection of items from the Marvel API.
-- [x] Search or filter the contents of this list/collection.
-- [ ] See the full details of any item from this list/collection.
+- [x] See a collection of items from the Marvel API.
+- [x] Search or filter the contents of the collection.
+- [x] See details of any item from the collection.
   - [X] Image
   - [X] Description
-  - [ ] Comics, Series and other collections
+  - [x] Comics, Series and other collections
 - [x] Use the latest Swift version (Swift 5.3)
 - [x] The project must use git.
 
