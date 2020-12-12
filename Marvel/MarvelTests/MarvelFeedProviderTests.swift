@@ -42,7 +42,7 @@ class MarvelFeedProviderTests: XCTestCase {
         charactersLoader.charactersCalledWith?.completion(
             .success(items)
         )
-        XCTAssertEqual(sut.items, items.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
+        XCTAssertEqual(sut.items, items.compactMap(BasicCharacterData.init))
     }
 
     func testPerform_loadFromStart_alwaysCleanPreviousItemsWhenCalled() {
@@ -57,7 +57,7 @@ class MarvelFeedProviderTests: XCTestCase {
         sut.perform(action: .loadFromStart)
         let newItems = createItems(amount: 10)
         charactersLoader.charactersCalledWith?.completion(.success(newItems))
-        XCTAssertEqual(sut.items, newItems.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
+        XCTAssertEqual(sut.items, newItems.compactMap(BasicCharacterData.init))
     }
 
     func testPerform_loadMore_leadsToASingleAPICall() {
@@ -99,7 +99,7 @@ class MarvelFeedProviderTests: XCTestCase {
         charactersLoader.charactersCalledWith?.completion(
             .success(items)
         )
-        XCTAssertEqual(sut.items, items.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) })
+        XCTAssertEqual(sut.items, items.compactMap(BasicCharacterData.init))
     }
 
     func testPerform_loadMore_doNotCleanPreviousItemsWhenCalled() {
@@ -129,8 +129,8 @@ class MarvelFeedProviderTests: XCTestCase {
 
     func testPerform_openItemWithItems_PerformCallsForItemInIndex() {
         let (sut, charactersLoader, items) = createSUT(itemCount: 2)
-        sut.items = items.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) }
 
+        sut.items = items.compactMap(BasicCharacterData.init)
         sut.perform(action: .openItem(index: 0))
 
         XCTAssertEqual(charactersLoader.characterCallCount, 1)
@@ -201,8 +201,8 @@ class MarvelFeedProviderTests: XCTestCase {
     func testPerform_openItemWithItems_triggerDetailsRoute() {
         var route: Route!
         let (sut, charactersLoader, items) = createSUT(itemCount: 1, router: { route = $0 })
-        sut.items = items.compactMap { BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified) }
 
+        sut.items = items.compactMap(BasicCharacterData.init)
         sut.perform(action: .openItem(index: 0))
 
         charactersLoader.characterCalledWith?.completion(.success(items.first))

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CharactersAPI
 
 final class MainQueueDispatchDecoratorPublicationFeedDataProvider: PublicationFeedDataProvider {
     private let decoratee: PublicationFeedDataProvider
@@ -41,7 +40,7 @@ final class MainQueueDispatchDecoratorPublicationFeedDataProvider: PublicationFe
         }
     }
 
-    var items: [MarvelPublication] {
+    var items: [BasicPublicationData] {
         decoratee.items
     }
 }

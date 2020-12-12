@@ -6,10 +6,9 @@
 //
 
 import Foundation
-import CharactersAPI
 
 protocol PublicationFeedDataProvider: class {
-    var items: [MarvelPublication] { get }
+    var items: [BasicPublicationData] { get }
     var onItemsChangeCallback: (() -> Void)? { get set }
 
     func perform(action: CharactersDetailsUserAction)

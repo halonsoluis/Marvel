@@ -10,7 +10,7 @@ import CharactersAPI
 import Foundation
 import UIKit
 
-class MarvelFeedProvider: FeedDataProvider {
+final class MarvelFeedProvider: FeedDataProvider {
 
     private var charactersLoader: CharacterFeedLoader
     private var prefetchImageHandler: ((url: URL,uniqueKey: String)) -> Void
@@ -84,11 +84,7 @@ class MarvelFeedProvider: FeedDataProvider {
             switch result {
             case .success(let characters):
                 items.removeAll()
-                items.append(
-                    contentsOf: characters.compactMap {
-                        BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified)
-                    }
-                )
+                items.append(contentsOf: characters.compactMap(BasicCharacterData.init))
             case .failure(let error):
                 break //Display errors?
             }
@@ -111,11 +107,7 @@ class MarvelFeedProvider: FeedDataProvider {
         func completion(result: Result<[MarvelCharacter], Error>) {
             switch result {
             case .success(let characters):
-                items.append(
-                    contentsOf: characters.compactMap {
-                        BasicCharacterData(id: $0.id, name: $0.name, thumbnail: $0.thumbnail, modified: $0.modified)
-                    }
-                )
+                items.append(contentsOf: characters.compactMap(BasicCharacterData.init))
             case .failure(let error):
                 break //Display errors?
             }

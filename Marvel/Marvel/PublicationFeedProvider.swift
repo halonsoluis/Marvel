@@ -16,7 +16,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     private var loadImageHandler: (ImageFormula, _ destinationView: UIImageView) -> Void
     private var nextPage = 0
 
-    var items: [MarvelPublication] = [] {
+    var items: [BasicPublicationData] = [] {
         didSet {
             onItemsChangeCallback?()
         }
@@ -35,8 +35,12 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     func perform(action: CharactersDetailsUserAction) {
         switch action {
         case let .loadFromStart(characterId, type):
+            guard let type = MarvelPublication.Kind(rawValue: type) else { return }
+
             loadFromStart(characterId: characterId, type: type)
         case let .loadMore(characterId, type):
+            guard let type = MarvelPublication.Kind(rawValue: type) else { return }
+
             loadMore(characterId: characterId, type: type)
         case .prepareForDisplay(let indexes):
             prefetchImagesForNewItems(newItems: indexes.compactMap {
@@ -50,11 +54,10 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
 
             let item = items[index]
 
-            if let thumbnail = item.thumbnail, let modified = item.modified {
-                DispatchQueue.main.async {
-                    self.loadImageHandler((thumbnail, modified), imageField)
-                }
+            DispatchQueue.main.async {
+                self.loadImageHandler(item.imageFormula, imageField)
             }
+
         }
     }
 
@@ -68,9 +71,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
             switch result {
             case .success(let characters):
                 items.removeAll()
-                items.append(
-                    contentsOf: characters.filter { $0.thumbnail != nil }
-                )
+                items.append(contentsOf: characters.compactMap(BasicPublicationData.init))
             case .failure(let error):
                 break //Display errors?
             }
@@ -94,9 +95,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
         func completion(result: Result<[MarvelPublication], Error>) {
             switch result {
             case .success(let characters):
-                items.append(
-                    contentsOf: characters.filter { $0.thumbnail != nil }
-                )
+                items.append(contentsOf: characters.compactMap(BasicPublicationData.init))
             case .failure(let error):
                 break //Display errors?
             }
@@ -111,9 +110,9 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
         )
     }
 
-    private func prefetchImagesForNewItems(newItems: [MarvelPublication]) {
+    private func prefetchImagesForNewItems(newItems: [BasicPublicationData]) {
         newItems.forEach { item in
-            prefetchImageHandler((item.thumbnail!, item.modified!))
+            prefetchImageHandler((item.imageFormula))
         }
     }
 

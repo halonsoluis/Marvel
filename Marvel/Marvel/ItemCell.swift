@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class ItemCell: UITableViewCell {
+final class ItemCell: UITableViewCell {
 
     private lazy var name: UIButton = self.createNameButton()
     private lazy var heroImage: UIImageView = self.createHeroImageView()

@@ -19,6 +19,18 @@ enum Route: Equatable {
     case details(for: MarvelCharacter)
 }
 
+extension BasicCharacterData {
+    init?(character: MarvelCharacter) {
+        self.init(id: character.id, name: character.name, description: character.description, thumbnail: character.thumbnail, modified: character.modified)
+    }
+}
+
+extension BasicPublicationData {
+    init?(publication: MarvelPublication) {
+        self.init(id: publication.id, title: publication.title, thumbnail: publication.thumbnail, modified: publication.modified)
+    }
+}
+
 class MainComposer {
     private let baseView: UIWindow
 
@@ -54,7 +66,7 @@ class MainComposer {
         loadImageHandlerWithCompletion(imageFormula: imageFormula, imageView: imageView, completion: { _ in })
     }
 
-    private func loadImageHandlerWithCompletion(imageFormula: ImageFormula, imageView: UIImageView, completion: @escaping (Error?)->Void) {
+    private func loadImageHandlerWithCompletion(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView, completion: @escaping (Error?)->Void) {
         createImageLoader(url: imageFormula.url, modifiedKey: imageFormula.uniqueKey).render(on: imageView, completion: completion)
     }
 
@@ -108,20 +120,21 @@ extension MainComposer {
     private func router(route: Route, using baseWindow: UIWindow ) {
         switch route {
         case .details(for: let item):
-            DispatchQueue.main.async { [weak self] in
-                guard let strongSelf = self else { return }
+            guard let character = BasicCharacterData(character: item) else { return }
+
+            DispatchQueue.main.async {
 
                 let sections = MarvelPublication.Kind.allCases.map { publicationKind in
                     PublicationCollection(
-                        characterId: item.id!,
-                        section: publicationKind,
-                        loadImageHandler: strongSelf.loadImageHandlerWithCompletion,
-                        feedDataProvider: strongSelf.publicationFeedDataProvider()
+                        characterId: character.id,
+                        section: publicationKind.rawValue,
+                        loadImageHandler: self.loadImageHandlerWithCompletion,
+                        feedDataProvider: self.publicationFeedDataProvider()
                     )
                 }
 
-                strongSelf.characterDetailsVC.drawCharacter(item: item, sections: sections)
-                strongSelf.splitView.showDetailViewController(strongSelf.characterDetailsVC, sender: nil)
+                self.characterDetailsVC.drawCharacter(item: character, sections: sections)
+                self.splitView.showDetailViewController(self.characterDetailsVC, sender: nil)
             }
         }
     }

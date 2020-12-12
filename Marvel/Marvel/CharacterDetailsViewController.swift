@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import SnapKit
-import CharactersAPI
 
 class CharacterDetailsViewController: UIViewController {
     private let loadImageHandler: (ImageFormula, UIImageView, @escaping (Error?) -> Void) -> Void
@@ -46,11 +45,9 @@ class CharacterDetailsViewController: UIViewController {
         adjustHeroImageAspect()
     }
 
-    func drawCharacter(item: MarvelCharacter, sections: [PublicationCollection]) {
+    func drawCharacter(item: BasicCharacterData, sections: [PublicationCollection]) {
 
-        if let thumbnail = item.thumbnail, let modified = item.modified {
-            loadImageHandler((thumbnail, modified), heroImage, { _ in })
-        }
+        loadImageHandler(item.imageFormula, heroImage, { _ in })
         heroName.setTitle(item.name, for: .normal)
         heroDescription.text = item.description
 

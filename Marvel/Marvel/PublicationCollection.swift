@@ -7,24 +7,17 @@
 
 import Foundation
 import UIKit
-import CharactersAPI
-
-extension MarvelPublication {
-    var isPresentable: Bool {
-        thumbnail != nil
-    }
-}
 
 final class PublicationCollection: UIViewController, UICollectionViewDataSource {
     lazy var sectionName: UILabel = createSection()
     lazy var collection: UICollectionView = createCollection()
 
     let characterId: Int
-    let section: MarvelPublication.Kind
+    let section: String
     let loadImageHandler: (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void
     let feedDataProvider: PublicationFeedDataProvider
 
-    init(characterId: Int, section: MarvelPublication.Kind, loadImageHandler: @escaping (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void, feedDataProvider: PublicationFeedDataProvider) {
+    init(characterId: Int, section: String, loadImageHandler: @escaping (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void, feedDataProvider: PublicationFeedDataProvider) {
         self.characterId = characterId
         self.section = section
         self.loadImageHandler = loadImageHandler
@@ -109,7 +102,7 @@ extension PublicationCollection {
 
         sectionName.textColor = .red
         sectionName.font = UIFont.boldSystemFont(ofSize: 17)
-        sectionName.text = section.rawValue
+        sectionName.text = section
         sectionName.textAlignment = .justified
 
         return sectionName

@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class FeedViewController: UIViewController {
+final class FeedViewController: UIViewController {
 
     enum Section: CaseIterable {
         case main
