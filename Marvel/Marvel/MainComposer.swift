@@ -10,9 +10,10 @@ import UIKit
 import CharactersAPI
 import ImageLoader
 
+typealias ImageFormula = (url: URL, uniqueKey: String)
 typealias Router = (_ route: Route) -> Void
-typealias PrefetchImageHandler = ((url: URL, uniqueKey: String)) -> Void
-typealias LoadImageHandler = ((url: URL, uniqueKey: String), _ destinationView: UIImageView) -> Void
+typealias PrefetchImageHandler = (ImageFormula) -> Void
+typealias LoadImageHandler = (ImageFormula, _ destinationView: UIImageView) -> Void
 
 enum Route: Equatable {
     case details(for: MarvelCharacter)
@@ -49,11 +50,11 @@ class MainComposer {
         return splitView
     }
 
-    private func loadImageHandler(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView) {
+    private func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
         loadImageHandlerWithCompletion(imageFormula: imageFormula, imageView: imageView, completion: { _ in })
     }
 
-    private func loadImageHandlerWithCompletion(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView, completion: @escaping (Error?)->Void) {
+    private func loadImageHandlerWithCompletion(imageFormula: ImageFormula, imageView: UIImageView, completion: @escaping (Error?)->Void) {
         createImageLoader(url: imageFormula.url, modifiedKey: imageFormula.uniqueKey).render(on: imageView, completion: completion)
     }
 

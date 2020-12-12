@@ -10,14 +10,14 @@ import Foundation
 struct BasicCharacterData: Hashable {
     let id: Int
     let name: String
-    let imageFormula: (url: URL, uniqueKey: String)
+    let imageFormula: ImageFormula
 
     init?(id: Int?, name: String?, thumbnail: URL?, modified: String?) {
         guard let id = id, let name = name, let thumbnail = thumbnail, let modified = modified else { return nil }
         self.init(id: id, name: name, imageFormula: (url: thumbnail, uniqueKey: modified))
     }
 
-    init(id: Int, name: String, imageFormula: (url: URL, uniqueKey: String)) {
+    init(id: Int, name: String, imageFormula: ImageFormula) {
         self.id = id
         self.name = name
         self.imageFormula = imageFormula

@@ -12,8 +12,8 @@ import UIKit
 final class PublicationFeedProvider: PublicationFeedDataProvider {
 
     private var charactersLoader: CharacterFeedLoader
-    private var prefetchImageHandler: ((url: URL, uniqueKey: String)) -> Void
-    private var loadImageHandler: ((url: URL, uniqueKey: String), _ destinationView: UIImageView) -> Void
+    private var prefetchImageHandler: (ImageFormula) -> Void
+    private var loadImageHandler: (ImageFormula, _ destinationView: UIImageView) -> Void
     private var nextPage = 0
 
     var items: [MarvelPublication] = [] {
@@ -25,8 +25,8 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     var workInProgress = false
 
     init(charactersLoader: CharacterFeedLoader,
-         prefetchImageHandler: @escaping ((url: URL, uniqueKey: String)) -> Void,
-         loadImageHandler: @escaping  ((url: URL, uniqueKey: String), UIImageView) -> Void) {
+         prefetchImageHandler: @escaping (ImageFormula) -> Void,
+         loadImageHandler: @escaping  (ImageFormula, UIImageView) -> Void) {
         self.charactersLoader = charactersLoader
         self.prefetchImageHandler = prefetchImageHandler
         self.loadImageHandler = loadImageHandler

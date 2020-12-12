@@ -29,8 +29,8 @@ class MarvelFeedProvider: FeedDataProvider {
     var workInProgress = false
 
     init(charactersLoader: CharacterFeedLoader,
-         prefetchImageHandler: @escaping ((url: URL, uniqueKey: String)) -> Void,
-         loadImageHandler: @escaping  ((url: URL, uniqueKey: String), UIImageView) -> Void,
+         prefetchImageHandler: @escaping (ImageFormula) -> Void,
+         loadImageHandler: @escaping  (ImageFormula, UIImageView) -> Void,
          router: @escaping  (Route) -> Void) {
         self.charactersLoader = charactersLoader
         self.prefetchImageHandler = prefetchImageHandler

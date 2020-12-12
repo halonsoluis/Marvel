@@ -247,8 +247,8 @@ extension MarvelFeedProviderTests {
     func createSUT(
         itemCount: Int = 0,
         charactersLoader: CharacterFeedLoaderSpy = CharacterFeedLoaderSpy(),
-        prefetchImageHandler: @escaping ((url: URL, uniqueKey: String)) -> Void  = { _ in },
-        loadImageHandler: @escaping ((url: URL, uniqueKey: String), UIImageView) -> Void = { _, _ in },
+        prefetchImageHandler: @escaping (ImageFormula) -> Void  = { _ in },
+        loadImageHandler: @escaping (ImageFormula, UIImageView) -> Void = { _, _ in },
         router: @escaping (Route) -> Void = { _ in }
     ) -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy, items: [MarvelCharacter]) {
         let sut = MarvelFeedProvider(
