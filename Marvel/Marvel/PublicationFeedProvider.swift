@@ -12,8 +12,8 @@ import UIKit
 final class PublicationFeedProvider: PublicationFeedDataProvider {
 
     private var charactersLoader: CharacterFeedLoader
-    private var prefetchImageHandler: (_ url: URL, _ uniqueKey: String) -> Void
-    private var loadImageHandler: (_ url: URL, _ uniqueKey: String, _ destinationView: UIImageView) -> Void
+    private var prefetchImageHandler: ((url: URL, uniqueKey: String)) -> Void
+    private var loadImageHandler: ((url: URL, uniqueKey: String), _ destinationView: UIImageView) -> Void
     private var nextPage = 0
 
     var items: [MarvelPublication] = [] {
@@ -25,8 +25,8 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     var workInProgress = false
 
     init(charactersLoader: CharacterFeedLoader,
-         prefetchImageHandler: @escaping (URL, String) -> Void,
-         loadImageHandler: @escaping  (URL, String, UIImageView) -> Void) {
+         prefetchImageHandler: @escaping ((url: URL, uniqueKey: String)) -> Void,
+         loadImageHandler: @escaping  ((url: URL, uniqueKey: String), UIImageView) -> Void) {
         self.charactersLoader = charactersLoader
         self.prefetchImageHandler = prefetchImageHandler
         self.loadImageHandler = loadImageHandler
@@ -52,7 +52,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
 
             if let thumbnail = item.thumbnail, let modified = item.modified {
                 DispatchQueue.main.async {
-                    self.loadImageHandler(thumbnail, modified, imageField)
+                    self.loadImageHandler((thumbnail, modified), imageField)
                 }
             }
         }
@@ -113,7 +113,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
 
     private func prefetchImagesForNewItems(newItems: [MarvelPublication]) {
         newItems.forEach { item in
-            prefetchImageHandler(item.thumbnail!, item.modified!)
+            prefetchImageHandler((item.thumbnail!, item.modified!))
         }
     }
 
@@ -124,8 +124,8 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
      func result(result: Result<[MarvelPublication], Error>) -> [MarvelPublication] {
         switch result {
         case .success(let items):
-            if let item = items.first, let image = item.thumbnail, let modified = item.modified {
-                prefetchImageHandler(image, modified)
+            if let item = items.first, let url = item.thumbnail, let modified = item.modified {
+                prefetchImageHandler((url, modified))
             }
             return items
         case .failure(let error):

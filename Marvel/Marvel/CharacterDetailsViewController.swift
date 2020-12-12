@@ -11,7 +11,7 @@ import SnapKit
 import CharactersAPI
 
 class CharacterDetailsViewController: UIViewController {
-    private let loadImageHandler: (URL, String, UIImageView, @escaping (Error?) -> Void) -> Void
+    private let loadImageHandler: ((url: URL, uniqueKey: String), UIImageView, @escaping (Error?) -> Void) -> Void
     private let feedDataProvider: () -> PublicationFeedDataProvider
 
     private lazy var scrollBar: UIScrollView = self.createScrollBar()
@@ -22,7 +22,7 @@ class CharacterDetailsViewController: UIViewController {
 
     private var sections: [PublicationCollection] = []
 
-    init(loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void,
+    init(loadImageHandler: @escaping ((url: URL, uniqueKey: String), UIImageView, @escaping ((Error?) -> Void)) -> Void,
          feedDataProvider: @escaping () -> PublicationFeedDataProvider) {
         self.loadImageHandler = loadImageHandler
         self.feedDataProvider = feedDataProvider
@@ -49,7 +49,7 @@ class CharacterDetailsViewController: UIViewController {
     func drawCharacter(item: MarvelCharacter, sections: [PublicationCollection]) {
 
         if let thumbnail = item.thumbnail, let modified = item.modified {
-            loadImageHandler(thumbnail, modified, heroImage, { _ in })
+            loadImageHandler((thumbnail, modified), heroImage, { _ in })
         }
         heroName.setTitle(item.name, for: .normal)
         heroDescription.text = item.description

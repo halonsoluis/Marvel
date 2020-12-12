@@ -11,8 +11,8 @@ import CharactersAPI
 import ImageLoader
 
 typealias Router = (_ route: Route) -> Void
-typealias PrefetchImageHandler = (_ url: URL, _ uniqueKey: String) -> Void
-typealias LoadImageHandler = (_ url: URL, _ uniqueKey: String, _ destinationView: UIImageView) -> Void
+typealias PrefetchImageHandler = ((url: URL, uniqueKey: String)) -> Void
+typealias LoadImageHandler = ((url: URL, uniqueKey: String), _ destinationView: UIImageView) -> Void
 
 enum Route: Equatable {
     case details(for: MarvelCharacter)
@@ -49,16 +49,20 @@ class MainComposer {
         return splitView
     }
 
-    private func loadImageHandler(url: URL, modifiedKey: String, imageView: UIImageView) {
-        loadImageHandlerWithCompletion(url: url, modifiedKey: modifiedKey, imageView: imageView, completion: { _ in })
+    private func loadImageHandler(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView) {
+        loadImageHandlerWithCompletion(imageFormula: imageFormula, imageView: imageView, completion: { _ in })
     }
 
-    private func loadImageHandlerWithCompletion(url: URL, modifiedKey: String, imageView: UIImageView, completion: @escaping (Error?)->Void) {
-        ImageCreator(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: completion)
+    private func loadImageHandlerWithCompletion(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView, completion: @escaping (Error?)->Void) {
+        createImageLoader(url: imageFormula.url, modifiedKey: imageFormula.uniqueKey).render(on: imageView, completion: completion)
     }
 
     private func prefetchImageHandler(url: URL, modifiedKey: String) {
-        ImageCreator(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
+        createImageLoader(url: url, modifiedKey: modifiedKey).prefetch(completion: { _ in })
+    }
+
+    private func createImageLoader(url: URL, modifiedKey: String) -> Image {
+        ImageCreator(url: url, uniqueKey: modifiedKey).image
     }
 
     private lazy var itemProvider: FeedDataProvider = {

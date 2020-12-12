@@ -13,8 +13,8 @@ import UIKit
 class MarvelFeedProvider: FeedDataProvider {
 
     private var charactersLoader: CharacterFeedLoader
-    private var prefetchImageHandler: (_ url: URL, _ uniqueKey: String) -> Void
-    private var loadImageHandler: (_ url: URL, _ uniqueKey: String, _ destinationView: UIImageView) -> Void
+    private var prefetchImageHandler: ((url: URL,uniqueKey: String)) -> Void
+    private var loadImageHandler: ((url: URL,uniqueKey: String), _ destinationView: UIImageView) -> Void
     private var router: (_ route: Route) -> Void
 
     private var nextPage = 0
@@ -29,8 +29,8 @@ class MarvelFeedProvider: FeedDataProvider {
     var workInProgress = false
 
     init(charactersLoader: CharacterFeedLoader,
-         prefetchImageHandler: @escaping (URL, String) -> Void,
-         loadImageHandler: @escaping  (URL, String, UIImageView) -> Void,
+         prefetchImageHandler: @escaping ((url: URL, uniqueKey: String)) -> Void,
+         loadImageHandler: @escaping  ((url: URL, uniqueKey: String), UIImageView) -> Void,
          router: @escaping  (Route) -> Void) {
         self.charactersLoader = charactersLoader
         self.prefetchImageHandler = prefetchImageHandler
@@ -69,7 +69,7 @@ class MarvelFeedProvider: FeedDataProvider {
             let item = items[index]
 
             DispatchQueue.main.async {
-                self.loadImageHandler(item.thumbnail, item.modified, imageField)
+                self.loadImageHandler(item.imageFormula, imageField)
             }
         }
     }
@@ -130,9 +130,7 @@ class MarvelFeedProvider: FeedDataProvider {
     }
 
     private func prefetchImagesForNewItems(newItems: [BasicCharacterData]) {
-        newItems.forEach { item in
-            prefetchImageHandler(item.thumbnail, item.modified)
-        }
+        newItems.map{ $0.imageFormula }.forEach(prefetchImageHandler)
     }
 
     private func openItem(at index: Int) {
@@ -154,7 +152,7 @@ class MarvelFeedProvider: FeedDataProvider {
         switch result {
         case .success(let items):
             if let item = items.first, let image = item.thumbnail, let modified = item.modified {
-                prefetchImageHandler(image, modified)
+                prefetchImageHandler((image, modified))
             }
             return items
         case .failure(let error):

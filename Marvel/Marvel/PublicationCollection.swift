@@ -21,10 +21,10 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource 
 
     let characterId: Int
     let section: MarvelPublication.Kind
-    let loadImageHandler: (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void
+    let loadImageHandler: ((url: URL, uniqueKey: String), UIImageView, @escaping ((Error?) -> Void)) -> Void
     let feedDataProvider: PublicationFeedDataProvider
 
-    init(characterId: Int, section: MarvelPublication.Kind, loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void, feedDataProvider: PublicationFeedDataProvider) {
+    init(characterId: Int, section: MarvelPublication.Kind, loadImageHandler: @escaping ((url: URL, uniqueKey: String), UIImageView, @escaping ((Error?) -> Void)) -> Void, feedDataProvider: PublicationFeedDataProvider) {
         self.characterId = characterId
         self.section = section
         self.loadImageHandler = loadImageHandler
