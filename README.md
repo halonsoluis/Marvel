@@ -52,10 +52,8 @@ Of course, this was evolving as the needs of the app were getting more clear. Fo
 ### Current Architecture
 
 <p align="center">
-<img src="Docs/Images/Marvel Characters 10-12-20.svg">
+<img src="Docs/Images/Marvel Characters 12-12-20.svg">
 </p>
-
-Notice that there's an strong dependency from **Marvel** to **CharactersAPI**, this is technical debt that will be addressed.
 
 `MainComposer` Can be extracted out of **Marvel** target, making it to effectively **MarvelUI**. This will then allow for easily interchange of UI technology, hence making easier, for example, the adoption of SwiftUI.
 
@@ -65,9 +63,9 @@ Most of the dependencies between frameworks were resolved in the MainComposer by
 
 MVC was used in previous iteration of the app. Nevertheless, I have come to appreaciate MVVM over it. VIPER has a lot to offer but for the size of this project and at this point, better not to go for a strict approach.
 
-Hence, for current project, learnings from the three of them were applied. I have noticed that I have a preference for compositional architecture and evolutionary design. :)
+Hence, for current project, learnings from the three of them were applied. I have noticed that I have a preference for compositional architecture and evolutionary design.
 
-Basically, the UI interacts with the rest of the app by producing calls to an API provided by the viewModel and listening for changesm. In the case of using **Combine** or **RxSwift** the exposed callback will not be needed, given that `items` is observable
+Basically, the UI interacts with the rest of the app by producing calls to an API provided by the viewModel and listening for changes. In the case of using **Combine** or **RxSwift** the exposed callback will not be needed, given that `items` is observable
 
 ```swift
 protocol FeedDataProvider {
@@ -77,7 +75,14 @@ protocol FeedDataProvider {
     func perform(action: Action)
 }
 
-enum Action {
+protocol PublicationFeedDataProvider {
+    var items: [BasicPublicationData] { get }
+    var onItemsChangeCallback: (() -> Void)? { get set }
+
+    func perform(action: CharactersDetailsUserAction)
+}
+
+enum CharactersFeedUserAction {
     case loadFromStart
     case loadMore
     case openItem(index: Int)
@@ -85,7 +90,16 @@ enum Action {
     case prepareForDisplay(indexes: [Int])
     case setHeroImage(index: Int, on: UIImageView)
 }
+
+enum CharactersDetailsUserAction {
+    case loadFromStart(characterId: Int, type: String)
+    case loadMore(characterId: Int, type: String)
+    case prepareForDisplay(indexes: [Int])
+    case setHeroImage(index: Int, on: UIImageView)
+}
 ```
+
+This allows for having a clear separation between business lo
 
 **Start simple, Continue simple, Compose, Repeat**
 
