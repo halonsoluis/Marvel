@@ -264,7 +264,6 @@
 		5BD7CFB92570921700F6EB7F /* CharactersFeedUseCase */ = {
 			isa = PBXGroup;
 			children = (
-				5BB7952D258198A4006D746F /* PublicationFeedProvider.swift */,
 				5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */,
 				5BB795182581846B006D746F /* FeedDataProvider.swift */,
 				5BB795202581851B006D746F /* CharactersFeedUserAction.swift */,
@@ -276,6 +275,7 @@
 		5BD8DF7A2573444800F5294A /* CharactersDetailsUseCase */ = {
 			isa = PBXGroup;
 			children = (
+				5BB7952D258198A4006D746F /* PublicationFeedProvider.swift */,
 				5BB7951C258184C3006D746F /* PublicationFeedDataProvider.swift */,
 				5BB795452581B25B006D746F /* CharactersDetailUserAction.swift */,
 				5BB7957B25850D8D006D746F /* BasicPublicationData.swift */,

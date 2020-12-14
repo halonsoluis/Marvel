@@ -8,9 +8,7 @@
 import Foundation
 import UIKit
 
-final class PublicationCollection: UIViewController, UICollectionViewDataSource {
-    lazy var sectionName: UILabel = createSection()
-    lazy var collection: UICollectionView = createCollection()
+final class PublicationCollection: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     let characterId: Int
     let section: String
@@ -93,6 +91,16 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("selected \(indexPath.row)")
     }
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let itemCount = feedDataProvider.items.count
+
+        guard itemCount > 0 else { return }
+
+        if (indexPath.row == itemCount - 1) {
+            feedDataProvider.perform(action: .loadMore(characterId: characterId, type: section))
+        }
+    }
 }
 
 // MARK: Initialisers
@@ -115,6 +123,7 @@ extension PublicationCollection {
         )
         collection.allowsMultipleSelection = false
         collection.register(PublicationCell.self, forCellWithReuseIdentifier: "PublicationCell")
+        collection.delegate = self
         collection.dataSource = self
 
         return collection
