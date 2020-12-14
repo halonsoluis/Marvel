@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BasicCharacterData: Hashable {
+struct BasicCharacterData: Hashable, Equatable {
     let id: Int
     let name: String
     let description: String

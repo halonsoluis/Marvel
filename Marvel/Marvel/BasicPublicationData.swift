@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BasicPublicationData: Hashable {
+struct BasicPublicationData: Hashable, Equatable {
     let id: Int
     let title: String
     let imageFormula: ImageFormula
