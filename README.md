@@ -44,7 +44,7 @@ This app is able to:
 As part of the process, an initial and oversimplified overview of the entities was created. This marked the most valuable entities and separation of concerns to take into account, as wells as the boundaries between the components of the app.
 
 <p align="center">
-<img src="Docs/Images/Marvel Characters.svg">
+<img src="Docs/Images/Marvel Characters pre.svg">
 </p>
 
 Of course, this was evolving as the needs of the app were getting more clear. For example, the neeed of callbacks, mixed protocols, avoiding overenginnering, etc.
@@ -52,7 +52,7 @@ Of course, this was evolving as the needs of the app were getting more clear. Fo
 ### Current Architecture
 
 <p align="center">
-<img src="Docs/Images/Marvel Characters 12-12-20.svg">
+<img src="Docs/Images/Marvel Characters.svg">
 </p>
 
 `MainComposer` Can be extracted out of **Marvel** target, making it to effectively **MarvelUI**. This will then allow for easily interchange of UI technology, hence making easier, for example, the adoption of SwiftUI.

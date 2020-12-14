@@ -191,6 +191,35 @@
 			name = Main;
 			sourceTree = "<group>";
 		};
+		5BB7958A2586EC56006D746F /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				5BB7958C2586EF6B006D746F /* CharactersDetailsUseCase */,
+				5BB7958B2586EF59006D746F /* CharactersFeedUseCase */,
+				5BB795832586B7E6006D746F /* Main */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		5BB7958B2586EF59006D746F /* CharactersFeedUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				5BFA3F8F256C93940057BD82 /* FeedViewController.swift */,
+				5BD8DF602573228500F5294A /* ItemCell.swift */,
+			);
+			name = CharactersFeedUseCase;
+			sourceTree = "<group>";
+		};
+		5BB7958C2586EF6B006D746F /* CharactersDetailsUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				5BD8DF7B2573449200F5294A /* CharacterDetailsViewController.swift */,
+				5BB79511258183FD006D746F /* PublicationCell.swift */,
+				5B14F170257F305D0003572D /* PublicationCollection.swift */,
+			);
+			name = CharactersDetailsUseCase;
+			sourceTree = "<group>";
+		};
 		5BD4F380256C9FF40016B3CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -235,10 +264,9 @@
 		5BD7CFB92570921700F6EB7F /* CharactersFeedUseCase */ = {
 			isa = PBXGroup;
 			children = (
+				5BB7952D258198A4006D746F /* PublicationFeedProvider.swift */,
+				5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */,
 				5BB795182581846B006D746F /* FeedDataProvider.swift */,
-				5B14F0D3257D1D510003572D /* MainQueueDispatchDecoratorFeedDataProvider.swift */,
-				5BFA3F8F256C93940057BD82 /* FeedViewController.swift */,
-				5BD8DF602573228500F5294A /* ItemCell.swift */,
 				5BB795202581851B006D746F /* CharactersFeedUserAction.swift */,
 				5BB795752584FCBD006D746F /* BasicCharacterData.swift */,
 			);
@@ -249,10 +277,6 @@
 			isa = PBXGroup;
 			children = (
 				5BB7951C258184C3006D746F /* PublicationFeedDataProvider.swift */,
-				5BB7953125819F5A006D746F /* MainQueueDispatchDecoratorPublicationFeedDataProvider.swift */,
-				5BD8DF7B2573449200F5294A /* CharacterDetailsViewController.swift */,
-				5B14F170257F305D0003572D /* PublicationCollection.swift */,
-				5BB79511258183FD006D746F /* PublicationCell.swift */,
 				5BB795452581B25B006D746F /* CharactersDetailUserAction.swift */,
 				5BB7957B25850D8D006D746F /* BasicPublicationData.swift */,
 			);
@@ -283,12 +307,12 @@
 		5BFA3F8A256C93940057BD82 /* Marvel */ = {
 			isa = PBXGroup;
 			children = (
-				5BB795832586B7E6006D746F /* Main */,
-				5BD8DF7A2573444800F5294A /* CharactersDetailsUseCase */,
+				5BB7958A2586EC56006D746F /* UI */,
 				5BD7CFB92570921700F6EB7F /* CharactersFeedUseCase */,
+				5BD8DF7A2573444800F5294A /* CharactersDetailsUseCase */,
 				5BD7CFB8257091BD00F6EB7F /* System Internals */,
-				5BB7952D258198A4006D746F /* PublicationFeedProvider.swift */,
-				5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */,
+				5BB7953125819F5A006D746F /* MainQueueDispatchDecoratorPublicationFeedDataProvider.swift */,
+				5B14F0D3257D1D510003572D /* MainQueueDispatchDecoratorFeedDataProvider.swift */,
 				5BD7CFA52570878100F6EB7F /* MainComposer.swift */,
 			);
 			path = Marvel;
