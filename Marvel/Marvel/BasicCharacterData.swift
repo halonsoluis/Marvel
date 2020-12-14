@@ -26,7 +26,10 @@ struct BasicCharacterData: Hashable, Equatable {
     }
 
     func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
+        hasher.combine(id)
+        hasher.combine(name)
+        hasher.combine(description)
+        hasher.combine(imageFormula.uniqueKey)
     }
 
     static func == (lhs: BasicCharacterData, rhs: BasicCharacterData) -> Bool {

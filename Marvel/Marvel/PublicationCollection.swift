@@ -8,12 +8,18 @@
 import Foundation
 import UIKit
 
-final class PublicationCollection: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+typealias DataSource = UICollectionViewDiffableDataSource<Int, BasicPublicationData>
 
-    let characterId: Int
-    let section: String
-    let loadImageHandler: (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void
-    let feedDataProvider: PublicationFeedDataProvider
+final class PublicationCollection: UIViewController, UICollectionViewDelegate {
+    private lazy var sectionName: UILabel = createSection()
+    private lazy var collection: UICollectionView = createCollection()
+    private lazy var dataSource: DataSource = makeDataSource()
+
+    private static let reuseIdentifier = "PublicationCell"
+    private let characterId: Int
+    private let section: String
+    private let loadImageHandler: (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void
+    private let feedDataProvider: PublicationFeedDataProvider
 
     init(characterId: Int, section: String, loadImageHandler: @escaping (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void, feedDataProvider: PublicationFeedDataProvider) {
         self.characterId = characterId
@@ -32,6 +38,8 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource,
         super.viewDidLoad()
 
         setupUI()
+        collection.dataSource = dataSource
+        updateDataSource(animated: false)
         feedDataProvider.onItemsChangeCallback = newItemsReceived
         feedDataProvider.perform(action: .loadFromStart(characterId: characterId, type: section))
     }
@@ -39,7 +47,16 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource,
     func newItemsReceived() {
         //Update data
         view.isHidden = feedDataProvider.items.isEmpty
-        collection.reloadData()
+        updateDataSource(animated: true)
+    }
+
+    private func updateDataSource(animated: Bool = false) {
+
+        var snapshot = NSDiffableDataSourceSnapshot<Int, BasicPublicationData>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(feedDataProvider.items, toSection: 0)
+
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
 
     func setupUI() {
@@ -64,28 +81,6 @@ final class PublicationCollection: UIViewController, UICollectionViewDataSource,
             make.bottom.equalToSuperview().inset(4)
             make.height.equalTo(PublicationCell.cellSize)
         }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PublicationCell", for: indexPath) as? PublicationCell
-        else { return UICollectionViewCell()}
-
-        let crossReference = feedDataProvider.items[indexPath.row]
-
-        cell.nameLabel.text = crossReference.title
-
-        cell.image.image = nil
-        feedDataProvider.perform(action: .setHeroImage(index: indexPath.row, on: cell.image))
-
-        return cell
-    }
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return feedDataProvider.items.count
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -124,7 +119,6 @@ extension PublicationCollection {
         collection.allowsMultipleSelection = false
         collection.register(PublicationCell.self, forCellWithReuseIdentifier: "PublicationCell")
         collection.delegate = self
-        collection.dataSource = self
 
         return collection
     }
@@ -144,4 +138,28 @@ extension PublicationCollection {
         return layout
     }
 
+}
+
+private extension PublicationCollection {
+    func makeDataSource() -> DataSource {
+
+        return DataSource(
+            collectionView: collection,
+            cellProvider: { [weak self] (collection, indexPath, crossReference) -> UICollectionViewCell? in
+
+                guard let cell = collection.dequeueReusableCell(withReuseIdentifier: Self.reuseIdentifier, for: indexPath) as? PublicationCell else {
+                    return nil
+                }
+
+                cell.nameLabel.text = crossReference.title
+                cell.image.image = nil
+
+                if let feedDataProvider = self?.feedDataProvider {
+                    feedDataProvider.perform(action: .setHeroImage(index: indexPath.row, on: cell.image))
+                }
+
+                return cell
+            }
+        )
+    }
 }

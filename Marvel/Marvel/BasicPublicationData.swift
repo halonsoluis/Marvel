@@ -24,7 +24,9 @@ struct BasicPublicationData: Hashable, Equatable {
     }
 
     func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
+        hasher.combine(id)
+        hasher.combine(title)
+        hasher.combine(imageFormula.uniqueKey)
     }
 
     static func == (lhs: BasicPublicationData, rhs: BasicPublicationData) -> Bool {

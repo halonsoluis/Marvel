@@ -95,7 +95,10 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
         func completion(result: Result<[MarvelPublication], Error>) {
             switch result {
             case .success(let characters):
-                items.append(contentsOf: characters.compactMap(BasicPublicationData.init))
+                let insertedIds = items.map { $0.id }
+                let newItems = characters.compactMap(BasicPublicationData.init)
+
+                items.append(contentsOf: newItems.filter { !insertedIds.contains($0.id) })
             case .failure(let error):
                 break //Display errors?
             }
