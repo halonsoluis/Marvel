@@ -180,9 +180,9 @@ Kingfisher is a powerful, pure-Swift library for downloading and caching images 
 - [x] Universal App
 
 <p align="center">
-<img src="Docs/Images/iOS Main View.png" width="48%">
+<img src="Docs/Images/iOS Main View Search.png" width="48%">
 <img src="Docs/Images/iOS Detailed View.png" width="48%">
-<img src="Docs/Images/iPadOS.png" width="100%">
+<img src="Docs/Images/iPadOS landscape.png" width="100%">
 <img src="Docs/Images/macOS.png" width="100%">
 </p>
 
