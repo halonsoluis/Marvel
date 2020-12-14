@@ -7,7 +7,6 @@
 
 import Foundation
 import CharactersAPI
-import Foundation
 import UIKit
 
 final class MarvelFeedProvider: FeedDataProvider {
