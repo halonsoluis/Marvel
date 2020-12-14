@@ -163,7 +163,7 @@ extension CharacterDetailsViewController {
         let descriptionLabel = UILabel()
         descriptionLabel.textColor = .white
         descriptionLabel.backgroundColor = .clear
-        descriptionLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        descriptionLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
         descriptionLabel.accessibilityIdentifier = "description"
         descriptionLabel.lineBreakMode = .byWordWrapping
         descriptionLabel.numberOfLines = 0
@@ -175,11 +175,11 @@ extension CharacterDetailsViewController {
     private func createNameButton() -> UIButton {
         let nameLabel = UIButton()
         nameLabel.setTitleColor(.black, for: .normal)
-        nameLabel.titleLabel?.adjustsFontSizeToFitWidth = false
+        nameLabel.titleLabel?.adjustsFontSizeToFitWidth = true
         nameLabel.titleLabel?.autoresizesSubviews = true
         nameLabel.autoresizingMask = [.flexibleLeftMargin]
         nameLabel.backgroundColor = .clear
-        nameLabel.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        nameLabel.titleLabel?.font = UIFont.boldSystemFont(ofSize: UIFont.systemFontSize)
         nameLabel.accessibilityIdentifier = "name"
         nameLabel.titleLabel?.lineBreakMode = .byWordWrapping
         nameLabel.titleLabel?.numberOfLines = 0

@@ -101,8 +101,8 @@ extension PublicationCollection {
         let sectionName = UILabel()
 
         sectionName.textColor = .red
-        sectionName.font = UIFont.boldSystemFont(ofSize: 17)
-        sectionName.text = section
+        sectionName.font = UIFont.boldSystemFont(ofSize: UIFont.systemFontSize)
+        sectionName.text = section.capitalized
         sectionName.textAlignment = .justified
 
         return sectionName

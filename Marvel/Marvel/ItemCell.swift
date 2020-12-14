@@ -63,11 +63,11 @@ extension ItemCell {
     private func createNameButton() -> UIButton {
         let nameLabel = UIButton()
         nameLabel.setTitleColor(.black, for: .normal)
-        nameLabel.titleLabel?.adjustsFontSizeToFitWidth = false
+        nameLabel.titleLabel?.adjustsFontSizeToFitWidth = true
         nameLabel.titleLabel?.autoresizesSubviews = true
         nameLabel.autoresizingMask = [UIView.AutoresizingMask.flexibleRightMargin, UIView.AutoresizingMask.flexibleTopMargin]
         nameLabel.backgroundColor = .clear
-        nameLabel.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        nameLabel.titleLabel?.font = UIFont.boldSystemFont(ofSize: UIFont.systemFontSize)
         nameLabel.accessibilityIdentifier = "name"
         nameLabel.titleLabel?.lineBreakMode = .byWordWrapping
         nameLabel.titleLabel?.numberOfLines = 0
