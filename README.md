@@ -113,12 +113,12 @@ Unit tests and Integration Tests are grouped in a dedicated target **"CI"** that
 
 For the more critical aspects of the app a **Test Driven Development** approach was followed, *with some moments of weakness on which the test was added after instead of before, also a reluctance to test unhappy paths of which I'm not proud*.
 
-- **CharactersAPI** **(93.8% code coverage)**
-  - Covered by 20 Unit Tests
-  - Covered by 8 Integration Tests
+- **CharactersAPI** **(93.3% code coverage)**
+  - Covered by 25 Unit Tests
+  - Covered by 12 Integration Tests
 - **ImageLoader** **(100% code coverage)**
   - Covered by 5 Unit Tests
-- **Marvel** **(47.6% code coverage)**
+- **Marvel** **(29.7% code coverage)**
   - Covered by 18 Unit Tests
   - Should be covered by Snapshot and UI Tests. *This is not done at this point*
 
