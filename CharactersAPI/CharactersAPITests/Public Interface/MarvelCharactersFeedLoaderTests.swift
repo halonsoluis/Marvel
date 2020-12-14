@@ -24,6 +24,15 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         XCTAssertEqual(items.count, 10)
     }
 
+    func test_publicationCallWithValidResponse_producesMarvelPublication() {
+        stubHTTPResponseAndData(publicationAmount: 10, statusCode: 200)
+
+        MarvelPublication.Kind.allCases.forEach {
+            let items = extractResultDataFromCall(result: performPublicationRequest(characterId: 1, type: $0, page: 0, using: makeSUT()))!
+            XCTAssertEqual(items.count, 10)
+        }
+    }
+
     func test_searchWithValidResponse_producesMarvelItems() {
         stubHTTPResponseAndData(itemAmount: 10, statusCode: 200)
 
@@ -65,6 +74,16 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
                 XCTFail("This is expected to receive an error as the status code is not handled")
             }
         }
+    }
+
+    private func stubHTTPResponseAndData(publicationAmount: Int, statusCode: Int = 200) {
+        let data: Data = try! JSONSerialization.data(
+            withJSONObject: makeValidJSONResponse(publicationAmount: publicationAmount, statusCode: statusCode).response,
+            options: .prettyPrinted
+        )
+        let response = HTTPURLResponse(url: URL(string: "www.anyurl.com")!, statusCode: statusCode, httpVersion: nil, headerFields: nil)
+
+        URLProtocolStub.stub(data: data, response: response, error: nil)
     }
 
     private func stubHTTPResponseAndData(itemAmount: Int, statusCode: Int = 200) {

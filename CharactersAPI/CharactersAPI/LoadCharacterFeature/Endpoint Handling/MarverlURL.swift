@@ -24,12 +24,16 @@ struct MarvelURL {
         guard var components = URLComponents(url: route.url(from: baseURL), resolvingAgainstBaseURL: false) else {
             return nil
         }
-        let params: [[String: String]] = [
+
+        var params: [[String: String]] = [
             securityParams(at: timeProvider(), using: hashResolver),
             pagination(for: page),
-            filter(by: nameStartingWith),
-            sortedBy()
+            filter(by: nameStartingWith)
         ]
+
+        if route == .characters {
+            params.append(sortedBy())
+        }
         components.queryItems = params.joined().map(URLQueryItem.init)
         return components.url
     }

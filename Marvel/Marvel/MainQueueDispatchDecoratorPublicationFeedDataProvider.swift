@@ -1,20 +1,20 @@
 //
-//  MainQueueDispatchDecorator.swift
+//  MainQueueDispatchDecoratorPublicationFeedDataProvider.swift
 //  Marvel
 //
-//  Created by Hugo Alonso on 06/12/2020.
+//  Created by Hugo Alonso on 10/12/2020.
 //
 
 import Foundation
 
-final class MainQueueDispatchDecorator: FeedDataProvider {
-    private let decoratee: FeedDataProvider
+final class MainQueueDispatchDecoratorPublicationFeedDataProvider: PublicationFeedDataProvider {
+    private let decoratee: PublicationFeedDataProvider
 
-    init(_ decoratee: FeedDataProvider){
+    init(_ decoratee: PublicationFeedDataProvider){
         self.decoratee = decoratee
     }
 
-    func perform(action: Action) {
+    func perform(action: CharactersDetailsUserAction) {
         DispatchQueue.global(qos: .userInitiated).async {
             self.decoratee.perform(action: action)
         }
@@ -40,7 +40,7 @@ final class MainQueueDispatchDecorator: FeedDataProvider {
         }
     }
 
-    var items: [BasicCharacterData] {
+    var items: [BasicPublicationData] {
         decoratee.items
     }
 }

@@ -10,52 +10,10 @@ import UIKit
 import CharactersAPI
 import ImageLoader
 
+typealias ImageFormula = (url: URL, uniqueKey: String)
 typealias Router = (_ route: Route) -> Void
-typealias PrefetchImageHandler = (_ url: URL, _ uniqueKey: String) -> Void
-typealias LoadImageHandler = (_ url: URL, _ uniqueKey: String, _ destinationView: UIImageView) -> Void
-
-struct BasicCharacterData: Hashable {
-    let id: Int
-    let name: String
-    let thumbnail: URL
-    let modified: String
-
-    init?(id: Int?, name: String?, thumbnail: URL?, modified: String?) {
-        guard let id = id, let name = name, let thumbnail = thumbnail, let modified = modified else { return nil }
-        self.init(id: id, name: name, thumbnail: thumbnail, modified: modified)
-    }
-
-    init(id: Int, name: String, thumbnail: URL, modified: String) {
-        self.id = id
-        self.name = name
-        self.thumbnail = thumbnail
-        self.modified = modified
-    }
-
-    func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
-    }
-
-    static func == (lhs: BasicCharacterData, rhs: BasicCharacterData) -> Bool {
-        return lhs.id == rhs.id
-    }
-}
-
-protocol FeedDataProvider: class {
-    var items: [BasicCharacterData] { get }
-    var onItemsChangeCallback: (() -> Void)? { get set }
-
-    func perform(action: Action)
-}
-
-enum Action {
-    case loadFromStart
-    case loadMore
-    case openItem(index: Int)
-    case search(name: String?)
-    case prepareForDisplay(indexes: [Int])
-    case setHeroImage(index: Int, on: UIImageView)
-}
+typealias PrefetchImageHandler = (ImageFormula) -> Void
+typealias LoadImageHandler = (ImageFormula, _ destinationView: UIImageView) -> Void
 
 enum Route: Equatable {
     case details(for: MarvelCharacter)
@@ -64,39 +22,30 @@ enum Route: Equatable {
 class MainComposer {
     private let baseView: UIWindow
 
-    private lazy var splitView: UISplitViewController = createSplitView()
-    private lazy var splitViewDelegate: SplitViewDelegate = SplitViewDelegate()
-    private lazy var feedViewVC = FeedViewController(feedDataProvider: MainQueueDispatchDecorator(itemProvider))
-    private lazy var characterDetailsVC = CharacterDetailsViewController(loadImageHandler: loadImageHandlerWithCompletion)
+    private lazy var characterfeedDataProvider = MainQueueDispatchDecoratorFeedDataProvider(itemProvider)
+    private lazy var publicationfeedDataProvider = MainQueueDispatchDecoratorPublicationFeedDataProvider(publicationsProvider)
+
+    private var mainView: MainSplitView?
+    private var characterDetails: CharacterDetailsViewController?
 
     init(baseView: UIWindow) {
         self.baseView = baseView
     }
 
     func start() {
-        baseView.rootViewController = splitView
-    }
+        let feedViewVC = FeedViewController(
+            feedDataProvider: characterfeedDataProvider
+        )
+        let characterDetailsVC = CharacterDetailsViewController(
+            loadImageHandler: loadImageHandlerWithCompletion,
+            feedDataProvider: { self.publicationfeedDataProvider }
+        )
+        let mainView = MainSplitView(mainViewVC: feedViewVC, detailVC: characterDetailsVC)
 
-    private func createSplitView() -> UISplitViewController {
-        let splitView = UISplitViewController()
-        splitView.delegate = splitViewDelegate
+        mainView.injectAsRoot(in: baseView)
 
-        splitView.viewControllers.append(UINavigationController(rootViewController: feedViewVC))
-        splitView.viewControllers.append(characterDetailsVC)
-
-        return splitView
-    }
-
-    private func loadImageHandler(url: URL, modifiedKey: String, imageView: UIImageView) {
-        loadImageHandlerWithCompletion(url: url, modifiedKey: modifiedKey, imageView: imageView, completion: { _ in })
-    }
-
-    private func loadImageHandlerWithCompletion(url: URL, modifiedKey: String, imageView: UIImageView, completion: @escaping (Error?)->Void) {
-        ImageCreator(url: url, uniqueKey: modifiedKey).image.render(on: imageView, completion: completion)
-    }
-
-    private func prefetchImageHandler(url: URL, modifiedKey: String) {
-        ImageCreator(url: url, uniqueKey: modifiedKey).image.prefetch(completion: { _ in })
+        self.mainView = mainView
+        self.characterDetails = characterDetailsVC
     }
 
     private lazy var itemProvider: FeedDataProvider = {
@@ -114,31 +63,89 @@ class MainComposer {
             router: routerIntercept
         )
     }()
+
+    private var publicationsProvider: PublicationFeedDataProvider {
+        let client = URLSessionHTTPClient(session: URLSession.shared)
+        let charactersLoader = MarvelCharactersFeedLoader(client: client)
+
+        func routerIntercept(route: Route) {
+            router(route: route, using: baseView)
+        }
+
+        return PublicationFeedProvider(
+            charactersLoader: charactersLoader,
+            prefetchImageHandler: prefetchImageHandler,
+            loadImageHandler: loadImageHandler
+        )
+    }
 }
 
 // MARK - Navigation
 extension MainComposer {
 
+    private func publicationFeedDataProvider() -> PublicationFeedDataProvider {
+        MainQueueDispatchDecoratorPublicationFeedDataProvider(self.publicationsProvider)
+    }
+
     private func router(route: Route, using baseWindow: UIWindow ) {
         switch route {
         case .details(for: let item):
+            guard let character = BasicCharacterData(character: item) else { return }
+
             DispatchQueue.main.async {
-                self.characterDetailsVC.drawCharacter(item: item)
-                self.splitView.showDetailViewController(self.characterDetailsVC, sender: nil)
+                self.renderCharacter(
+                    item: character,
+                    sections: MarvelPublication.Kind.allCases.map { publicationKind in
+                        self.createSection(characterId: character.id, publicationKind: publicationKind)
+                    }
+                )
             }
         }
     }
+
+    private func createSection(characterId: Int, publicationKind: MarvelPublication.Kind) -> PublicationCollection {
+        PublicationCollection(
+            characterId: characterId,
+            section: publicationKind.rawValue,
+            loadImageHandler: self.loadImageHandlerWithCompletion,
+            feedDataProvider: publicationFeedDataProvider()
+        )
+    }
+
+    private func renderCharacter(item: BasicCharacterData, sections: [PublicationCollection]) {
+        characterDetails?.drawCharacter(item: item, sections: sections)
+        mainView?.forceShowDetailView()
+    }
 }
 
+
+// MARK - Image Handling
 extension MainComposer {
-    class SplitViewDelegate: UISplitViewControllerDelegate {
+    private func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
+        loadImageHandlerWithCompletion(imageFormula: imageFormula, imageView: imageView, completion: { _ in })
+    }
 
-        func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
-            return true
-        }
+    private func loadImageHandlerWithCompletion(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView, completion: @escaping (Error?)->Void) {
+        createImageLoader(url: imageFormula.url, modifiedKey: imageFormula.uniqueKey).render(on: imageView, completion: completion)
+    }
 
-        func primaryViewController(forCollapsing splitViewController: UISplitViewController) -> UIViewController? {
-            return splitViewController.viewControllers.first
-        }
+    private func prefetchImageHandler(url: URL, modifiedKey: String) {
+        createImageLoader(url: url, modifiedKey: modifiedKey).prefetch(completion: { _ in })
+    }
+
+    private func createImageLoader(url: URL, modifiedKey: String) -> Image {
+        ImageCreator(url: url, uniqueKey: modifiedKey).image
+    }
+}
+
+extension BasicCharacterData {
+    init?(character: MarvelCharacter) {
+        self.init(id: character.id, name: character.name, description: character.description, thumbnail: character.thumbnail, modified: character.modified)
+    }
+}
+
+extension BasicPublicationData {
+    init?(publication: MarvelPublication) {
+        self.init(id: publication.id, title: publication.title, thumbnail: publication.thumbnail, modified: publication.modified)
     }
 }

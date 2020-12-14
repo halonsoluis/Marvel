@@ -8,11 +8,10 @@
 import Foundation
 import UIKit
 import SnapKit
-import CharactersAPI
 
 class CharacterDetailsViewController: UIViewController {
-    private let item: MarvelCharacter?
-    private let loadImageHandler: (URL, String, UIImageView, @escaping (Error?) -> Void) -> Void
+    private let loadImageHandler: (ImageFormula, UIImageView, @escaping (Error?) -> Void) -> Void
+    private let feedDataProvider: () -> PublicationFeedDataProvider
 
     private lazy var scrollBar: UIScrollView = self.createScrollBar()
     private lazy var stack: UIStackView = self.createStackView()
@@ -20,9 +19,12 @@ class CharacterDetailsViewController: UIViewController {
     private lazy var heroName: UIButton = self.createNameButton()
     private lazy var heroImage: UIImageView = self.createHeroImageView()
 
-    init(item: MarvelCharacter? = nil, loadImageHandler: @escaping (URL, String, UIImageView, @escaping ((Error?) -> Void)) -> Void) {
-        self.item = item
+    private var sections: [PublicationCollection] = []
+
+    init(loadImageHandler: @escaping (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void,
+         feedDataProvider: @escaping () -> PublicationFeedDataProvider) {
         self.loadImageHandler = loadImageHandler
+        self.feedDataProvider = feedDataProvider
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -35,9 +37,6 @@ class CharacterDetailsViewController: UIViewController {
         super.viewDidLoad()
 
         setupUI()
-        if let item = item {
-            drawCharacter(item: item)
-        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -46,15 +45,26 @@ class CharacterDetailsViewController: UIViewController {
         adjustHeroImageAspect()
     }
 
-    func drawCharacter(item: MarvelCharacter) {
+    func drawCharacter(item: BasicCharacterData, sections: [PublicationCollection]) {
 
-        if let thumbnail = item.thumbnail, let modified = item.modified {
-            loadImageHandler(thumbnail, modified, heroImage, { _ in })
-        }
+        loadImageHandler(item.imageFormula, heroImage, { _ in })
         heroName.setTitle(item.name, for: .normal)
         heroDescription.text = item.description
 
         adjustHeroImageAspect()
+
+        self.sections.map { $0.view }.forEach { $0?.removeFromSuperview() }
+
+        self.sections = sections
+
+        sections.forEach { publication in
+            stack.addArrangedSubview(publication.view)
+
+            publication.view.snp.makeConstraints { make in
+                make.width.equalToSuperview().inset(20)
+            }
+        }
+
     }
 
     private func adjustHeroImageAspect() {
@@ -117,6 +127,7 @@ class CharacterDetailsViewController: UIViewController {
 
 // MARK: Initialisers
 extension CharacterDetailsViewController {
+
     private func createScrollBar() -> UIScrollView {
         let scrollView = UIScrollView()
         scrollView.bounces = true
@@ -152,11 +163,11 @@ extension CharacterDetailsViewController {
         let descriptionLabel = UILabel()
         descriptionLabel.textColor = .white
         descriptionLabel.backgroundColor = .clear
-        descriptionLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        descriptionLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
         descriptionLabel.accessibilityIdentifier = "description"
         descriptionLabel.lineBreakMode = .byWordWrapping
         descriptionLabel.numberOfLines = 0
-        descriptionLabel.textAlignment = .center
+        descriptionLabel.textAlignment = .justified
 
         return descriptionLabel
     }
@@ -164,11 +175,11 @@ extension CharacterDetailsViewController {
     private func createNameButton() -> UIButton {
         let nameLabel = UIButton()
         nameLabel.setTitleColor(.black, for: .normal)
-        nameLabel.titleLabel?.adjustsFontSizeToFitWidth = false
+        nameLabel.titleLabel?.adjustsFontSizeToFitWidth = true
         nameLabel.titleLabel?.autoresizesSubviews = true
         nameLabel.autoresizingMask = [.flexibleLeftMargin]
         nameLabel.backgroundColor = .clear
-        nameLabel.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        nameLabel.titleLabel?.font = UIFont.boldSystemFont(ofSize: UIFont.systemFontSize)
         nameLabel.accessibilityIdentifier = "name"
         nameLabel.titleLabel?.lineBreakMode = .byWordWrapping
         nameLabel.titleLabel?.numberOfLines = 0

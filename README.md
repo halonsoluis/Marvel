@@ -17,9 +17,10 @@ Using this app, users will be able to browse through the Marvel library of chara
 <!-- Portfolio Gallery Grid -->
 
 <p align="center">
-<img src="Docs/Images/iOS Main View.png" width="32%">
-<img src="Docs/Images/iOS Main View Scrolled UP.png" width="32%">
-<img src="Docs/Images/iOS Detailed View.png" width="32%">
+<img src="Docs/Images/iOS Main View.png" width="24%">
+<img src="Docs/Images/iOS Main View Scrolled UP.png" width="24%">
+<img src="Docs/Images/iOS Detailed View.png" width="24%">
+<img src="Docs/Images/iOS Detailed View Scrolled.png" width="24%">
 </p>
 
 [//]: # "Features"
@@ -27,12 +28,12 @@ Using this app, users will be able to browse through the Marvel library of chara
 This app is able to:
 
 - [x] Communicate with the Public Marvel API.
-- [x] See a list/collection of items from the Marvel API.
-- [x] Search or filter the contents of this list/collection.
-- [ ] See the full details of any item from this list/collection.
+- [x] See a collection of items from the Marvel API.
+- [x] Search or filter the contents of the collection.
+- [x] See details of any item from the collection.
   - [X] Image
   - [X] Description
-  - [ ] Comics, Series and other collections
+  - [x] Comics, Series and other collections
 - [x] Use the latest Swift version (Swift 5.3)
 - [x] The project must use git.
 
@@ -43,7 +44,7 @@ This app is able to:
 As part of the process, an initial and oversimplified overview of the entities was created. This marked the most valuable entities and separation of concerns to take into account, as wells as the boundaries between the components of the app.
 
 <p align="center">
-<img src="Docs/Images/Marvel Characters.svg">
+<img src="Docs/Images/Marvel Characters pre.svg">
 </p>
 
 Of course, this was evolving as the needs of the app were getting more clear. For example, the neeed of callbacks, mixed protocols, avoiding overenginnering, etc.
@@ -51,10 +52,8 @@ Of course, this was evolving as the needs of the app were getting more clear. Fo
 ### Current Architecture
 
 <p align="center">
-<img src="Docs/Images/Marvel Characters- 03-12-20.svg">
+<img src="Docs/Images/Marvel Characters.svg">
 </p>
-
-Notice that there's an strong dependency from **Marvel** to **CharactersAPI**, this is technical debt that will be addressed.
 
 `MainComposer` Can be extracted out of **Marvel** target, making it to effectively **MarvelUI**. This will then allow for easily interchange of UI technology, hence making easier, for example, the adoption of SwiftUI.
 
@@ -64,9 +63,9 @@ Most of the dependencies between frameworks were resolved in the MainComposer by
 
 MVC was used in previous iteration of the app. Nevertheless, I have come to appreaciate MVVM over it. VIPER has a lot to offer but for the size of this project and at this point, better not to go for a strict approach.
 
-Hence, for current project, learnings from the three of them were applied. I have noticed that I have a preference for compositional architecture and evolutionary design. :)
+Hence, for current project, learnings from the three of them were applied. I have noticed that I have a preference for compositional architecture and evolutionary design.
 
-Basically, the UI interacts with the rest of the app by producing calls to an API provided by the viewModel and listening for changesm. In the case of using **Combine** or **RxSwift** the exposed callback will not be needed, given that `items` is observable
+Basically, the UI interacts with the rest of the app by producing calls to an API provided by the viewModel and listening for changes. In the case of using **Combine** or **RxSwift** the exposed callback will not be needed, given that `items` is observable
 
 ```swift
 protocol FeedDataProvider {
@@ -76,7 +75,14 @@ protocol FeedDataProvider {
     func perform(action: Action)
 }
 
-enum Action {
+protocol PublicationFeedDataProvider {
+    var items: [BasicPublicationData] { get }
+    var onItemsChangeCallback: (() -> Void)? { get set }
+
+    func perform(action: CharactersDetailsUserAction)
+}
+
+enum CharactersFeedUserAction {
     case loadFromStart
     case loadMore
     case openItem(index: Int)
@@ -84,7 +90,16 @@ enum Action {
     case prepareForDisplay(indexes: [Int])
     case setHeroImage(index: Int, on: UIImageView)
 }
+
+enum CharactersDetailsUserAction {
+    case loadFromStart(characterId: Int, type: String)
+    case loadMore(characterId: Int, type: String)
+    case prepareForDisplay(indexes: [Int])
+    case setHeroImage(index: Int, on: UIImageView)
+}
 ```
+
+This allows for having a clear separation between business lo
 
 **Start simple, Continue simple, Compose, Repeat**
 
@@ -98,12 +113,12 @@ Unit tests and Integration Tests are grouped in a dedicated target **"CI"** that
 
 For the more critical aspects of the app a **Test Driven Development** approach was followed, *with some moments of weakness on which the test was added after instead of before, also a reluctance to test unhappy paths of which I'm not proud*.
 
-- **CharactersAPI** **(93.8% code coverage)**
-  - Covered by 20 Unit Tests
-  - Covered by 8 Integration Tests
+- **CharactersAPI** **(93.3% code coverage)**
+  - Covered by 25 Unit Tests
+  - Covered by 12 Integration Tests
 - **ImageLoader** **(100% code coverage)**
   - Covered by 5 Unit Tests
-- **Marvel** **(47.6% code coverage)**
+- **Marvel** **(29.7% code coverage)**
   - Covered by 18 Unit Tests
   - Should be covered by Snapshot and UI Tests. *This is not done at this point*
 
@@ -165,9 +180,9 @@ Kingfisher is a powerful, pure-Swift library for downloading and caching images 
 - [x] Universal App
 
 <p align="center">
-<img src="Docs/Images/iOS Main View.png" width="48%">
+<img src="Docs/Images/iOS Main View Search.png" width="48%">
 <img src="Docs/Images/iOS Detailed View.png" width="48%">
-<img src="Docs/Images/iPadOS.png" width="100%">
+<img src="Docs/Images/iPadOS landscape.png" width="100%">
 <img src="Docs/Images/macOS.png" width="100%">
 </p>
 

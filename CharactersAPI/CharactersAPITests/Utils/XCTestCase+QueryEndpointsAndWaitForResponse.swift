@@ -20,6 +20,17 @@ extension XCTestCase {
         return receivedResult
     }
 
+    func performPublicationRequest(characterId: Int, type: MarvelPublication.Kind, page: Int, using sut: CharacterFeedLoader, timeout: TimeInterval = 1.0) -> Result<[MarvelPublication], Error> {
+        let expect = expectation(description: "A request for data to the network was issued")
+        var receivedResult: Result<[MarvelPublication], Error>!
+        sut.publication(characterId: characterId, type: type, page: page) {
+            receivedResult = $0
+            expect.fulfill()
+        }
+        wait(for: [expect], timeout: timeout)
+        return receivedResult
+    }
+
     func performSearchRequest(name: String, page: Int, using sut: CharacterFeedLoader, timeout: TimeInterval = 1.0) -> Result<[MarvelCharacter], Error> {
         let expect = expectation(description: "A request for data to the network was issued")
         var receivedResult: Result<[MarvelCharacter], Error>!

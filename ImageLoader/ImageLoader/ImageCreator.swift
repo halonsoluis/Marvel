@@ -21,4 +21,3 @@ public struct ImageCreator {
         CachedImage(url: url, uniqueKey: uniqueKey)
     }
 }
-

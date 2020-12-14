@@ -20,6 +20,30 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
         XCTAssertGreaterThan(items.count, 1, "Items Received")
     }
 
+    func test_publicationCallWithValidResponse_producesMarvelEvents() {
+        let receivedResult = performPublicationRequest(characterId: 1011334, type: .events, page: 0, using: makeSUT(), timeout: 5.0)
+        let items = extractResultDataFromCall(result: receivedResult)!
+        XCTAssertGreaterThanOrEqual(items.count, 1)
+    }
+
+    func test_publicationCallWithValidResponse_produceMarvelComics() {
+        let receivedResult = performPublicationRequest(characterId: 1011334, type: .comics, page: 0, using: makeSUT(), timeout: 5.0)
+        let items = extractResultDataFromCall(result: receivedResult)!
+        XCTAssertGreaterThanOrEqual(items.count, 12)
+    }
+
+    func test_publicationCallWithValidResponse_producesMarvelSeries() {
+        let receivedResult = performPublicationRequest(characterId: 1017100, type: .series, page: 0, using: makeSUT(), timeout: 5.0)
+        let items = extractResultDataFromCall(result: receivedResult)!
+        XCTAssertGreaterThanOrEqual(items.count, 2)
+    }
+
+    func test_publicationCallWithValidResponse_producesMarvelStories() {
+        let receivedResult = performPublicationRequest(characterId: 1017100, type: .stories, page: 0, using: makeSUT(), timeout: 5.0)
+        let items = extractResultDataFromCall(result: receivedResult)!
+        XCTAssertGreaterThanOrEqual(items.count, 6)
+    }
+
     func test_searchWithValidResponse_producesMarvelItems() {
         let sut = makeSUT()
 
