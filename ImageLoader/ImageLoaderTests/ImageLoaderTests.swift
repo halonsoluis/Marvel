@@ -10,7 +10,31 @@ import Foundation
 import ImageLoader
 @testable import Kingfisher
 
+#if os(macOS)
+import AppKit
+
+typealias SystemImage = NSImage
+typealias SystemColor = NSColor
+
+func extractData(image: NSImage) -> Data {
+    image.tiffRepresentation!
+}
+
+extension NSColor {
+    func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> NSImage {
+        let image = NSImage(size: size)
+        image.lockFocus()
+        self.drawSwatch(in: NSRect(origin: .zero, size: size))
+        image.unlockFocus()
+        return image
+    }
+}
+
+#elseif !os(watchOS)
 import UIKit
+
+typealias SystemImage = UIImage
+typealias SystemColor = UIColor
 
 //Taken from https://stackoverflow.com/a/48441178/2683201
 extension UIColor {
@@ -22,10 +46,15 @@ extension UIColor {
     }
 }
 
+func extractData(image: UIImage) -> Data {
+    image.pngData()!
+}
+#endif
+
 class ImageLoaderTests: XCTestCase {
 
     class MockImageDownloader: ImageDownloader {
-        static var image: UIImage?
+        static var image: SystemImage?
 
         override func downloadImage(
             with url: URL,
@@ -33,7 +62,7 @@ class ImageLoaderTests: XCTestCase {
             completionHandler: ((Result<ImageLoadingResult, KingfisherError>) -> Void)? = nil) -> DownloadTask? {
             if let image = Self.image {
                 completionHandler?(
-                    .success(ImageLoadingResult(image: image, url: url, originalData: image.pngData()!))
+                    .success(ImageLoadingResult(image: image, url: url, originalData: extractData(image: image)))
                 )
             } else {
                 completionHandler?(
@@ -108,7 +137,7 @@ class ImageLoaderTests: XCTestCase {
         return receivedError
     }
 
-    private func receivedErrorFromRender(from imageLoader: ImageCreator, view: UIImageView) -> Error? {
+    private func receivedErrorFromRender(from imageLoader: ImageCreator, view: UniversalImageView) -> Error? {
         let expect = expectation(description: "A request to render is made")
 
         var receivedError: Error?
@@ -120,10 +149,10 @@ class ImageLoaderTests: XCTestCase {
         return receivedError
     }
 
-    private func createSUT(uniqueKey: String = UUID().uuidString, image: UIImage? = UIColor.black.image(CGSize(width: 1, height: 1))) -> (imageLoader: ImageCreator, view: UIImageView){
+    private func createSUT(uniqueKey: String = UUID().uuidString, image: SystemImage? = SystemColor.black.image(CGSize(width: 1, height: 1))) -> (imageLoader: ImageCreator, view: UniversalImageView){
         let url = URL(string: "https://www.anyurl.com/image.png")!
         let imageLoader = ImageCreator(url: url, uniqueKey: uniqueKey)
-        let view = UIImageView()
+        let view = UniversalImageView()
 
         MockImageDownloader.image = image
 
