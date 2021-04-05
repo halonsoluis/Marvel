@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 typealias DataSource = UICollectionViewDiffableDataSource<Int, BasicPublicationData>
+typealias LoadImageHandlerResult = (Error?) -> Void
+typealias LoadImageHandlerType = (ImageFormula, UIImageView, @escaping LoadImageHandlerResult) -> Void
 
 final class PublicationCollection: UIViewController, UICollectionViewDelegate {
     private lazy var sectionName: UILabel = createSection()
@@ -18,10 +20,13 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate {
     private static let reuseIdentifier = "PublicationCell"
     private let characterId: Int
     private let section: String
-    private let loadImageHandler: (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void
+    private let loadImageHandler: LoadImageHandlerType
     private let feedDataProvider: PublicationFeedDataProvider
 
-    init(characterId: Int, section: String, loadImageHandler: @escaping (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void, feedDataProvider: PublicationFeedDataProvider) {
+    init(characterId: Int,
+         section: String,
+         loadImageHandler: @escaping LoadImageHandlerType,
+         feedDataProvider: PublicationFeedDataProvider) {
         self.characterId = characterId
         self.section = section
         self.loadImageHandler = loadImageHandler
@@ -142,8 +147,7 @@ extension PublicationCollection {
 
 private extension PublicationCollection {
     func makeDataSource() -> DataSource {
-
-        return DataSource(
+        DataSource(
             collectionView: collection,
             cellProvider: { [weak self] (collection, indexPath, crossReference) -> UICollectionViewCell? in
 
@@ -155,9 +159,10 @@ private extension PublicationCollection {
                 cell.image.image = nil
 
                 if let feedDataProvider = self?.feedDataProvider {
-                    feedDataProvider.perform(action: .setHeroImage(index: indexPath.row, on: cell.image))
+                    feedDataProvider.perform(
+                        action: .setHeroImage(index: indexPath.row, on: cell.image)
+                    )
                 }
-
                 return cell
             }
         )

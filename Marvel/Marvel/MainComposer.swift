@@ -22,8 +22,13 @@ enum Route: Equatable {
 class MainComposer {
     private let baseView: UIWindow
 
-    private lazy var characterfeedDataProvider = MainQueueDispatchDecoratorFeedDataProvider(itemProvider)
-    private lazy var publicationfeedDataProvider = MainQueueDispatchDecoratorPublicationFeedDataProvider(publicationsProvider)
+    private let client = URLSessionHTTPClient(session: URLSession.shared)
+    private lazy var charactersLoader = MarvelCharactersFeedLoader(client: client)
+
+    private lazy var characterFeedDataProvider = MainQueueDispatchDecoratorFeedDataProvider(itemProvider)
+
+    private func publicationsFeedDataProvider() -> PublicationFeedDataProvider { MainQueueDispatchDecoratorPublicationFeedDataProvider(publicationsProvider)
+    }
 
     private var mainView: MainSplitView?
     private var characterDetails: CharacterDetailsViewController?
@@ -34,11 +39,11 @@ class MainComposer {
 
     func start() {
         let feedViewVC = FeedViewController(
-            feedDataProvider: characterfeedDataProvider
+            feedDataProvider: characterFeedDataProvider
         )
         let characterDetailsVC = CharacterDetailsViewController(
             loadImageHandler: loadImageHandlerWithCompletion,
-            feedDataProvider: { self.publicationfeedDataProvider }
+            feedDataProvider: publicationsFeedDataProvider
         )
         let mainView = MainSplitView(mainViewVC: feedViewVC, detailVC: characterDetailsVC)
 
@@ -49,9 +54,6 @@ class MainComposer {
     }
 
     private lazy var itemProvider: FeedDataProvider = {
-        let client = URLSessionHTTPClient(session: URLSession.shared)
-        let charactersLoader = MarvelCharactersFeedLoader(client: client)
-
         func routerIntercept(route: Route) {
             router(route: route, using: baseView)
         }
@@ -65,13 +67,6 @@ class MainComposer {
     }()
 
     private var publicationsProvider: PublicationFeedDataProvider {
-        let client = URLSessionHTTPClient(session: URLSession.shared)
-        let charactersLoader = MarvelCharactersFeedLoader(client: client)
-
-        func routerIntercept(route: Route) {
-            router(route: route, using: baseView)
-        }
-
         return PublicationFeedProvider(
             charactersLoader: charactersLoader,
             prefetchImageHandler: prefetchImageHandler,
@@ -83,24 +78,23 @@ class MainComposer {
 // MARK - Navigation
 extension MainComposer {
 
-    private func publicationFeedDataProvider() -> PublicationFeedDataProvider {
-        MainQueueDispatchDecoratorPublicationFeedDataProvider(self.publicationsProvider)
-    }
-
     private func router(route: Route, using baseWindow: UIWindow ) {
         switch route {
         case .details(for: let item):
             guard let character = BasicCharacterData(character: item) else { return }
 
             DispatchQueue.main.async {
-                self.renderCharacter(
-                    item: character,
-                    sections: MarvelPublication.Kind.allCases.map { publicationKind in
-                        self.createSection(characterId: character.id, publicationKind: publicationKind)
-                    }
-                )
+                self.createSectionsForCharacter(character: character)
             }
         }
+    }
+
+    private func createSectionsForCharacter(character: BasicCharacterData) {
+        let sectionsForCharacter = MarvelPublication.Kind.allCases
+            .map { (character.id, $0) }
+            .compactMap(createSection)
+
+        renderCharacter(item: character, sections: sectionsForCharacter)
     }
 
     private func createSection(characterId: Int, publicationKind: MarvelPublication.Kind) -> PublicationCollection {
@@ -108,7 +102,7 @@ extension MainComposer {
             characterId: characterId,
             section: publicationKind.rawValue,
             loadImageHandler: self.loadImageHandlerWithCompletion,
-            feedDataProvider: publicationFeedDataProvider()
+            feedDataProvider: publicationsFeedDataProvider()
         )
     }
 
@@ -118,34 +112,53 @@ extension MainComposer {
     }
 }
 
-
 // MARK - Image Handling
 extension MainComposer {
     private func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
-        loadImageHandlerWithCompletion(imageFormula: imageFormula, imageView: imageView, completion: { _ in })
+        loadImageHandlerWithCompletion(
+            imageFormula: imageFormula,
+            imageView: imageView,
+            completion: { _ in }
+        )
     }
 
     private func loadImageHandlerWithCompletion(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView, completion: @escaping (Error?)->Void) {
-        createImageLoader(url: imageFormula.url, modifiedKey: imageFormula.uniqueKey).render(on: imageView, completion: completion)
+        createImageLoader(
+            url: imageFormula.url,
+            modifiedKey: imageFormula.uniqueKey
+        ).render(on: imageView, completion: completion)
     }
 
     private func prefetchImageHandler(url: URL, modifiedKey: String) {
-        createImageLoader(url: url, modifiedKey: modifiedKey).prefetch(completion: { _ in })
+        createImageLoader(url: url, modifiedKey: modifiedKey)
+            .prefetch(completion: { _ in })
     }
 
     private func createImageLoader(url: URL, modifiedKey: String) -> Image {
-        ImageCreator(url: url, uniqueKey: modifiedKey).image
+        ImageCreator(url: url, uniqueKey: modifiedKey)
+            .image
     }
 }
 
 extension BasicCharacterData {
     init?(character: MarvelCharacter) {
-        self.init(id: character.id, name: character.name, description: character.description, thumbnail: character.thumbnail, modified: character.modified)
+        self.init(
+            id: character.id,
+            name: character.name,
+            description: character.description,
+            thumbnail: character.thumbnail,
+            modified: character.modified
+        )
     }
 }
 
 extension BasicPublicationData {
     init?(publication: MarvelPublication) {
-        self.init(id: publication.id, title: publication.title, thumbnail: publication.thumbnail, modified: publication.modified)
+        self.init(
+            id: publication.id,
+            title: publication.title,
+            thumbnail: publication.thumbnail,
+            modified: publication.modified
+        )
     }
 }
