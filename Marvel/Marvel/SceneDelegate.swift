@@ -24,7 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         window.makeKeyAndVisible()
 
-        MainComposer(baseView: window).start()
+        MainComposer()
+            .compose(using: window)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

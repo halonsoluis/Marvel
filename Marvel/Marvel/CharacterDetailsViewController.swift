@@ -11,7 +11,6 @@ import SnapKit
 
 class CharacterDetailsViewController: UIViewController {
     private let loadImageHandler: (ImageFormula, UIImageView, @escaping (Error?) -> Void) -> Void
-    private let feedDataProvider: () -> PublicationFeedDataProvider
 
     private lazy var scrollBar: UIScrollView = self.createScrollBar()
     private lazy var stack: UIStackView = self.createStackView()
@@ -21,10 +20,8 @@ class CharacterDetailsViewController: UIViewController {
 
     private var sections: [PublicationCollection] = []
 
-    init(loadImageHandler: @escaping (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void,
-         feedDataProvider: @escaping () -> PublicationFeedDataProvider) {
+    init(loadImageHandler: @escaping (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void) {
         self.loadImageHandler = loadImageHandler
-        self.feedDataProvider = feedDataProvider
 
         super.init(nibName: nil, bundle: nil)
     }

@@ -118,7 +118,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     }
 
     private func openItem(at index: Int) {
-
+        // Not on scope so far
     }
 
      func result(result: Result<[MarvelPublication], Error>) -> [MarvelPublication] {

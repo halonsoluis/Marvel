@@ -45,6 +45,7 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate {
         setupUI()
         collection.dataSource = dataSource
         updateDataSource(animated: false)
+        
         feedDataProvider.onItemsChangeCallback = newItemsReceived
         feedDataProvider.perform(action: .loadFromStart(characterId: characterId, type: section))
     }
@@ -118,9 +119,16 @@ extension PublicationCollection {
 
     private func createCollection() -> UICollectionView {
         let collection = UICollectionView(
-            frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: view.bounds.width, height: 400)),
+            frame: CGRect(
+                origin: CGPoint(x: 0, y: 0),
+                size: CGSize(
+                    width: view.bounds.width,
+                    height: 400
+                )
+            ),
             collectionViewLayout: createBasicListLayout()
         )
+
         collection.allowsMultipleSelection = false
         collection.register(PublicationCell.self, forCellWithReuseIdentifier: "PublicationCell")
         collection.delegate = self
@@ -151,9 +159,10 @@ private extension PublicationCollection {
             collectionView: collection,
             cellProvider: { [weak self] (collection, indexPath, crossReference) -> UICollectionViewCell? in
 
-                guard let cell = collection.dequeueReusableCell(withReuseIdentifier: Self.reuseIdentifier, for: indexPath) as? PublicationCell else {
-                    return nil
-                }
+                guard let cell = collection.dequeueReusableCell(
+                        withReuseIdentifier: Self.reuseIdentifier,
+                        for: indexPath
+                ) as? PublicationCell else { return nil }
 
                 cell.nameLabel.text = crossReference.title
                 cell.image.image = nil
