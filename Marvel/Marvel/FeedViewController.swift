@@ -129,7 +129,9 @@ extension FeedViewController: UITableViewDelegate {
 
 extension FeedViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        feedDataProvider.perform(action: .prepareForDisplay(indexes: indexPaths.map { $0.row }))
+        feedDataProvider.perform(
+            action: .prepareForDisplay(indexes: indexPaths.map(\.row))
+        )
     }
 }
 

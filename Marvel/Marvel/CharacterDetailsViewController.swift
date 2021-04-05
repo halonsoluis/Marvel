@@ -53,7 +53,8 @@ class CharacterDetailsViewController: UIViewController {
 
         adjustHeroImageAspect()
 
-        self.sections.map { $0.view }.forEach { $0?.removeFromSuperview() }
+        self.sections.compactMap(\.view)
+            .forEach { $0.removeFromSuperview() }
 
         self.sections = sections
 

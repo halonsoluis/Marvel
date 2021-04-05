@@ -95,7 +95,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
         func completion(result: Result<[MarvelPublication], Error>) {
             switch result {
             case .success(let characters):
-                let insertedIds = items.map { $0.id }
+                let insertedIds = items.map(\.id)
                 let newItems = characters.compactMap(BasicPublicationData.init)
 
                 items.append(contentsOf: newItems.filter { !insertedIds.contains($0.id) })
@@ -114,9 +114,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     }
 
     private func prefetchImagesForNewItems(newItems: [BasicPublicationData]) {
-        newItems.forEach { item in
-            prefetchImageHandler((item.imageFormula))
-        }
+        newItems.map(\.imageFormula).forEach(prefetchImageHandler)
     }
 
     private func openItem(at index: Int) {
