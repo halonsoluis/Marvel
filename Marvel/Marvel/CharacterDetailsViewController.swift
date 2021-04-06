@@ -62,7 +62,7 @@ class CharacterDetailsViewController: UIViewController {
                 make.width.equalToSuperview().inset(20)
             }
         }
-
+        scrollBar.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
     }
 
     private func adjustHeroImageAspect() {
