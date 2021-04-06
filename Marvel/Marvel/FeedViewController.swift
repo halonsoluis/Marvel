@@ -42,8 +42,16 @@ final class FeedViewController: UIViewController {
     }
 
     func newItemsReceived() {
-        self.updateDataSource(animated: true)
-        self.tableView.refreshControl?.endRefreshing()
+        updateDataSource(animated: true)
+        tableView.refreshControl?.endRefreshing()
+
+        selectFirstCharacterIfNoneIsSelectedInIpad()
+    }
+
+    private func selectFirstCharacterIfNoneIsSelectedInIpad() {
+        if isNothingSelected && tableIsNotEmpty && isIPad {
+            feedDataProvider.perform(action: .openItem(index: 0))
+        }
     }
 
     func updateDataSource(animated: Bool = false) {
@@ -159,5 +167,19 @@ private extension FeedViewController {
                 return cell
             }
         )
+    }
+}
+
+extension FeedViewController {
+    private var tableIsNotEmpty: Bool {
+        !tableView.visibleCells.isEmpty
+    }
+
+    private var isNothingSelected: Bool {
+        tableView.indexPathForSelectedRow == nil
+    }
+
+    private var isIPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
     }
 }
