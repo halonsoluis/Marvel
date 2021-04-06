@@ -8,10 +8,6 @@
 import Foundation
 import UIKit
 
-typealias DataSource = UICollectionViewDiffableDataSource<Int, BasicPublicationData>
-typealias LoadImageHandlerResult = (Error?) -> Void
-typealias LoadImageHandlerType = (ImageFormula, UIImageView, @escaping LoadImageHandlerResult) -> Void
-
 final class PublicationCollection: UIViewController, UICollectionViewDelegate {
     private lazy var sectionName: UILabel = createSection()
     private lazy var collection: UICollectionView = createCollection()
@@ -46,7 +42,9 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate {
         collection.dataSource = dataSource
         updateDataSource(animated: false)
         
-        feedDataProvider.onItemsChangeCallback = newItemsReceived
+        feedDataProvider.onItemsChangeCallback = { [weak self] in
+            self?.newItemsReceived()
+        }
         feedDataProvider.perform(action: .loadFromStart(characterId: characterId, type: section))
     }
 
