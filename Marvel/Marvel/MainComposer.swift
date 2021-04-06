@@ -31,8 +31,8 @@ class MainComposer {
         let characterFeedDataProvider = MainQueueDispatchDecoratorFeedDataProvider(
             MarvelFeedProvider(
                 charactersLoader: marvelFeed,
-                prefetchImageHandler: prefetchImageHandler,
-                loadImageHandler: loadImageHandler,
+                prefetchImageHandler: Self.prefetchImageHandler,
+                loadImageHandler: Self.loadImageHandler,
                 router: router
             )
         )
@@ -41,25 +41,23 @@ class MainComposer {
             MainQueueDispatchDecoratorPublicationFeedDataProvider(
                 PublicationFeedProvider(
                     charactersLoader: marvelFeed,
-                    prefetchImageHandler: self.prefetchImageHandler,
-                    loadImageHandler: self.loadImageHandler
+                    prefetchImageHandler: Self.prefetchImageHandler,
+                    loadImageHandler: Self.loadImageHandler
                 )
             )
         }
 
         let feedViewVC = FeedViewController(feedDataProvider: characterFeedDataProvider)
         let characterDetails = CharacterDetailsViewController(
-            loadImageHandler: loadImageHandler
+            loadImageHandler: Self.loadImageHandler
         )
         let mainView = MainSplitView(mainViewVC: feedViewVC, detailVC: characterDetails)
 
-        createSectionsForCharacter = { [weak self] (character: BasicCharacterData) in
-            guard let self = self else { return }
-
+        createSectionsForCharacter = { (character: BasicCharacterData) in
             characterDetails.drawCharacter(
                 item: character,
                 sections: MarvelPublication.Kind.allCases
-                    .map { (character.id, $0.rawValue, self.loadImageHandler, publicationsProvider()) }
+                    .map { (character.id, $0.rawValue, Self.loadImageHandler, publicationsProvider()) }
                     .compactMap(PublicationCollection.init)
             )
             mainView.forceShowDetailView()
@@ -82,19 +80,19 @@ class MainComposer {
 
     // MARK - Image Handling
 
-    private func prefetchImageHandler(url: URL, modifiedKey: String) {
+    private static func prefetchImageHandler(url: URL, modifiedKey: String) {
         ImageCreator(url: url, uniqueKey: modifiedKey)
             .image
             .prefetch(completion: { _ in })
     }
 
-    private func loadImageHandler(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView, completion: @escaping (Error?)->Void) {
+    private static func loadImageHandler(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView, completion: @escaping (Error?)->Void) {
         ImageCreator(url: imageFormula.url, uniqueKey: imageFormula.uniqueKey)
             .image
             .render(on: imageView, completion: completion)
     }
 
-    private func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
+    private static func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
         loadImageHandler(
             imageFormula: imageFormula,
             imageView: imageView,
