@@ -10,18 +10,16 @@ import UIKit
 
 final class MainSplitView {
     private let mainViewVC: UIViewController
-    private let detailVC: UIViewController
 
     private lazy var splitView: UISplitViewController = createSplitView()
-    private lazy var splitViewDelegate: SplitViewDelegate = SplitViewDelegate()
+    private lazy var splitViewDelegate = SplitViewDelegate()
 
-    internal init(mainViewVC: UIViewController, detailVC: UIViewController) {
+    init(mainViewVC: UIViewController) {
         self.mainViewVC = mainViewVC
-        self.detailVC = detailVC
     }
 
-    func forceShowDetailView() {
-        splitView.showDetailViewController(detailVC, sender: nil)
+    func show(_ view: UIViewController) {
+        splitView.showDetailViewController(view, sender: nil)
     }
 
     func injectAsRoot(in window: UIWindow) {
@@ -33,7 +31,6 @@ final class MainSplitView {
         splitView.delegate = splitViewDelegate
 
         splitView.viewControllers.append(UINavigationController(rootViewController: mainViewVC))
-        splitView.viewControllers.append(detailVC)
 
         return splitView
     }

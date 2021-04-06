@@ -48,21 +48,29 @@ class MainComposer {
         }
 
         let feedViewVC = FeedViewController(feedDataProvider: characterFeedDataProvider)
-        let characterDetails = CharacterDetailsViewController(
-            loadImageHandler: Self.loadImageHandler
-        )
-        let mainView = MainSplitView(mainViewVC: feedViewVC, detailVC: characterDetails)
+        let mainView = MainSplitView(mainViewVC: feedViewVC)
 
         createSectionsForCharacter = { (character: BasicCharacterData) in
-            characterDetails.drawCharacter(
-                item: character,
-                sections: MarvelPublication.Kind.allCases
-                    .map { (character.id, $0.rawValue, Self.loadImageHandler, publicationsProvider()) }
-                    .compactMap(PublicationCollection.init)
+            mainView.show(
+                Self.createDetails(for: character, using: publicationsProvider)
             )
-            mainView.forceShowDetailView()
         }
         mainView.injectAsRoot(in: window)
+    }
+
+    private static func createDetails(
+        for character: BasicCharacterData,
+        using publicationsProvider: @escaping () -> PublicationFeedDataProvider
+    ) -> CharacterDetailsViewController {
+
+        let characterDetails = CharacterDetailsViewController(loadImageHandler: Self.loadImageHandler)
+        characterDetails.drawCharacter(
+            item: character,
+            sections: MarvelPublication.Kind.allCases.map(\.rawValue)
+                .map { (character.id, $0, Self.loadImageHandler, publicationsProvider()) }
+                .compactMap(PublicationCollection.init)
+        )
+        return characterDetails
     }
 
     // MARK - Navigation
