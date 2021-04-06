@@ -145,7 +145,7 @@ extension PublicationCollection {
 
         let section = NSCollectionLayoutSection(group: group)
 
-        section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+        section.orthogonalScrollingBehavior = .continuous
 
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
