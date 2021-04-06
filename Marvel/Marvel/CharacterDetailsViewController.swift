@@ -43,26 +43,31 @@ class CharacterDetailsViewController: UIViewController {
     }
 
     func drawCharacter(item: BasicCharacterData, sections: [PublicationCollection]) {
+        removeSectionsFromTheView()
 
-        loadImageHandler(item.imageFormula, heroImage, { _ in })
+        self.sections = sections
+
+        loadImageHandler(item.imageFormula, heroImage)
+
         heroName.setTitle(item.name, for: .normal)
         heroDescription.text = item.description
 
         adjustHeroImageAspect()
 
-        self.sections.compactMap(\.view)
-            .forEach { $0.removeFromSuperview() }
+        sections.compactMap(\.view).forEach { view in
+            stack.addArrangedSubview(view)
 
-        self.sections = sections
-
-        sections.forEach { publication in
-            stack.addArrangedSubview(publication.view)
-
-            publication.view.snp.makeConstraints { make in
+            view.snp.makeConstraints { make in
                 make.width.equalToSuperview().inset(20)
             }
         }
         scrollBar.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+    }
+
+    private func removeSectionsFromTheView() {
+        sections.map(\.view).forEach {
+            $0?.removeFromSuperview()
+        }
     }
 
     private func adjustHeroImageAspect() {
@@ -87,36 +92,28 @@ class CharacterDetailsViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.isTranslucent = true
 
-        let mainStack = createStackView()
-
         view.addSubview(scrollBar)
-        scrollBar.addSubview(mainStack)
+        scrollBar.addSubview(stack)
 
         scrollBar.translatesAutoresizingMaskIntoConstraints = false
-        mainStack.translatesAutoresizingMaskIntoConstraints = false
+        stack.translatesAutoresizingMaskIntoConstraints = false
         heroName.translatesAutoresizingMaskIntoConstraints = false
         heroImage.translatesAutoresizingMaskIntoConstraints = false
 
-        mainStack.addArrangedSubview(heroImage)
-        mainStack.addArrangedSubview(heroDescription)
+        stack.addArrangedSubview(heroImage)
+        stack.addArrangedSubview(heroDescription)
 
         heroImage.addSubview(heroName)
-
-        mainStack.addArrangedSubview(stack)
 
         scrollBar.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.bottom.left.right.equalToSuperview()
         }
 
-        mainStack.snp.makeConstraints { make in
+        stack.snp.makeConstraints { make in
             make.topMargin.equalTo(scrollBar.contentLayoutGuide.snp.top)
             make.bottomMargin.equalToSuperview()
             make.width.equalTo(self.view)
-        }
-
-        stack.snp.makeConstraints { make in
-            make.width.equalToSuperview().inset(20)
         }
 
         heroDescription.snp.makeConstraints { make in
