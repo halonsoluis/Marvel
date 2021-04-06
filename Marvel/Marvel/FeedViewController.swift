@@ -37,7 +37,9 @@ final class FeedViewController: UIViewController {
 
         layoutUI()
 
-        feedDataProvider.onItemsChangeCallback = newItemsReceived
+        feedDataProvider.onItemsChangeCallback = { [weak self] in
+            self?.newItemsReceived()
+        }
         feedDataProvider.perform(action: .loadFromStart)
     }
 
