@@ -86,18 +86,10 @@ class MainComposer {
             .prefetch(completion: { _ in })
     }
 
-    private static func loadImageHandler(imageFormula: (url: URL, uniqueKey: String), imageView: UIImageView, completion: @escaping (Error?)->Void) {
+    private static func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
         ImageCreator(url: imageFormula.url, uniqueKey: imageFormula.uniqueKey)
             .image
-            .render(on: imageView, completion: completion)
-    }
-
-    private static func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
-        loadImageHandler(
-            imageFormula: imageFormula,
-            imageView: imageView,
-            completion: { _ in }
-        )
+            .render(on: imageView, completion: { _ in })
     }
 }
 

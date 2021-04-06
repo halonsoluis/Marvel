@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 final class PublicationCollection: UIViewController, UICollectionViewDelegate {
+    typealias DataSource = UICollectionViewDiffableDataSource<Int, BasicPublicationData>
+
     private lazy var sectionName: UILabel = createSection()
     private lazy var collection: UICollectionView = createCollection()
     private lazy var dataSource: DataSource = makeDataSource()
@@ -16,12 +18,12 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate {
     private static let reuseIdentifier = "PublicationCell"
     private let characterId: Int
     private let section: String
-    private let loadImageHandler: LoadImageHandlerType
+    private let loadImageHandler: LoadImageHandler
     private let feedDataProvider: PublicationFeedDataProvider
 
     init(characterId: Int,
          section: String,
-         loadImageHandler: @escaping LoadImageHandlerType,
+         loadImageHandler: @escaping LoadImageHandler,
          feedDataProvider: PublicationFeedDataProvider) {
         self.characterId = characterId
         self.section = section

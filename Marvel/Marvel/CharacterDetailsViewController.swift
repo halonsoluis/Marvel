@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 class CharacterDetailsViewController: UIViewController {
-    private let loadImageHandler: (ImageFormula, UIImageView, @escaping (Error?) -> Void) -> Void
+    private let loadImageHandler: LoadImageHandler
 
     private lazy var scrollBar: UIScrollView = self.createScrollBar()
     private lazy var stack: UIStackView = self.createStackView()
@@ -20,7 +20,7 @@ class CharacterDetailsViewController: UIViewController {
 
     private var sections: [PublicationCollection] = []
 
-    init(loadImageHandler: @escaping (ImageFormula, UIImageView, @escaping ((Error?) -> Void)) -> Void) {
+    init(loadImageHandler: @escaping LoadImageHandler) {
         self.loadImageHandler = loadImageHandler
 
         super.init(nibName: nil, bundle: nil)
@@ -78,7 +78,6 @@ class CharacterDetailsViewController: UIViewController {
             make.height.equalTo(imageHeight).priority(.high)
             make.width.equalTo(superviewWidth).priority(.medium)
         }
-
         stack.setNeedsLayout()
     }
 
@@ -88,28 +87,36 @@ class CharacterDetailsViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.isTranslucent = true
 
+        let mainStack = createStackView()
+
         view.addSubview(scrollBar)
-        scrollBar.addSubview(stack)
+        scrollBar.addSubview(mainStack)
 
         scrollBar.translatesAutoresizingMaskIntoConstraints = false
-        stack.translatesAutoresizingMaskIntoConstraints = false
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
         heroName.translatesAutoresizingMaskIntoConstraints = false
         heroImage.translatesAutoresizingMaskIntoConstraints = false
 
-        stack.addArrangedSubview(heroImage)
-        stack.addArrangedSubview(heroDescription)
+        mainStack.addArrangedSubview(heroImage)
+        mainStack.addArrangedSubview(heroDescription)
 
         heroImage.addSubview(heroName)
+
+        mainStack.addArrangedSubview(stack)
 
         scrollBar.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.bottom.left.right.equalToSuperview()
         }
 
-        stack.snp.makeConstraints { make in
+        mainStack.snp.makeConstraints { make in
             make.topMargin.equalTo(scrollBar.contentLayoutGuide.snp.top)
             make.bottomMargin.equalToSuperview()
             make.width.equalTo(self.view)
+        }
+
+        stack.snp.makeConstraints { make in
+            make.width.equalToSuperview().inset(20)
         }
 
         heroDescription.snp.makeConstraints { make in
