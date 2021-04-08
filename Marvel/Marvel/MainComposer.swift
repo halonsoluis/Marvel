@@ -37,67 +37,28 @@ class MainComposer {
             )
         )
 
-        let publicationsProvider: () -> PublicationFeedDataProvider = {
-            MainQueueDispatchDecoratorPublicationFeedDataProvider(
-                PublicationFeedProvider(
-                    charactersLoader: marvelFeed,
-                    prefetchImageHandler: Self.prefetchImageHandler,
-                    loadImageHandler: Self.loadImageHandler
-                )
-            )
-        }
-
         let feedViewVC = FeedViewController(feedDataProvider: characterFeedDataProvider)
 
         Self.bind(controller: feedViewVC, feed: characterFeedDataProvider)
         
         let mainView = MainSplitView(mainViewVC: feedViewVC)
 
+        let charactersDetailComposer = CharactersDetailsUseCaseComposer(marvelFeed: marvelFeed)
+
         createSectionsForCharacter = { (character: BasicCharacterData) in
             mainView.show(
-                Self.createDetails(for: character, using: publicationsProvider)
+                charactersDetailComposer.createDetails(for: character)
             )
         }
+
         mainView.injectAsRoot(in: window)
     }
 
-    private static func createDetails(
-        for character: BasicCharacterData,
-        using feedProvider: @escaping () -> PublicationFeedDataProvider
-    ) -> CharacterDetailsViewController {
-
-        let characterDetails = CharacterDetailsViewController(loadImageHandler: Self.loadImageHandler)
-
-        characterDetails.drawCharacter(
-            item: character,
-            sections: composeSections(for: character.id, using: feedProvider)
-        )
-        return characterDetails
-    }
-
-    private static func composeSections(for characterId: Int, using publicationsProvider: @escaping () -> PublicationFeedDataProvider) -> [PublicationCollection] {
-
-        let sections = MarvelPublication.Kind.allCases.map(\.rawValue)
-        let feedProviders = sections.map { _ in publicationsProvider() }
-
-        let collections = zip(sections, feedProviders)
-            .map { (characterId, $0, Self.loadImageHandler, $1) }
-            .compactMap(PublicationCollection.init)
-
-        zip(collections, feedProviders).forEach(bind)
-
-        return collections
-    }
-
-    private static func bind(controller: (AnyObject & ContentUpdatable), feed: ContentUpdatePerformer) -> Void {
+    static func bind(controller: (AnyObject & ContentUpdatable), feed: ContentUpdatePerformer) -> Void {
         var feed = feed
         feed.onItemsChangeCallback = { [weak controller] in
             controller?.update()
         }
-    }
-
-    private static func bind(_ body: (collection: PublicationCollection, feed: ContentUpdatePerformer)) -> Void {
-        bind(controller: body.collection, feed: body.feed)
     }
 
     // MARK - Navigation
@@ -115,13 +76,13 @@ class MainComposer {
 
     // MARK - Image Handling
 
-    private static func prefetchImageHandler(url: URL, modifiedKey: String) {
+    static func prefetchImageHandler(url: URL, modifiedKey: String) {
         ImageCreator(url: url, uniqueKey: modifiedKey)
             .image
             .prefetch(completion: { _ in })
     }
 
-    private static func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
+    static func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
         ImageCreator(url: imageFormula.url, uniqueKey: imageFormula.uniqueKey)
             .image
             .render(on: imageView, completion: { _ in })
@@ -136,17 +97,6 @@ extension BasicCharacterData {
             description: character.description,
             thumbnail: character.thumbnail,
             modified: character.modified
-        )
-    }
-}
-
-extension BasicPublicationData {
-    init?(publication: MarvelPublication) {
-        self.init(
-            id: publication.id,
-            title: publication.title,
-            thumbnail: publication.thumbnail,
-            modified: publication.modified
         )
     }
 }
