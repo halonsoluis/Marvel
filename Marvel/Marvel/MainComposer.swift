@@ -19,7 +19,7 @@ enum Route: Equatable {
     case details(for: MarvelCharacter)
 }
 
-class MainComposer {
+final class MainComposer {
     private var createSectionsForCharacter: ((BasicCharacterData) -> Void)?
 
     func compose(using window: UIWindow) {
@@ -28,26 +28,22 @@ class MainComposer {
             client: URLSessionHTTPClient(session: URLSession.shared)
         )
 
-        let characterFeedDataProvider = MainQueueDispatchDecoratorFeedDataProvider(
-            MarvelFeedProvider(
-                charactersLoader: marvelFeed,
-                prefetchImageHandler: Self.prefetchImageHandler,
-                loadImageHandler: Self.loadImageHandler,
-                router: router
-            )
+        let feedUseCase = CharactersFeedUseCaseComposer(
+            marvelFeed: marvelFeed,
+            router: router
         )
 
-        let feedViewVC = FeedViewController(feedDataProvider: characterFeedDataProvider)
+        let detailsUseCase = CharactersDetailsUseCaseComposer(
+            marvelFeed: marvelFeed
+        )
 
-        Self.bind(controller: feedViewVC, feed: characterFeedDataProvider)
-        
-        let mainView = MainSplitView(mainViewVC: feedViewVC)
-
-        let charactersDetailComposer = CharactersDetailsUseCaseComposer(marvelFeed: marvelFeed)
+        let mainView = MainSplitView(
+            mainViewVC: feedUseCase.composeFeedListController()
+        )
 
         createSectionsForCharacter = { (character: BasicCharacterData) in
             mainView.show(
-                charactersDetailComposer.createDetails(for: character)
+                detailsUseCase.createDetails(for: character)
             )
         }
 
@@ -66,7 +62,9 @@ class MainComposer {
     private func router(route: Route) {
         switch route {
         case .details(for: let item):
-            guard let character = BasicCharacterData(character: item) else { return }
+            guard let character = BasicCharacterData(character: item) else {
+                return
+            }
 
             DispatchQueue.main.async {
                 self.createSectionsForCharacter?(character)
@@ -86,17 +84,5 @@ class MainComposer {
         ImageCreator(url: imageFormula.url, uniqueKey: imageFormula.uniqueKey)
             .image
             .render(on: imageView, completion: { _ in })
-    }
-}
-
-extension BasicCharacterData {
-    init?(character: MarvelCharacter) {
-        self.init(
-            id: character.id,
-            name: character.name,
-            description: character.description,
-            thumbnail: character.thumbnail,
-            modified: character.modified
-        )
     }
 }
