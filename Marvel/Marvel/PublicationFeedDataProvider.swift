@@ -7,9 +7,8 @@
 
 import Foundation
 
-protocol PublicationFeedDataProvider: class {
+protocol PublicationFeedDataProvider: ContentUpdatePerformer {
     var items: [BasicPublicationData] { get }
-    var onItemsChangeCallback: (() -> Void)? { get set }
 
     func perform(action: CharactersDetailsUserAction)
 }

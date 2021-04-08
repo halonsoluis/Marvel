@@ -8,7 +8,8 @@
 import Foundation
 
 final class MainQueueDispatchDecoratorPublicationFeedDataProvider: PublicationFeedDataProvider {
-    private let decoratee: PublicationFeedDataProvider
+
+    private var decoratee: PublicationFeedDataProvider
 
     init(_ decoratee: PublicationFeedDataProvider){
         self.decoratee = decoratee

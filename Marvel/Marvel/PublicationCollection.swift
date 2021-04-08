@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class PublicationCollection: UIViewController, UICollectionViewDelegate {
+final class PublicationCollection: UIViewController, UICollectionViewDelegate, ContentUpdatable {
     typealias DataSource = UICollectionViewDiffableDataSource<Int, BasicPublicationData>
 
     private lazy var sectionName: UILabel = createSection()
@@ -44,14 +44,10 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate {
         collection.dataSource = dataSource
         updateDataSource(animated: false)
         
-        feedDataProvider.onItemsChangeCallback = { [weak self] in
-            self?.newItemsReceived()
-        }
         feedDataProvider.perform(action: .loadFromStart(characterId: characterId, type: section))
     }
 
-    func newItemsReceived() {
-        //Update data
+    func update() {
         view.isHidden = feedDataProvider.items.isEmpty
         updateDataSource(animated: true)
     }

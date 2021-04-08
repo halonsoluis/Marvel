@@ -7,9 +7,8 @@
 
 import Foundation
 
-protocol FeedDataProvider: class {
+protocol FeedDataProvider: ContentUpdatePerformer {
     var items: [BasicCharacterData] { get }
-    var onItemsChangeCallback: (() -> Void)? { get set }
 
     func perform(action: CharactersFeedUserAction)
 }

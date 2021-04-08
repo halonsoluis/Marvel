@@ -48,6 +48,9 @@ class MainComposer {
         }
 
         let feedViewVC = FeedViewController(feedDataProvider: characterFeedDataProvider)
+
+        Self.bind(controller: feedViewVC, feed: characterFeedDataProvider)
+        
         let mainView = MainSplitView(mainViewVC: feedViewVC)
 
         createSectionsForCharacter = { (character: BasicCharacterData) in
@@ -60,17 +63,41 @@ class MainComposer {
 
     private static func createDetails(
         for character: BasicCharacterData,
-        using publicationsProvider: @escaping () -> PublicationFeedDataProvider
+        using feedProvider: @escaping () -> PublicationFeedDataProvider
     ) -> CharacterDetailsViewController {
 
         let characterDetails = CharacterDetailsViewController(loadImageHandler: Self.loadImageHandler)
+
         characterDetails.drawCharacter(
             item: character,
-            sections: MarvelPublication.Kind.allCases.map(\.rawValue)
-                .map { (character.id, $0, Self.loadImageHandler, publicationsProvider()) }
-                .compactMap(PublicationCollection.init)
+            sections: composeSections(for: character.id, using: feedProvider)
         )
         return characterDetails
+    }
+
+    private static func composeSections(for characterId: Int, using publicationsProvider: @escaping () -> PublicationFeedDataProvider) -> [PublicationCollection] {
+
+        let sections = MarvelPublication.Kind.allCases.map(\.rawValue)
+        let feedProviders = sections.map { _ in publicationsProvider() }
+
+        let collections = zip(sections, feedProviders)
+            .map { (characterId, $0, Self.loadImageHandler, $1) }
+            .compactMap(PublicationCollection.init)
+
+        zip(collections, feedProviders).forEach(bind)
+
+        return collections
+    }
+
+    private static func bind(controller: (AnyObject & ContentUpdatable), feed: ContentUpdatePerformer) -> Void {
+        var feed = feed
+        feed.onItemsChangeCallback = { [weak controller] in
+            controller?.update()
+        }
+    }
+
+    private static func bind(_ body: (collection: PublicationCollection, feed: ContentUpdatePerformer)) -> Void {
+        bind(controller: body.collection, feed: body.feed)
     }
 
     // MARK - Navigation

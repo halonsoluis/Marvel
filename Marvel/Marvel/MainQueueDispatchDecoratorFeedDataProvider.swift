@@ -8,7 +8,7 @@
 import Foundation
 
 final class MainQueueDispatchDecoratorFeedDataProvider: FeedDataProvider {
-    private let decoratee: FeedDataProvider
+    private var decoratee: FeedDataProvider
 
     init(_ decoratee: FeedDataProvider){
         self.decoratee = decoratee

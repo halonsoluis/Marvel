@@ -8,7 +8,11 @@ import Foundation
 import UIKit
 import SnapKit
 
-final class FeedViewController: UIViewController {
+protocol ContentUpdatable {
+    func update()
+}
+
+final class FeedViewController: UIViewController, ContentUpdatable {
 
     enum Section: CaseIterable {
         case main
@@ -36,14 +40,10 @@ final class FeedViewController: UIViewController {
         updateDataSource()
 
         layoutUI()
-
-        feedDataProvider.onItemsChangeCallback = { [weak self] in
-            self?.newItemsReceived()
-        }
         feedDataProvider.perform(action: .loadFromStart)
     }
 
-    func newItemsReceived() {
+    func update() {
         updateDataSource(animated: true)
         tableView.refreshControl?.endRefreshing()
 
