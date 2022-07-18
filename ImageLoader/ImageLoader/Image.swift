@@ -17,7 +17,12 @@ public typealias UniversalImageView = UIImageView
 
 public typealias ImageLoadCompleted = (Error?) -> Void
 
-public protocol Image {
-    func prefetch(completion: @escaping ImageLoadCompleted)
-    func render(on imageView: UniversalImageView, completion: @escaping ImageLoadCompleted)
+public protocol Cancellable {
+    func cancel()
 }
+
+public protocol Image {
+    func prefetch(completion: @escaping ImageLoadCompleted) -> Cancellable?
+    func render(on imageView: UniversalImageView, completion: @escaping ImageLoadCompleted) -> Cancellable?
+}
+

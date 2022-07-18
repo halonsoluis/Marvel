@@ -26,7 +26,10 @@ final class CharactersFeedUseCaseComposer {
             feedDataProvider: characterFeedDataProvider
         )
 
-        MainComposer.bind(controller: feedViewVC, feed: characterFeedDataProvider)
+        MainComposer.bind(
+            controller: feedViewVC,
+            feed: characterFeedDataProvider
+        )
 
         return feedViewVC
     }

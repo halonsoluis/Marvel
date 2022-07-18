@@ -11,6 +11,7 @@ import XCTest
 import CharactersAPI
 import Foundation
 import UIKit
+import ImageLoader
 
 class MarvelFeedProviderTests: XCTestCase {
 
@@ -247,8 +248,8 @@ extension MarvelFeedProviderTests {
     func createSUT(
         itemCount: Int = 0,
         charactersLoader: CharacterFeedLoaderSpy = CharacterFeedLoaderSpy(),
-        prefetchImageHandler: @escaping (ImageFormula) -> Void  = { _ in },
-        loadImageHandler: @escaping (ImageFormula, UIImageView) -> Void = { _, _ in },
+        prefetchImageHandler: @escaping (ImageFormula) -> Cancellable?  = { _ in return nil },
+        loadImageHandler: @escaping (ImageFormula, UIImageView) -> Cancellable? = { _, _ in return nil },
         router: @escaping (Route) -> Void = { _ in }
     ) -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy, items: [MarvelCharacter]) {
         let sut = MarvelFeedProvider(

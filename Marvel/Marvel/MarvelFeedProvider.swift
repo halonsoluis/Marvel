@@ -8,13 +8,14 @@
 import Foundation
 import CharactersAPI
 import UIKit
+import ImageLoader
 
 final class MarvelFeedProvider: FeedDataProvider {
 
-    private var charactersLoader: CharacterFeedLoader
-    private var prefetchImageHandler: ((url: URL,uniqueKey: String)) -> Void
-    private var loadImageHandler: ((url: URL,uniqueKey: String), _ destinationView: UIImageView) -> Void
-    private var router: (_ route: Route) -> Void
+    private let charactersLoader: CharacterFeedLoader
+    private let prefetchImageHandler: (ImageFormula) -> Cancellable?
+    private let loadImageHandler: ((url: URL, uniqueKey: String), _ destinationView: UIImageView) -> Cancellable?
+    private let router: (_ route: Route) -> Void
 
     private var nextPage = 0
     private var searchCriteria: String?
@@ -28,8 +29,8 @@ final class MarvelFeedProvider: FeedDataProvider {
     var workInProgress = false
 
     init(charactersLoader: CharacterFeedLoader,
-         prefetchImageHandler: @escaping (ImageFormula) -> Void,
-         loadImageHandler: @escaping  (ImageFormula, UIImageView) -> Void,
+         prefetchImageHandler: @escaping (ImageFormula) -> Cancellable?,
+         loadImageHandler: @escaping  (ImageFormula, UIImageView) -> Cancellable?,
          router: @escaping  (Route) -> Void) {
         self.charactersLoader = charactersLoader
         self.prefetchImageHandler = prefetchImageHandler
@@ -121,7 +122,9 @@ final class MarvelFeedProvider: FeedDataProvider {
     }
 
     private func prefetchImagesForNewItems(newItems: [BasicCharacterData]) {
-        newItems.map{ $0.imageFormula }.forEach(prefetchImageHandler)
+        newItems
+            .map(\.imageFormula)
+            .forEach { prefetchImageHandler($0) } 
     }
 
     private func openItem(at index: Int) {
@@ -131,9 +134,9 @@ final class MarvelFeedProvider: FeedDataProvider {
                 if let item = item {
                     self?.router(.details(for: item))
                 } else {
-                    // What to do here?
+                    // Wha_ere?
                 }
-            case .failure(let error):
+            case .failure(_):
                 break
             }
         }
@@ -146,7 +149,7 @@ final class MarvelFeedProvider: FeedDataProvider {
                 prefetchImageHandler((image, modified))
             }
             return items
-        case .failure(let error):
+        case .failure(_):
             return []
         }
     }

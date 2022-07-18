@@ -12,8 +12,8 @@ import ImageLoader
 
 typealias ImageFormula = (url: URL, uniqueKey: String)
 typealias Router = (_ route: Route) -> Void
-typealias PrefetchImageHandler = (ImageFormula) -> Void
-typealias LoadImageHandler = (ImageFormula, _ destinationView: UIImageView) -> Void
+typealias PrefetchImageHandler = (ImageFormula) -> Cancellable?
+typealias LoadImageHandler = (ImageFormula, _ destinationView: UIImageView) -> Cancellable?
 
 enum Route: Equatable {
     case details(for: MarvelCharacter)
@@ -74,13 +74,13 @@ final class MainComposer {
 
     // MARK - Image Handling
 
-    static func prefetchImageHandler(url: URL, modifiedKey: String) {
+    static func prefetchImageHandler(url: URL, modifiedKey: String) -> Cancellable? {
         ImageCreator(url: url, uniqueKey: modifiedKey)
             .image
             .prefetch(completion: { _ in })
     }
 
-    static func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) {
+    static func loadImageHandler(imageFormula: ImageFormula, imageView: UIImageView) -> Cancellable? {
         ImageCreator(url: imageFormula.url, uniqueKey: imageFormula.uniqueKey)
             .image
             .render(on: imageView, completion: { _ in })

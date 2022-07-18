@@ -8,13 +8,14 @@
 import Foundation
 import CharactersAPI
 import UIKit
+import ImageLoader
 
 final class PublicationFeedProvider: PublicationFeedDataProvider {
 
-    private var charactersLoader: CharacterFeedLoader
-    private var prefetchImageHandler: (ImageFormula) -> Void
-    private var loadImageHandler: (ImageFormula, _ destinationView: UIImageView) -> Void
-    private var nextPage = 0
+    private let charactersLoader: CharacterFeedLoader
+    private let prefetchImageHandler: (ImageFormula) -> Cancellable?
+    private let loadImageHandler: (ImageFormula, _ destinationView: UIImageView) -> Cancellable?
+    private let nextPage = 0
 
     var items: [BasicPublicationData] = [] {
         didSet {
@@ -25,8 +26,8 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     var workInProgress = false
 
     init(charactersLoader: CharacterFeedLoader,
-         prefetchImageHandler: @escaping (ImageFormula) -> Void,
-         loadImageHandler: @escaping  (ImageFormula, UIImageView) -> Void) {
+         prefetchImageHandler: @escaping (ImageFormula) -> Cancellable?,
+         loadImageHandler: @escaping  (ImageFormula, UIImageView) -> Cancellable?) {
         self.charactersLoader = charactersLoader
         self.prefetchImageHandler = prefetchImageHandler
         self.loadImageHandler = loadImageHandler
@@ -114,7 +115,9 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     }
 
     private func prefetchImagesForNewItems(newItems: [BasicPublicationData]) {
-        newItems.map(\.imageFormula).forEach(prefetchImageHandler)
+        newItems
+            .map(\.imageFormula)
+            .forEach { prefetchImageHandler($0) }
     }
 
     private func openItem(at index: Int) {

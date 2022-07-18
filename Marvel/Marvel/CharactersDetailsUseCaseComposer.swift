@@ -46,7 +46,8 @@ final class CharactersDetailsUseCaseComposer {
             .map { (characterId, $0, MainComposer.loadImageHandler, $1) }
             .compactMap(PublicationCollection.init)
 
-        zip(collections, feedProviders).forEach(bind)
+        zip(collections, feedProviders)
+            .forEach(bind)
 
         return collections
     }
