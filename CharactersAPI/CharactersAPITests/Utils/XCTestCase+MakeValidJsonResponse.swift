@@ -47,7 +47,7 @@ extension XCTestCase {
                 "total": 1485,
                 "count": amountOfItems,
                 "results": Array(repeating: item, count: amountOfItems)
-            ]
+            ] as [String : Any]
         ]
         return (response, item, urls, thumbnail)
     }
@@ -85,7 +85,7 @@ extension XCTestCase {
                 "total": 33,
                 "count": publicationAmount,
                 "results": Array(repeating: item, count: publicationAmount)
-            ]
+            ] as [String : Any]
         ]
         return (response, item, thumbnail)
     }

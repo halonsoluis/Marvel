@@ -22,7 +22,7 @@
 		5BB795762584FCBD006D746F /* BasicCharacterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB795752584FCBD006D746F /* BasicCharacterData.swift */; };
 		5BB7957C25850D8D006D746F /* BasicPublicationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7957B25850D8D006D746F /* BasicPublicationData.swift */; };
 		5BB795852586B7F4006D746F /* MainSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB795842586B7F4006D746F /* MainSplitView.swift */; };
-		5BD4F3E6256CA5350016B3CF /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; platformFilter = ios; };
+		5BD4F3E6256CA5350016B3CF /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; };
 		5BD4F3E8256CA5350016B3CF /* ImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; };
 		5BD7CF9925706FBB00F6EB7F /* MarvelFeedProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CF9825706FBB00F6EB7F /* MarvelFeedProviderTests.swift */; };
 		5BD7CFA22570876600F6EB7F /* MarvelFeedProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */; };
@@ -514,7 +514,6 @@
 		};
 		5BFA3FA0256C93950057BD82 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
 			target = 5BFA3F87256C93940057BD82 /* Marvel */;
 			targetProxy = 5BFA3F9F256C93950057BD82 /* PBXContainerItemProxy */;
 		};
@@ -583,7 +582,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -642,7 +641,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -666,7 +665,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RU5U8BC26T;
 				INFOPLIST_FILE = Marvel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -691,7 +690,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RU5U8BC26T;
 				INFOPLIST_FILE = Marvel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -715,6 +714,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = RU5U8BC26T;
 				INFOPLIST_FILE = MarvelTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -724,6 +724,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marvel.app/Marvel";
@@ -740,6 +743,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = RU5U8BC26T;
 				INFOPLIST_FILE = MarvelTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -749,6 +753,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marvel.app/Marvel";

@@ -129,7 +129,7 @@ class ImageLoaderTests: XCTestCase {
         let expect = expectation(description: "A request to prefetch is made")
 
         var receivedError: Error?
-        imageLoader.image.prefetch() { error in
+        _ = imageLoader.image.prefetch() { error in
             receivedError = error
             expect.fulfill()
         }
@@ -141,7 +141,7 @@ class ImageLoaderTests: XCTestCase {
         let expect = expectation(description: "A request to render is made")
 
         var receivedError: Error?
-        imageLoader.image.render(on: view) { error in
+        _ = imageLoader.image.render(on: view) { error in
             receivedError = error
             expect.fulfill()
         }
