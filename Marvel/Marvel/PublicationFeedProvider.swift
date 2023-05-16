@@ -15,7 +15,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     private let charactersLoader: CharacterFeedLoader
     private let prefetchImageHandler: (ImageFormula) -> Cancellable?
     private let loadImageHandler: (ImageFormula, _ destinationView: UIImageView) -> Cancellable?
-    private let nextPage = 0
+    private var nextPage = 0
 
     var items: [BasicPublicationData] = [] {
         didSet {

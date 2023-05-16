@@ -23,9 +23,7 @@
 		5BB7957C25850D8D006D746F /* BasicPublicationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7957B25850D8D006D746F /* BasicPublicationData.swift */; };
 		5BB795852586B7F4006D746F /* MainSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB795842586B7F4006D746F /* MainSplitView.swift */; };
 		5BD4F3E6256CA5350016B3CF /* CharactersAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; platformFilter = ios; };
-		5BD4F3E7256CA5350016B3CF /* CharactersAPI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3B4256CA3410016B3CF /* CharactersAPI.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5BD4F3E8256CA5350016B3CF /* ImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; };
-		5BD4F3E9256CA5350016B3CF /* ImageLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD4F3BF256CA3520016B3CF /* ImageLoader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5BD7CF9925706FBB00F6EB7F /* MarvelFeedProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CF9825706FBB00F6EB7F /* MarvelFeedProviderTests.swift */; };
 		5BD7CFA22570876600F6EB7F /* MarvelFeedProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA12570876600F6EB7F /* MarvelFeedProvider.swift */; };
 		5BD7CFA62570878100F6EB7F /* MainComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD7CFA52570878100F6EB7F /* MainComposer.swift */; };
@@ -98,21 +96,6 @@
 			remoteInfo = Marvel;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		5BD4F385256C9FF40016B3CF /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				5BD4F3E7256CA5350016B3CF /* CharactersAPI.framework in Embed Frameworks */,
-				5BD4F3E9256CA5350016B3CF /* ImageLoader.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5B14F0D3257D1D510003572D /* MainQueueDispatchDecoratorFeedDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecoratorFeedDataProvider.swift; sourceTree = "<group>"; };
@@ -335,7 +318,6 @@
 				5BFA3F84256C93940057BD82 /* Sources */,
 				5BFA3F85256C93940057BD82 /* Frameworks */,
 				5BFA3F86256C93940057BD82 /* Resources */,
-				5BD4F385256C9FF40016B3CF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -683,6 +665,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RU5U8BC26T;
 				INFOPLIST_FILE = Marvel/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -707,6 +690,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RU5U8BC26T;
 				INFOPLIST_FILE = Marvel/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
