@@ -1,20 +1,13 @@
-//
-//  ItemCell.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 29/11/2020.
-//
-
 import Foundation
-import UIKit
 import SnapKit
+import UIKit
 
 final class ItemCell: UITableViewCell {
-
     private lazy var name: UIButton = self.createNameButton()
     private lazy var heroImage: UIImageView = self.createHeroImageView()
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -50,6 +43,7 @@ final class ItemCell: UITableViewCell {
 }
 
 // MARK: Initialisers
+
 extension ItemCell {
     private func createHeroImageView() -> UIImageView {
         let imageView = UIImageView()

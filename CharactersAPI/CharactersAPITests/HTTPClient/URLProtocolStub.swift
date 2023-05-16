@@ -1,10 +1,3 @@
-//
-//  URLProtocolStub.swift
-//  CharactersAPITests
-//
-//  Created by Hugo Alonso on 18/11/2020.
-//
-
 import Foundation
 
 class URLProtocolStub: URLProtocol {
@@ -29,12 +22,12 @@ class URLProtocolStub: URLProtocol {
         stub = nil
     }
 
-    override class func canInit(with request: URLRequest) -> Bool {
-        return true
+    override class func canInit(with _: URLRequest) -> Bool {
+        true
     }
 
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-        return request
+        request
     }
 
     override func startLoading() {
@@ -42,16 +35,15 @@ class URLProtocolStub: URLProtocol {
             client?.urlProtocol(self, didLoad: data)
         }
 
-        if let response =  Self.stub?.response {
+        if let response = Self.stub?.response {
             client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         }
 
-        if let error =  Self.stub?.error {
+        if let error = Self.stub?.error {
             client?.urlProtocol(self, didFailWithError: error)
         }
         client?.urlProtocolDidFinishLoading(self)
     }
 
-    override func stopLoading() {
-    }
+    override func stopLoading() {}
 }

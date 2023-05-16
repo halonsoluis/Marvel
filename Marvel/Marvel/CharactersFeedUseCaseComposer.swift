@@ -1,14 +1,7 @@
-//
-//  CharactersFeedUseCaseComposer.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 08/04/2021.
-//
-
 import Foundation
 
-import Foundation
 import CharactersAPI
+import Foundation
 import ImageLoader
 
 final class CharactersFeedUseCaseComposer {
@@ -33,7 +26,7 @@ final class CharactersFeedUseCaseComposer {
 
         return feedViewVC
     }
-    
+
     private func createFeedDataProvider() -> FeedDataProvider {
         MainQueueDispatchDecoratorFeedDataProvider(
             MarvelFeedProvider(

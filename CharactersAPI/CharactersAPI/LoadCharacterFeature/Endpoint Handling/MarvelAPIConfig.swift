@@ -1,10 +1,3 @@
-//
-//  MarvelAPIConfig.swift
-//  CharactersAPI
-//
-//  Created by Hugo Alonso on 17/11/2020.
-//
-
 import Foundation
 
 struct MarvelAPIConfig {

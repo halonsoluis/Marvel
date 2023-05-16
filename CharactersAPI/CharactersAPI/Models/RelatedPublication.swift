@@ -1,10 +1,3 @@
-//
-//  RelatedPublication.swift
-//  CharactersAPI
-//
-//  Created by Hugo Alonso on 08/12/2020.
-//
-
 import Foundation
 
 struct RelatedPublication: Codable {

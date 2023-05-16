@@ -1,12 +1,5 @@
-//
-//  MarverlURLTests.swift
-//  CharactersAPITests
-//
-//  Created by Hugo Alonso on 17/11/2020.
-//
-
-import XCTest
 @testable import CharactersAPI
+import XCTest
 
 class MarverlURLTests: XCTestCase {
     func test_includesMarvelAPIRequirementsInURL() {
@@ -18,7 +11,8 @@ class MarverlURLTests: XCTestCase {
             config: MarvelAPIConfig(
                 itemsPerPage: 10,
                 privateAPIKey: "privateAPIKey",
-                publicAPIKey: "publicAPIKey"),
+                publicAPIKey: "publicAPIKey"
+            ),
             hashResolver: { $0.joined() },
             timeProvider: { expectedDate }
         )
@@ -34,8 +28,7 @@ class MarverlURLTests: XCTestCase {
     }
 
     func test_includesMarvelAPIRequirementsInURLforPage1() {
-
-        let url = URL(string: "www.url.com" )!
+        let url = URL(string: "www.url.com")!
         let expectedDate = Date()
 
         let sut = MarvelURL(
@@ -43,7 +36,8 @@ class MarverlURLTests: XCTestCase {
             config: MarvelAPIConfig(
                 itemsPerPage: 10,
                 privateAPIKey: "privateAPIKey",
-                publicAPIKey: "publicAPIKey"),
+                publicAPIKey: "publicAPIKey"
+            ),
             hashResolver: { $0.joined() },
             timeProvider: { expectedDate }
         )

@@ -1,10 +1,3 @@
-//
-//  CharactersFeedLoader.swift
-//  CharactersAPI
-//
-//  Created by Hugo Alonso on 16/11/2020.
-//
-
 import Foundation
 
 public struct MarvelCharacter: Equatable {
@@ -24,7 +17,6 @@ public struct MarvelCharacter: Equatable {
 }
 
 public struct MarvelPublication: Equatable {
-
     public enum Kind: String, CaseIterable {
         case comics
         case events

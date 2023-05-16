@@ -1,12 +1,5 @@
-//
-//  XCTestCase+QueryEndpointsAndWaitForResponse.swift
-//  CharactersAPITests
-//
-//  Created by Hugo Alonso on 20/11/2020.
-//
-
-import XCTest
 import CharactersAPI
+import XCTest
 
 extension XCTestCase {
     func performCharactersRequest(page: Int, using sut: CharacterFeedLoader, timeout: TimeInterval = 1.0) -> Result<[MarvelCharacter], Error> {

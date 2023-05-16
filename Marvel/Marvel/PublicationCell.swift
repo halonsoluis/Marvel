@@ -1,20 +1,14 @@
-//
-//  PublicationCell.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 09/12/2020.
-//
-
 import Foundation
 import UIKit
 
 final class PublicationCell: UICollectionViewCell {
-    static var cellSize: CGSize = CGSize(width: 119, height: 250)
+    static var cellSize: CGSize = .init(width: 119, height: 250)
 
     lazy var image: UIImageView = setupImageView()
     lazy var nameLabel: UILabel = createTitleButton()
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) is not supported")
     }
 
@@ -73,8 +67,7 @@ final class PublicationCell: UICollectionViewCell {
         nameLabel.numberOfLines = 0
         nameLabel.clipsToBounds = true
         nameLabel.textAlignment = .center
-        
+
         return nameLabel
     }
-
 }

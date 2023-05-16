@@ -5,25 +5,26 @@
 //  Created by Hugo Alonso on 24/11/2020.
 //
 import Foundation
-import UIKit
 import SnapKit
+import UIKit
 
 protocol ContentUpdatable {
     func update()
 }
 
 final class FeedViewController: UIViewController, ContentUpdatable {
-
     enum Section: CaseIterable {
         case main
     }
+
     private let cellReuseIdentifier = "ItemCell"
-    private lazy var tableView: UITableView = UITableView()
+    private lazy var tableView: UITableView = .init()
     private lazy var dataSource: UITableViewDiffableDataSource<Section, BasicCharacterData> = makeDataSource()
 
     private var feedDataProvider: FeedDataProvider
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -32,7 +33,7 @@ final class FeedViewController: UIViewController, ContentUpdatable {
 
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,18 +52,17 @@ final class FeedViewController: UIViewController, ContentUpdatable {
     }
 
     private func selectFirstCharacterIfNoneIsSelectedInIpad() {
-        if isNothingSelected && tableIsNotEmpty && isIPad {
+        if isNothingSelected, tableIsNotEmpty, isIPad {
             feedDataProvider.perform(action: .openItem(index: 0))
         }
     }
 
     func updateDataSource(animated: Bool = false) {
-
         var snapshot = NSDiffableDataSourceSnapshot<Section, BasicCharacterData>()
         snapshot.appendSections([Section.main])
         snapshot.appendItems(feedDataProvider.items, toSection: .main)
 
-        self.dataSource.apply(snapshot, animatingDifferences: animated)
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
 
     func layoutUI() {
@@ -106,11 +106,12 @@ final class FeedViewController: UIViewController, ContentUpdatable {
         tableView.prefetchDataSource = self
 
         tableView.refreshControl = UIRefreshControl()
-        tableView.refreshControl?.addTarget(self, action:  #selector(handleRefreshControl), for: .valueChanged)
+        tableView.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
         tableView.dataSource = dataSource
     }
 
-    @objc func handleRefreshControl() {
+    @objc
+    func handleRefreshControl() {
         tableView.refreshControl?.beginRefreshing()
         feedDataProvider.perform(action: .loadFromStart)
     }
@@ -127,18 +128,16 @@ final class FeedViewController: UIViewController, ContentUpdatable {
             feedDataProvider.perform(action: .loadMore)
         }
     }
-
 }
 
 extension FeedViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         feedDataProvider.perform(action: .openItem(index: indexPath.row))
     }
 }
 
-
 extension FeedViewController: UITableViewDataSourcePrefetching {
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+    func tableView(_: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         feedDataProvider.perform(
             action: .prepareForDisplay(indexes: indexPaths.map(\.row))
         )
@@ -157,7 +156,7 @@ private extension FeedViewController {
 
         return UITableViewDiffableDataSource(
             tableView: tableView,
-            cellProvider: { [weak self] tableView, indexPath, character in
+            cellProvider: { [weak self] tableView, indexPath, _ in
                 let cell = tableView.dequeueReusableCell(
                     withIdentifier: reuseIdentifier,
                     for: indexPath

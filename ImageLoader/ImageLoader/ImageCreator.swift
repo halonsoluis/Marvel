@@ -1,14 +1,6 @@
-//
-//  ImageCreator.swift
-//  ImageLoader
-//
-//  Created by Hugo Alonso on 20/11/2020.
-//
-
 import Foundation
 
 public struct ImageCreator {
-
     let url: URL
     let uniqueKey: String
 

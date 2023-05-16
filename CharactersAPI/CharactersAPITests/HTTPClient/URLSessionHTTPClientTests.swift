@@ -1,16 +1,8 @@
-//
-//  URLSessionHTTPClientTests.swift
-//  CharactersAPITests
-//
-//  Created by Hugo Alonso on 16/11/2020.
-//
-
-import XCTest
-import Foundation
 import CharactersAPI
+import Foundation
+import XCTest
 
 class URLSessionHTTPClientTests: XCTestCase {
-
     func test_load_onFailure_FailsWithError() {
         URLProtocolStub.startIntercepting()
         let expectedError = NSError(domain: "anyerror", code: 123, userInfo: nil)

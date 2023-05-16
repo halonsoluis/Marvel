@@ -1,10 +1,3 @@
-//
-//  MarvelCharactersFeedLoaderFactory.swift
-//  CharactersAPI
-//
-//  Created by Hugo Alonso on 17/11/2020.
-//
-
 import Foundation
 
 public final class MarvelCharactersFeedLoader: CharacterFeedLoader {

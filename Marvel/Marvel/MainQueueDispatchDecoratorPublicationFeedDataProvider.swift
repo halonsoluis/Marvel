@@ -1,17 +1,9 @@
-//
-//  MainQueueDispatchDecoratorPublicationFeedDataProvider.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 10/12/2020.
-//
-
 import Foundation
 
 final class MainQueueDispatchDecoratorPublicationFeedDataProvider: PublicationFeedDataProvider {
-
     private var decoratee: PublicationFeedDataProvider
 
-    init(_ decoratee: PublicationFeedDataProvider){
+    init(_ decoratee: PublicationFeedDataProvider) {
         self.decoratee = decoratee
     }
 

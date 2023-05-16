@@ -1,13 +1,6 @@
-//
-//  CharacterDetailsViewController.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 29/11/2020.
-//
-
 import Foundation
-import UIKit
 import SnapKit
+import UIKit
 
 class CharacterDetailsViewController: UIViewController {
     private let loadImageHandler: LoadImageHandler
@@ -26,7 +19,8 @@ class CharacterDetailsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -71,7 +65,9 @@ class CharacterDetailsViewController: UIViewController {
     }
 
     private func adjustHeroImageAspect() {
-        guard let imageSize = heroImage.image?.size else { return }
+        guard let imageSize = heroImage.image?.size else {
+            return
+        }
 
         let superviewWidth = view.bounds.width
         let ratio = superviewWidth / imageSize.width
@@ -87,7 +83,6 @@ class CharacterDetailsViewController: UIViewController {
     }
 
     private func setupUI() {
-
         view.backgroundColor = .black
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.isTranslucent = true
@@ -128,8 +123,8 @@ class CharacterDetailsViewController: UIViewController {
 }
 
 // MARK: Initialisers
-extension CharacterDetailsViewController {
 
+extension CharacterDetailsViewController {
     private func createScrollBar() -> UIScrollView {
         let scrollView = UIScrollView()
         scrollView.bounces = true
@@ -137,7 +132,7 @@ extension CharacterDetailsViewController {
         scrollView.alwaysBounceHorizontal = false
         scrollView.isDirectionalLockEnabled = true
         scrollView.contentInset = UIEdgeInsets.zero
-        
+
         return scrollView
     }
 

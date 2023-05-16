@@ -1,12 +1,5 @@
-//
-//  HTTPClientSpy.swift
-//  CharactersAPITests
-//
-//  Created by Hugo Alonso on 18/11/2020.
-//
-
-import Foundation
 import CharactersAPI
+import Foundation
 
 class HTTPClientSpy: HTTPClient {
     var requestedURL: URL?
@@ -17,12 +10,12 @@ class HTTPClientSpy: HTTPClient {
     func get(from url: URL, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) {
         requestedURL = url
 
-        if let returnedError = returnedError {
+        if let returnedError {
             completion(.failure(returnedError))
             return
         }
 
-        if let returnedJSON = returnedJSON {
+        if let returnedJSON {
             let data = try! JSONSerialization.data(withJSONObject: returnedJSON)
             completion(.success((data, HTTPURLResponse(url: url, statusCode: returnedStatusCode, httpVersion: nil, headerFields: nil)!)))
         }

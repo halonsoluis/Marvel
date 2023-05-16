@@ -1,10 +1,3 @@
-//
-//  PublicationCollection.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 08/12/2020.
-//
-
 import Foundation
 import UIKit
 
@@ -21,10 +14,12 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate, C
     private let loadImageHandler: LoadImageHandler
     private let feedDataProvider: PublicationFeedDataProvider
 
-    init(characterId: Int,
-         section: String,
-         loadImageHandler: @escaping LoadImageHandler,
-         feedDataProvider: PublicationFeedDataProvider) {
+    init(
+        characterId: Int,
+        section: String,
+        loadImageHandler: @escaping LoadImageHandler,
+        feedDataProvider: PublicationFeedDataProvider
+    ) {
         self.characterId = characterId
         self.section = section
         self.loadImageHandler = loadImageHandler
@@ -33,7 +28,8 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate, C
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -43,7 +39,7 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate, C
         setupUI()
         collection.dataSource = dataSource
         updateDataSource(animated: false)
-        
+
         feedDataProvider.perform(action: .loadFromStart(characterId: characterId, type: section))
     }
 
@@ -53,7 +49,6 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate, C
     }
 
     private func updateDataSource(animated: Bool = false) {
-
         var snapshot = NSDiffableDataSourceSnapshot<Int, BasicPublicationData>()
         snapshot.appendSections([0])
         snapshot.appendItems(feedDataProvider.items, toSection: 0)
@@ -85,22 +80,25 @@ final class PublicationCollection: UIViewController, UICollectionViewDelegate, C
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("selected \(indexPath.row)")
     }
 
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let itemCount = feedDataProvider.items.count
 
-        guard itemCount > 0 else { return }
+        guard itemCount > 0 else {
+            return
+        }
 
-        if (indexPath.row == itemCount - 1) {
+        if indexPath.row == itemCount - 1 {
             feedDataProvider.perform(action: .loadMore(characterId: characterId, type: section))
         }
     }
 }
 
 // MARK: Initialisers
+
 extension PublicationCollection {
     private func createSection() -> UILabel {
         let sectionName = UILabel()
@@ -146,19 +144,21 @@ extension PublicationCollection {
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
-
 }
 
 private extension PublicationCollection {
     func makeDataSource() -> DataSource {
         DataSource(
             collectionView: collection,
-            cellProvider: { [weak self] (collection, indexPath, crossReference) -> UICollectionViewCell? in
+            cellProvider: { [weak self] collection, indexPath, crossReference -> UICollectionViewCell? in
 
                 guard let cell = collection.dequeueReusableCell(
-                        withReuseIdentifier: Self.reuseIdentifier,
-                        for: indexPath
-                ) as? PublicationCell else { return nil }
+                    withReuseIdentifier: Self.reuseIdentifier,
+                    for: indexPath
+                ) as? PublicationCell
+                else {
+                    return nil
+                }
 
                 cell.nameLabel.text = crossReference.title
                 cell.image.image = nil

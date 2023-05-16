@@ -1,14 +1,7 @@
-//
-//  MainComposer.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 27/11/2020.
-//
-
-import Foundation
-import UIKit
 import CharactersAPI
+import Foundation
 import ImageLoader
+import UIKit
 
 typealias ImageFormula = (url: URL, uniqueKey: String)
 typealias Router = (_ route: Route) -> Void
@@ -23,7 +16,6 @@ final class MainComposer {
     private var createSectionsForCharacter: ((BasicCharacterData) -> Void)?
 
     func compose(using window: UIWindow) {
-
         let marvelFeed = MarvelCharactersFeedLoader(
             client: URLSessionHTTPClient(session: URLSession.shared)
         )
@@ -50,18 +42,18 @@ final class MainComposer {
         mainView.injectAsRoot(in: window)
     }
 
-    static func bind(controller: (AnyObject & ContentUpdatable), feed: ContentUpdatePerformer) -> Void {
+    static func bind(controller: AnyObject & ContentUpdatable, feed: ContentUpdatePerformer) {
         var feed = feed
         feed.onItemsChangeCallback = { [weak controller] in
             controller?.update()
         }
     }
 
-    // MARK - Navigation
+    // MARK: - Navigation
 
     private func router(route: Route) {
         switch route {
-        case .details(for: let item):
+        case let .details(for: item):
             guard let character = BasicCharacterData(character: item) else {
                 return
             }
@@ -72,7 +64,7 @@ final class MainComposer {
         }
     }
 
-    // MARK - Image Handling
+    // MARK: - Image Handling
 
     static func prefetchImageHandler(url: URL, modifiedKey: String) -> Cancellable? {
         ImageCreator(url: url, uniqueKey: modifiedKey)

@@ -1,17 +1,9 @@
-//
-//  PublicationFeedProvider.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 10/12/2020.
-//
-
-import Foundation
 import CharactersAPI
-import UIKit
+import Foundation
 import ImageLoader
+import UIKit
 
 final class PublicationFeedProvider: PublicationFeedDataProvider {
-
     private let charactersLoader: CharacterFeedLoader
     private let prefetchImageHandler: (ImageFormula) -> Cancellable?
     private let loadImageHandler: (ImageFormula, _ destinationView: UIImageView) -> Cancellable?
@@ -22,12 +14,15 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
             onItemsChangeCallback?()
         }
     }
+
     var onItemsChangeCallback: (() -> Void)?
     var workInProgress = false
 
-    init(charactersLoader: CharacterFeedLoader,
-         prefetchImageHandler: @escaping (ImageFormula) -> Cancellable?,
-         loadImageHandler: @escaping  (ImageFormula, UIImageView) -> Cancellable?) {
+    init(
+        charactersLoader: CharacterFeedLoader,
+        prefetchImageHandler: @escaping (ImageFormula) -> Cancellable?,
+        loadImageHandler: @escaping (ImageFormula, UIImageView) -> Cancellable?
+    ) {
         self.charactersLoader = charactersLoader
         self.prefetchImageHandler = prefetchImageHandler
         self.loadImageHandler = loadImageHandler
@@ -36,45 +31,52 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     func perform(action: CharactersDetailsUserAction) {
         switch action {
         case let .loadFromStart(characterId, type):
-            guard let type = MarvelPublication.Kind(rawValue: type) else { return }
+            guard let type = MarvelPublication.Kind(rawValue: type) else {
+                return
+            }
 
             loadFromStart(characterId: characterId, type: type)
         case let .loadMore(characterId, type):
-            guard let type = MarvelPublication.Kind(rawValue: type) else { return }
+            guard let type = MarvelPublication.Kind(rawValue: type) else {
+                return
+            }
 
             loadMore(characterId: characterId, type: type)
-        case .prepareForDisplay(let indexes):
+        case let .prepareForDisplay(indexes):
             prefetchImagesForNewItems(newItems: indexes.compactMap {
                 guard items.count > $0 else {
                     return nil
                 }
                 return items[$0]
             })
-        case .setHeroImage(let index, let imageField):
-            guard index < items.count else { return }
+        case let .setHeroImage(index, imageField):
+            guard index < items.count else {
+                return
+            }
 
             let item = items[index]
 
             DispatchQueue.main.async {
                 _ = self.loadImageHandler(item.imageFormula, imageField)
             }
-
         }
     }
 
     private func loadFromStart(characterId: Int, type: MarvelPublication.Kind) {
-        guard !workInProgress else { return }
+        guard !workInProgress else {
+            return
+        }
         workInProgress = true
 
         nextPage = 0
 
         func completion(result: Result<[MarvelPublication], Error>) {
             switch result {
-            case .success(let characters):
+            case let .success(characters):
                 items.removeAll()
                 items.append(contentsOf: characters.compactMap(BasicPublicationData.init))
-            case .failure(_):
-                break //Display errors?
+            case .failure:
+                break // Display errors?
             }
             workInProgress = false
         }
@@ -88,20 +90,22 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     }
 
     private func loadMore(characterId: Int, type: MarvelPublication.Kind) {
-        guard !workInProgress else { return }
+        guard !workInProgress else {
+            return
+        }
         workInProgress = true
 
         nextPage += 1
 
         func completion(result: Result<[MarvelPublication], Error>) {
             switch result {
-            case .success(let characters):
+            case let .success(characters):
                 let insertedIds = items.map(\.id)
                 let newItems = characters.compactMap(BasicPublicationData.init)
 
                 items.append(contentsOf: newItems.filter { !insertedIds.contains($0.id) })
-            case .failure(_):
-                break //Display errors?
+            case .failure:
+                break // Display errors?
             }
             workInProgress = false
         }
@@ -120,20 +124,19 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
             .forEach { _ = prefetchImageHandler($0) }
     }
 
-    private func openItem(at index: Int) {
+    private func openItem(at _: Int) {
         // Not on scope so far
     }
 
-     func result(result: Result<[MarvelPublication], Error>) -> [MarvelPublication] {
+    func result(result: Result<[MarvelPublication], Error>) -> [MarvelPublication] {
         switch result {
-        case .success(let items):
+        case let .success(items):
             if let item = items.first, let url = item.thumbnail, let modified = item.modified {
-                _ =  prefetchImageHandler((url, modified))
+                _ = prefetchImageHandler((url, modified))
             }
             return items
-        case .failure(_):
+        case .failure:
             return []
         }
     }
-
 }

@@ -1,10 +1,3 @@
-//
-//  MarvelAPICharacterFeedLoader.swift
-//  CharactersAPI
-//
-//  Created by Hugo Alonso on 16/11/2020.
-//
-
 import Foundation
 
 final class MarvelAPICharacterFeedLoader {
@@ -32,7 +25,7 @@ final class MarvelAPICharacterFeedLoader {
 
         requestCharacter(to: url) { result in
             switch result {
-            case .success(let items):
+            case let .success(items):
                 completion(.success(items.first))
             case let .failure(error as Error) where error == Error.invalidStatusCode(code: 404):
                 completion(.success(nil))
@@ -62,15 +55,15 @@ final class MarvelAPICharacterFeedLoader {
     }
 
     private func requestPublication(to url: URL?, completion: @escaping MultiplePublicationFeedLoaderResult) {
-        guard let url = url else {
+        guard let url else {
             completion(.failure(Error.invalidURL))
             return
         }
         client.get(from: url, completion: { [weak self] result in
-            guard let `self` = self else {
+            guard let self else {
                 return
             }
-            completion(self.parse(response: result))
+            completion(parse(response: result))
         })
     }
 
@@ -98,15 +91,15 @@ final class MarvelAPICharacterFeedLoader {
     }
 
     private func requestCharacter(to url: URL?, completion: @escaping MultipleCharacterFeedLoaderResult) {
-        guard let url = url else {
+        guard let url else {
             completion(.failure(Error.invalidURL))
             return
         }
         client.get(from: url, completion: { [weak self] result in
-            guard let `self` = self else {
+            guard let self else {
                 return
             }
-            completion(self.parse(response: result))
+            completion(parse(response: result))
         })
     }
 
@@ -133,7 +126,7 @@ final class MarvelAPICharacterFeedLoader {
         }
     }
 
-    private struct MarvelAPICharacterMapper {
+    private enum MarvelAPICharacterMapper {
         static func mapItem(_ item: MarvelCharacterItem) -> MarvelCharacter {
             MarvelCharacter(
                 id: item.id,
@@ -183,10 +176,9 @@ extension MarvelAPICharacterFeedLoader: CharacterFeedLoader {
 
 extension LinkURL {
     var resolvedURL: URL? {
-        guard let url = url, let type = type else {
+        guard let url, let type else {
             return nil
         }
         return URL(string: "\(url).\(type)")
     }
 }
-// NOE AND HUGO AND MAMA ARE FRIENDS

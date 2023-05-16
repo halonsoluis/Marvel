@@ -1,16 +1,8 @@
-//
-//  MarvelCharactersFeedLoaderTests.swift
-//  CharactersAPITests
-//
-//  Created by Hugo Alonso on 18/11/2020.
-//
-
-import XCTest
 import CharactersAPI
+import XCTest
 
-//Integration test to verify end2end system work as expected
+// Integration test to verify end2end system work as expected
 class MarvelCharactersFeedLoaderTests: XCTestCase {
-
     override class func setUp() {
         super.setUp()
 
@@ -69,7 +61,7 @@ class MarvelCharactersFeedLoaderTests: XCTestCase {
 
             switch performCharacterRequest(using: makeSUT()) {
             case .failure:
-                break;
+                break
             default:
                 XCTFail("This is expected to receive an error as the status code is not handled")
             }

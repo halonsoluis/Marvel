@@ -1,12 +1,5 @@
-//
-//  MarvelAPIRouteTests.swift
-//  CharactersAPITests
-//
-//  Created by Hugo Alonso on 16/11/2020.
-//
-
-import XCTest
 @testable import CharactersAPI
+import XCTest
 
 class MarvelAPIRouteTests: XCTestCase {
     func test_GetRoute_ListCharacters() {

@@ -1,10 +1,3 @@
-//
-//  CharactersDetailUserAction.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 10/12/2020.
-//
-
 import Foundation
 import UIKit
 

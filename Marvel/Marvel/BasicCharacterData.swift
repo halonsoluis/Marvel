@@ -1,10 +1,3 @@
-//
-//  BasicCharacterData.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 12/12/2020.
-//
-
 import Foundation
 
 struct BasicCharacterData: Hashable, Equatable {
@@ -14,7 +7,9 @@ struct BasicCharacterData: Hashable, Equatable {
     let imageFormula: ImageFormula
 
     init?(id: Int?, name: String?, description: String?, thumbnail: URL?, modified: String?) {
-        guard let id = id, let name = name, let description = description, let thumbnail = thumbnail, let modified = modified else { return nil }
+        guard let id, let name, let description, let thumbnail, let modified else {
+            return nil
+        }
         self.init(id: id, name: name, description: description, imageFormula: (url: thumbnail, uniqueKey: modified))
     }
 
@@ -33,6 +28,6 @@ struct BasicCharacterData: Hashable, Equatable {
     }
 
     static func == (lhs: BasicCharacterData, rhs: BasicCharacterData) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 }

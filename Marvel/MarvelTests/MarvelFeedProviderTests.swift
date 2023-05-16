@@ -1,22 +1,14 @@
-//
-//  MarvelFeedProviderTests.swift
-//  MarvelTests
-//
-//  Created by Hugo Alonso on 27/11/2020.
-//
-
-import XCTest
 @testable import Marvel
+import XCTest
 
 import CharactersAPI
 import Foundation
-import UIKit
 import ImageLoader
+import UIKit
 
 class MarvelFeedProviderTests: XCTestCase {
-
     func testPerform_loadFromStart_leadsToASingleAPICall() {
-        let (sut, charactersLoader,_) = createSUT()
+        let (sut, charactersLoader, _) = createSUT()
 
         sut.perform(action: .loadFromStart)
         XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
@@ -27,7 +19,7 @@ class MarvelFeedProviderTests: XCTestCase {
     }
 
     func testPerform_loadFromStart_AlwaysLoadsTheFirstPage() {
-        let (sut, charactersLoader,_) = createSUT()
+        let (sut, charactersLoader, _) = createSUT()
 
         sut.perform(action: .loadFromStart)
         XCTAssertEqual(charactersLoader.charactersCalledWith?.page, 0)
@@ -141,7 +133,6 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.characterCalledWith?.id, items[0].id)
     }
 
-
     func testPerform_searchWithInvalidText_performNoAPICalls() {
         let (sut, charactersLoader, _) = createSUT()
 
@@ -198,7 +189,6 @@ class MarvelFeedProviderTests: XCTestCase {
         XCTAssertEqual(charactersLoader.searchCalledWith?.page, 0)
     }
 
-
     func testPerform_openItemWithItems_triggerDetailsRoute() {
         var route: Route!
         let (sut, charactersLoader, items) = createSUT(itemCount: 1, router: { route = $0 })
@@ -210,10 +200,10 @@ class MarvelFeedProviderTests: XCTestCase {
 
         XCTAssertEqual(route, Route.details(for: items[0]))
     }
-
 }
 
-// MARK - Helpers
+// MARK: - Helpers
+
 extension MarvelFeedProviderTests {
     class CharacterFeedLoaderSpy: CharacterFeedLoader {
         var publicationCallCount = 0
@@ -248,8 +238,8 @@ extension MarvelFeedProviderTests {
     func createSUT(
         itemCount: Int = 0,
         charactersLoader: CharacterFeedLoaderSpy = CharacterFeedLoaderSpy(),
-        prefetchImageHandler: @escaping (ImageFormula) -> Cancellable?  = { _ in return nil },
-        loadImageHandler: @escaping (ImageFormula, UIImageView) -> Cancellable? = { _, _ in return nil },
+        prefetchImageHandler: @escaping (ImageFormula) -> Cancellable? = { _ in nil },
+        loadImageHandler: @escaping (ImageFormula, UIImageView) -> Cancellable? = { _, _ in nil },
         router: @escaping (Route) -> Void = { _ in }
     ) -> (sut: MarvelFeedProvider, charactersLoader: CharacterFeedLoaderSpy, items: [MarvelCharacter]) {
         let sut = MarvelFeedProvider(
@@ -263,7 +253,7 @@ extension MarvelFeedProviderTests {
     }
 
     private func createItems(amount: Int) -> [MarvelCharacter] {
-        let itemBuilder = { MarvelCharacter(id: Int.random(in: 1...100), name: "name", description: "description", modified: "modified", thumbnail: URL(string: "https://any-url.com")!) }
+        let itemBuilder = { MarvelCharacter(id: Int.random(in: 1 ... 100), name: "name", description: "description", modified: "modified", thumbnail: URL(string: "https://any-url.com")!) }
         return Array(repeating: itemBuilder(), count: amount)
     }
 }

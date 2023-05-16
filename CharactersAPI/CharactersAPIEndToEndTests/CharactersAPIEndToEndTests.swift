@@ -1,15 +1,7 @@
-//
-//  CharactersAPIEndToEndTests.swift
-//  CharactersAPIEndToEndTests
-//
-//  Created by Hugo Alonso on 17/11/2020.
-//
-
-import XCTest
 @testable import CharactersAPI
+import XCTest
 
 class CharactersAPIEndToEndTests: XCTestCase {
-
     func test_load_DataFromNetwork() {
         let (sut, marvelURL) = createSUT()
         let url = marvelURL.url(route: .characters)!
@@ -19,7 +11,7 @@ class CharactersAPIEndToEndTests: XCTestCase {
 
     func test_load_DataFromNetworkSingleCharacterEndpoint() {
         let (sut, marvelURL) = createSUT()
-        let url = marvelURL.url(route: .character(id: 1011334))!
+        let url = marvelURL.url(route: .character(id: 1_011_334))!
 
         expectToResolve(url: url, sut: sut, with: 200)
     }

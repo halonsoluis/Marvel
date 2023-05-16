@@ -1,12 +1,5 @@
-//
-//  CharactersDetailsUseCaseComposer.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 08/04/2021.
-//
-
-import Foundation
 import CharactersAPI
+import Foundation
 import ImageLoader
 
 final class CharactersDetailsUseCaseComposer {
@@ -17,7 +10,6 @@ final class CharactersDetailsUseCaseComposer {
     }
 
     func createDetails(for character: BasicCharacterData) -> CharacterDetailsViewController {
-
         let characterDetails = CharacterDetailsViewController(loadImageHandler: MainComposer.loadImageHandler)
 
         characterDetails.drawCharacter(
@@ -38,7 +30,6 @@ final class CharactersDetailsUseCaseComposer {
     }
 
     private func composeSections(for characterId: Int) -> [PublicationCollection] {
-
         let sections = MarvelPublication.Kind.allCases.map(\.rawValue)
         let feedProviders = sections.map { _ in createFeedProvider() }
 
@@ -52,7 +43,7 @@ final class CharactersDetailsUseCaseComposer {
         return collections
     }
 
-    private func bind(_ body: (collection: PublicationCollection, feed: ContentUpdatePerformer)) -> Void {
+    private func bind(_ body: (collection: PublicationCollection, feed: ContentUpdatePerformer)) {
         MainComposer.bind(controller: body.collection, feed: body.feed)
     }
 }

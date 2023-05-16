@@ -1,65 +1,58 @@
-//
-//  ImageLoaderTests.swift
-//  ImageLoaderTests
-//
-//  Created by Hugo Alonso on 20/11/2020.
-//
-
-import XCTest
 import Foundation
 import ImageLoader
 @testable import Kingfisher
+import XCTest
 
 #if os(macOS)
-import AppKit
+    import AppKit
 
-typealias SystemImage = NSImage
-typealias SystemColor = NSColor
+    typealias SystemImage = NSImage
+    typealias SystemColor = NSColor
 
-func extractData(image: NSImage) -> Data {
-    image.tiffRepresentation!
-}
-
-extension NSColor {
-    func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> NSImage {
-        let image = NSImage(size: size)
-        image.lockFocus()
-        self.drawSwatch(in: NSRect(origin: .zero, size: size))
-        image.unlockFocus()
-        return image
+    func extractData(image: NSImage) -> Data {
+        image.tiffRepresentation!
     }
-}
 
-#elseif !os(watchOS)
-import UIKit
-
-typealias SystemImage = UIImage
-typealias SystemColor = UIColor
-
-//Taken from https://stackoverflow.com/a/48441178/2683201
-extension UIColor {
-    func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { rendererContext in
-            self.setFill()
-            rendererContext.fill(CGRect(origin: .zero, size: size))
+    extension NSColor {
+        func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> NSImage {
+            let image = NSImage(size: size)
+            image.lockFocus()
+            drawSwatch(in: NSRect(origin: .zero, size: size))
+            image.unlockFocus()
+            return image
         }
     }
-}
 
-func extractData(image: UIImage) -> Data {
-    image.pngData()!
-}
+#elseif !os(watchOS)
+    import UIKit
+
+    typealias SystemImage = UIImage
+    typealias SystemColor = UIColor
+
+    // Taken from https://stackoverflow.com/a/48441178/2683201
+    extension UIColor {
+        func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+            UIGraphicsImageRenderer(size: size).image { rendererContext in
+                self.setFill()
+                rendererContext.fill(CGRect(origin: .zero, size: size))
+            }
+        }
+    }
+
+    func extractData(image: UIImage) -> Data {
+        image.pngData()!
+    }
 #endif
 
 class ImageLoaderTests: XCTestCase {
-
     class MockImageDownloader: ImageDownloader {
         static var image: SystemImage?
 
         override func downloadImage(
             with url: URL,
-            options: KingfisherParsedOptionsInfo,
-            completionHandler: ((Result<ImageLoadingResult, KingfisherError>) -> Void)? = nil) -> DownloadTask? {
+            options _: KingfisherParsedOptionsInfo,
+            completionHandler: ((Result<ImageLoadingResult, KingfisherError>) -> Void)? = nil
+        ) -> DownloadTask? {
             if let image = Self.image {
                 completionHandler?(
                     .success(ImageLoadingResult(image: image, url: url, originalData: extractData(image: image)))
@@ -129,7 +122,7 @@ class ImageLoaderTests: XCTestCase {
         let expect = expectation(description: "A request to prefetch is made")
 
         var receivedError: Error?
-        _ = imageLoader.image.prefetch() { error in
+        _ = imageLoader.image.prefetch { error in
             receivedError = error
             expect.fulfill()
         }
@@ -149,7 +142,7 @@ class ImageLoaderTests: XCTestCase {
         return receivedError
     }
 
-    private func createSUT(uniqueKey: String = UUID().uuidString, image: SystemImage? = SystemColor.black.image(CGSize(width: 1, height: 1))) -> (imageLoader: ImageCreator, view: UniversalImageView){
+    private func createSUT(uniqueKey: String = UUID().uuidString, image: SystemImage? = SystemColor.black.image(CGSize(width: 1, height: 1))) -> (imageLoader: ImageCreator, view: UniversalImageView) {
         let url = URL(string: "https://www.anyurl.com/image.png")!
         let imageLoader = ImageCreator(url: url, uniqueKey: uniqueKey)
         let view = UniversalImageView()

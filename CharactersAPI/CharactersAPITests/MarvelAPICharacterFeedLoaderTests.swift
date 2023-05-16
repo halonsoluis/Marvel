@@ -1,18 +1,10 @@
-//
-//  MarvelAPICharacterFeedLoaderTests.swift
-//  CharactersAPITests
-//
-//  Created by Hugo Alonso on 16/11/2020.
-//
-
-import XCTest
 @testable import CharactersAPI
+import XCTest
 
 class MarvelAPICharacterFeedLoaderTests: XCTestCase {
-    
     func test_load_allCharactersFromURLWhenNoIdPassed() {
         let (client, sut, time) = makeSUT()
-        
+
         sut.characters(page: 0) { _ in }
 
         expect(
@@ -31,18 +23,18 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
             toBeEquivalentTo: "https://gateway.marvel.com:443/v1/public/characters?ts=\(time)&apikey=&hash=&limit=10&offset=10&orderBy=name"
         )
     }
-    
+
     func test_load_singleCharacterFromURLWhenIdPassed() {
         let (client, sut, time) = makeSUT()
-        
+
         sut.character(id: 1) { _ in }
-        
+
         expect(
             requestedURL: client.requestedURL,
             toBeEquivalentTo: "https://gateway.marvel.com:443/v1/public/characters/1?ts=\(time)&apikey=&hash=&limit=10&offset=0&orderBy=name"
         )
     }
-    
+
     func test_load_anItemFromJSONResponse() {
         let (client, sut, _) = makeSUT()
         let (response, item, _, thumbnail) = makeValidJSONResponse(amountOfItems: 1)
@@ -126,7 +118,6 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
         wait(for: [expect], timeout: 1)
     }
 
-
     private func expect(requestedURL: URL?, toBeEquivalentTo expectedURL: String, file: StaticString = #filePath, line: UInt = #line) {
         let expectedURL = URL(string: expectedURL)
 
@@ -135,15 +126,15 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
         XCTAssertEqual(requestedURL?.port, expectedURL?.port, file: file, line: line)
         XCTAssertEqual(requestedURL?.pathComponents, expectedURL?.pathComponents, file: file, line: line)
     }
-    
+
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (client: HTTPClientSpy, loader: CharacterFeedLoader, time: String) {
         let client = HTTPClientSpy()
         let time = Date()
 
-        func dummyHasher(values: String...) -> String {
-            return ""
+        func dummyHasher(values _: String...) -> String {
+            ""
         }
-        
+
         let sut = MarvelAPICharacterFeedLoader(urlDecorator: MarvelURL(
             URL(string: "https://gateway.marvel.com:443/v1/public/")!,
             config: MarvelAPIConfig(itemsPerPage: 10, privateAPIKey: "", publicAPIKey: ""),
@@ -154,7 +145,7 @@ class MarvelAPICharacterFeedLoaderTests: XCTestCase {
         addTeardownBlock { [weak sut] in
             XCTAssertNil(sut, "Potential memory leak", file: file, line: line)
         }
-        
+
         return (client: client, loader: sut, time: time.timeIntervalSinceReferenceDate.description)
     }
 }

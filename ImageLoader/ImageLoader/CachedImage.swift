@@ -1,10 +1,3 @@
-//
-//  CachedImage.swift
-//  ImageLoader
-//
-//  Created by Hugo Alonso on 20/11/2020.
-//
-
 import Foundation
 import Kingfisher
 
@@ -19,14 +12,15 @@ struct CachedImage: Image {
 
     func prefetch(completion: @escaping ImageLoadCompleted) -> Cancellable? {
         KingfisherManager.shared.retrieveImage(
-            with: .network(resource)) { result in
-                switch result {
-                case let .failure(error):
-                    completion(error)
-                default:
-                    completion(nil)
-                }
+            with: .network(resource))
+        { result in
+            switch result {
+            case let .failure(error):
+                completion(error)
+            default:
+                completion(nil)
             }
+        }
     }
 
     func render(on imageView: UniversalImageView, completion: @escaping ImageLoadCompleted) -> Cancellable? {
@@ -34,21 +28,22 @@ struct CachedImage: Image {
         return imageView.kf.setImage(
             with: resource,
             options: [.transition(transition)],
-            completionHandler:  { result in
+            completionHandler: { result in
                 switch result {
                 case let .failure(error):
                     completion(error)
                 default:
                     completion(nil)
                 }
-            })
+            }
+        )
     }
 
     private var transition: ImageTransition {
         #if os(iOS) || os(tvOS)
-        return .fade(1)
+            return .fade(1)
         #else
-        return .none
+            return .none
         #endif
     }
 }

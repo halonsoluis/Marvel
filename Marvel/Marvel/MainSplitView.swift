@@ -1,10 +1,3 @@
-//
-//  MainSplitView.swift
-//  Marvel
-//
-//  Created by Hugo Alonso on 13/12/2020.
-//
-
 import Foundation
 import UIKit
 
@@ -38,13 +31,12 @@ final class MainSplitView {
 
 extension MainSplitView {
     class SplitViewDelegate: UISplitViewControllerDelegate {
-
-        func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
-            return true
+        func splitViewController(_: UISplitViewController, collapseSecondary _: UIViewController, onto _: UIViewController) -> Bool {
+            true
         }
 
         func primaryViewController(forCollapsing splitViewController: UISplitViewController) -> UIViewController? {
-            return splitViewController.viewControllers.first
+            splitViewController.viewControllers.first
         }
     }
 }
