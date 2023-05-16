@@ -19,7 +19,7 @@ jobs:
           scheme: CI
           workspace: Marvel.xcworkspace
         run: |
-          xcodebuild build-for-testing -scheme "$scheme" -workspace $workspace CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -enableCodeCoverage YES -destination "platform=iOS Simulator,name=iPhone 11"
+          xcodebuild build-for-testing -scheme "$scheme" -workspace $workspace CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -enableCodeCoverage YES -destination "platform=iOS Simulator,name=iPhone 14"
       - name: Test
         env:
           scheme: CI
