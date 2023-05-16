@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build and Test CI scheme
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
       - name: Checkout
