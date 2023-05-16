@@ -69,7 +69,7 @@ final class MarvelFeedProvider: FeedDataProvider {
             let item = items[index]
 
             DispatchQueue.main.async {
-                self.loadImageHandler(item.imageFormula, imageField)
+                _ = self.loadImageHandler(item.imageFormula, imageField)
             }
         }
     }
@@ -85,7 +85,7 @@ final class MarvelFeedProvider: FeedDataProvider {
             case .success(let characters):
                 items.removeAll()
                 items.append(contentsOf: characters.compactMap(BasicCharacterData.init))
-            case .failure(let error):
+            case .failure(_):
                 break //Display errors?
             }
             workInProgress = false
@@ -108,7 +108,7 @@ final class MarvelFeedProvider: FeedDataProvider {
             switch result {
             case .success(let characters):
                 items.append(contentsOf: characters.compactMap(BasicCharacterData.init))
-            case .failure(let error):
+            case .failure(_):
                 break //Display errors?
             }
             workInProgress = false
@@ -124,7 +124,7 @@ final class MarvelFeedProvider: FeedDataProvider {
     private func prefetchImagesForNewItems(newItems: [BasicCharacterData]) {
         newItems
             .map(\.imageFormula)
-            .forEach { prefetchImageHandler($0) } 
+            .forEach { _ = _ = prefetchImageHandler($0) }
     }
 
     private func openItem(at index: Int) {
@@ -146,7 +146,7 @@ final class MarvelFeedProvider: FeedDataProvider {
         switch result {
         case .success(let items):
             if let item = items.first, let image = item.thumbnail, let modified = item.modified {
-                prefetchImageHandler((image, modified))
+                _ = prefetchImageHandler((image, modified))
             }
             return items
         case .failure(_):

@@ -47,7 +47,7 @@ class CharacterDetailsViewController: UIViewController {
 
         self.sections = sections
 
-        loadImageHandler(item.imageFormula, heroImage)
+        _ = loadImageHandler(item.imageFormula, heroImage)
 
         heroName.setTitle(item.name, for: .normal)
         heroDescription.text = item.description

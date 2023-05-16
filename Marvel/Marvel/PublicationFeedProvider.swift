@@ -56,7 +56,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
             let item = items[index]
 
             DispatchQueue.main.async {
-                self.loadImageHandler(item.imageFormula, imageField)
+                _ = self.loadImageHandler(item.imageFormula, imageField)
             }
 
         }
@@ -73,7 +73,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
             case .success(let characters):
                 items.removeAll()
                 items.append(contentsOf: characters.compactMap(BasicPublicationData.init))
-            case .failure(let error):
+            case .failure(_):
                 break //Display errors?
             }
             workInProgress = false
@@ -100,7 +100,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
                 let newItems = characters.compactMap(BasicPublicationData.init)
 
                 items.append(contentsOf: newItems.filter { !insertedIds.contains($0.id) })
-            case .failure(let error):
+            case .failure(_):
                 break //Display errors?
             }
             workInProgress = false
@@ -117,7 +117,7 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
     private func prefetchImagesForNewItems(newItems: [BasicPublicationData]) {
         newItems
             .map(\.imageFormula)
-            .forEach { prefetchImageHandler($0) }
+            .forEach { _ = prefetchImageHandler($0) }
     }
 
     private func openItem(at index: Int) {
@@ -128,10 +128,10 @@ final class PublicationFeedProvider: PublicationFeedDataProvider {
         switch result {
         case .success(let items):
             if let item = items.first, let url = item.thumbnail, let modified = item.modified {
-                prefetchImageHandler((url, modified))
+                _ =  prefetchImageHandler((url, modified))
             }
             return items
-        case .failure(let error):
+        case .failure(_):
             return []
         }
     }
