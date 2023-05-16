@@ -1,0 +1,13 @@
+--allman "false" 
+--guardelse "next-line" 
+--header "strip" 
+--enable isEmpty 
+--enable wrapEnumCases
+--enable wrapConditionalBodies
+--wrapcollections before-first 
+--funcattributes prev-line 
+--typeattributes prev-line 
+--varattributes prev-line 
+--wraparguments before-first 
+--wrapparameters before-first 
+--wrapternary "before-operators"
